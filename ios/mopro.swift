@@ -407,11 +407,14 @@ class MoproCircomBridge: NSObject {
         super.init()
     }
     
-    @objc(setupWithWasmPath:r1csPath:resolver:rejecter:)
-    func setup(withWasmPath wasmPath: String,
-                    r1csPath: String,
-                    resolver resolve: RCTPromiseResolveBlock,
-                    rejecter reject: RCTPromiseRejectBlock) -> Void {
+    @objc(setup:rejecter:)
+    func setup(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        guard let wasmPath = Bundle.main.path(forResource: "complex-circuit-100k-100k", ofType: "wasm"),
+              let r1csPath = Bundle.main.path(forResource: "complex-circuit-100k-100k", ofType: "r1cs") else {
+            reject("E_FILE_NOT_FOUND", "Could not find files in bundle.", nil)
+            return
+        }
+        
         do {
             let _ = try moproCircom.setup(wasmPath: wasmPath, r1csPath: r1csPath)
             resolve(true) // Use resolve for success

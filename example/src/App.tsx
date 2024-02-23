@@ -8,7 +8,7 @@ export default function App() {
   // const [result, setResult] = useState(false);
 
   useEffect(() => {
-    setupMopro('wasmPath', 'r1csPath');
+    setupMopro();
   }, []);
 
   return (

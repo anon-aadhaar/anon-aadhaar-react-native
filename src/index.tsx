@@ -17,8 +17,8 @@ const MoproCircomBridge = NativeModules.MoproCircomBridge
       }
     );
 
-export function setupMopro(wasmPath: string, r1csPath: string) {
-  MoproCircomBridge.setupWithWasmPath(wasmPath, r1csPath)
+export function setupMopro() {
+  MoproCircomBridge.setup()
     .then((result: any) => {
       console.log('Setup successful', result);
     })

@@ -13,9 +13,7 @@
 
 @interface RCT_EXTERN_MODULE(MoproCircomBridge, NSObject)
 
-RCT_EXTERN_METHOD(setupWithWasmPath:(NSString *)wasmPath
-                r1csPath:(NSString *)r1csPath
-                resolver:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(setup: (RCTPromiseResolveBlock)resolve
                 rejecter:(RCTPromiseRejectBlock)reject)
 + (BOOL)requiresMainQueueSetup
 {

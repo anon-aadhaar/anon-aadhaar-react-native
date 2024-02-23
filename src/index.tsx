@@ -6,8 +6,8 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const ReactNative = NativeModules.ReactNative
-  ? NativeModules.ReactNative
+const MoproCircomBridge = NativeModules.MoproCircomBridge
+  ? NativeModules.MoproCircomBridge
   : new Proxy(
       {},
       {
@@ -17,10 +17,12 @@ const ReactNative = NativeModules.ReactNative
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return ReactNative.multiply(a, b);
-}
-
-export function add(a: number, b: number): Promise<number> {
-  return ReactNative.add(a, b);
+export function setupMopro(wasmPath: string, r1csPath: string) {
+  MoproCircomBridge.setupWithWasmPath(wasmPath, r1csPath)
+    .then((result: any) => {
+      console.log('Setup successful', result);
+    })
+    .catch((error: any) => {
+      console.error('Setup failed', error);
+    });
 }

@@ -79,3 +79,4 @@ lib/
 .xcode.env.local
 .xcode.env
 podfile.lock
+libmopro_ffi.a

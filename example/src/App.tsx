@@ -1,19 +1,20 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { add } from '@anon-aadhaar/react-native';
+import { setupMopro } from '@anon-aadhaar/react-native';
+import { useEffect } from 'react';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  // const [result, setResult] = useState(false);
 
-  React.useEffect(() => {
-    add(3, 7).then(setResult);
+  useEffect(() => {
+    setupMopro('wasmPath', 'r1csPath');
   }, []);
 
   return (
     <View style={styles.container}>
       <Text>Hello World!</Text>
-      <Text>Result: {result}</Text>
+      {/* <Text>Result: {result}</Text> */}
     </View>
   );
 }

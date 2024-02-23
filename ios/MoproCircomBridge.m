@@ -15,6 +15,10 @@
 
 RCT_EXTERN_METHOD(setup: (RCTPromiseResolveBlock)resolve
                 rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(generateProof:(NSDictionary *)circuitInputs resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(verifyProof:(NSString *)proof publicInput:(NSString *)publicInput resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 + (BOOL)requiresMainQueueSetup
 {
   return YES;

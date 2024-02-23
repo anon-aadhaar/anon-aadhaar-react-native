@@ -417,9 +417,42 @@ class MoproCircomBridge: NSObject {
         
         do {
             let _ = try moproCircom.setup(wasmPath: wasmPath, r1csPath: r1csPath)
-            resolve(true) // Use resolve for success
+            resolve(true)
         } catch let error {
-            reject("E_SETUP", "Setup failed: \(error.localizedDescription)", error) // Use reject for errors
+            reject("E_SETUP", "Setup failed: \(error.localizedDescription)", error)
+        }
+    }
+    
+    @objc(generateProof:resolver:rejecter:)
+    func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        do {
+            let inputs = circuitInputs as! [String: [String]]
+            let result = try moproCircom.generateProof(circuitInputs: inputs)
+            
+            let proofBase64 = result.proof.base64EncodedString()
+            let inputsBase64 = result.inputs.base64EncodedString()
+            
+            let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
+            
+            resolve(resultDict)
+        } catch let error {
+            reject("E_GENERATE_PROOF", "Proof generation failed: \(error.localizedDescription)", error)
+        }
+    }
+    
+    @objc(verifyProof:publicInput:resolver:rejecter:)
+    func verifyProof(proof: String, publicInput: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        do {
+            guard let proofData = Data(base64Encoded: proof),
+                  let inputData = Data(base64Encoded: publicInput) else {
+                reject("E_INVALID_ARGS", "Invalid argument format for proof or publicInput", nil)
+                return
+            }
+            
+            let isValid = try moproCircom.verifyProof(proof: proofData, publicInput: inputData)
+            resolve(isValid)
+        } catch let error {
+            reject("E_VERIFY_PROOF", "Proof verification failed: \(error.localizedDescription)", error)
         }
     }
 

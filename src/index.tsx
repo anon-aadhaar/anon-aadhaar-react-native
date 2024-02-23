@@ -26,3 +26,36 @@ export function setupMopro() {
       console.error('Setup failed', error);
     });
 }
+
+export async function generateProof(circuitInputs: any): Promise<{
+  proof: string;
+  inputs: string;
+}> {
+  try {
+    const result = await MoproCircomBridge.generateProof(circuitInputs);
+    const proof = result.proof;
+    const inputs = result.inputs;
+
+    console.log('Proof:', proof);
+    console.log('Inputs:', inputs);
+
+    return { proof, inputs };
+  } catch (error) {
+    console.error(error);
+    throw new Error('generateProof: something went wrong!');
+  }
+}
+
+export async function verifyProof(
+  proof: string,
+  publicInputs: string
+): Promise<boolean> {
+  try {
+    const isVerified = await MoproCircomBridge.verifyProof(proof, publicInputs);
+
+    return isVerified;
+  } catch (error) {
+    console.error(error);
+    throw new Error('verifyProof: something went wrong!');
+  }
+}

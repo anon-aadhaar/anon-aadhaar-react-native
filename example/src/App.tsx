@@ -7,6 +7,7 @@ import {
   verifyProof,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
+import data from './input.json';
 
 export default function App() {
   const [result, setResult] = useState<'ready' | 'not-ready'>('not-ready');
@@ -16,14 +17,20 @@ export default function App() {
 
   useEffect(() => {
     try {
-      setupMopro();
-      setResult('ready');
+      setupMopro().then(() => setResult('ready'));
     } catch (e) {
       console.log(e);
     }
   }, []);
 
-  const genProof = async (input: any) => {
+  const genProof = async () => {
+    const input = {
+      aadhaarData: data.aadhaar_data,
+      aadhaarDataLength: [data.aadhaarDataLength.toString()],
+      signature: data.signature,
+      pubKey: data.pub_key,
+      signalHash: [data.signalHash.toString()],
+    };
     const { proof, inputs } = await generateProof(input);
     setComplexProof(proof);
     setPublicInputs(inputs);
@@ -39,7 +46,7 @@ export default function App() {
       <Text>Hello World!</Text>
       <Text>Prover State: {result} </Text>
       <Button
-        onPress={() => genProof({ a: ['2'] })}
+        onPress={() => genProof()}
         title="Prove"
         color="#841584"
         accessibilityLabel="Generate a zkp"

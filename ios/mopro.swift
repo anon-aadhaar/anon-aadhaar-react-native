@@ -409,8 +409,8 @@ class MoproCircomBridge: NSObject {
     
     @objc(setup:rejecter:)
     func setup(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        guard let wasmPath = Bundle.main.path(forResource: "complex-circuit-100k-100k", ofType: "wasm"),
-              let r1csPath = Bundle.main.path(forResource: "complex-circuit-100k-100k", ofType: "r1cs") else {
+        guard let wasmPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "wasm"),
+              let r1csPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "r1cs") else {
             reject("E_FILE_NOT_FOUND", "Could not find files in bundle.", nil)
             return
         }

@@ -17,14 +17,13 @@ const MoproCircomBridge = NativeModules.MoproCircomBridge
       }
     );
 
-export function setupMopro() {
-  MoproCircomBridge.setup()
-    .then((result: any) => {
-      console.log('Setup successful', result);
-    })
-    .catch((error: any) => {
-      console.error('Setup failed', error);
-    });
+export async function setupMopro() {
+  try {
+    const result = await MoproCircomBridge.setup();
+    console.log('Setup successful', result);
+  } catch (e) {
+    console.error('Setup failed', e);
+  }
 }
 
 export async function generateProof(circuitInputs: any): Promise<{

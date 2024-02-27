@@ -14,8 +14,8 @@
 		3A7B4870CA0661A65F613013 /* libPods-ReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B28CE7679076F93B9D116 /* libPods-ReactNativeExample.a */; };
 		6CE63199A701B9ECB50724CB /* libPods-ReactNativeExample-ReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E30EE2144745D904302F170F /* libPods-ReactNativeExample-ReactNativeExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		E678915D2B863243001374D2 /* complex-circuit-100k-100k.r1cs in Resources */ = {isa = PBXBuildFile; fileRef = E678915C2B863243001374D2 /* complex-circuit-100k-100k.r1cs */; };
-		E678915F2B863268001374D2 /* complex-circuit-100k-100k.wasm in Resources */ = {isa = PBXBuildFile; fileRef = E678915E2B863268001374D2 /* complex-circuit-100k-100k.wasm */; };
+		E6814FEE2B8D003C00899640 /* aadhaar-verifier.wasm in Resources */ = {isa = PBXBuildFile; fileRef = E6814FED2B8D003C00899640 /* aadhaar-verifier.wasm */; };
+		E6814FF02B8D005F00899640 /* aadhaar-verifier.r1cs in Resources */ = {isa = PBXBuildFile; fileRef = E6814FEF2B8D005F00899640 /* aadhaar-verifier.r1cs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,8 +45,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9997E9FD117731F40116A5D4 /* Pods-ReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeExample/Pods-ReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		E30EE2144745D904302F170F /* libPods-ReactNativeExample-ReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeExample-ReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E678915C2B863243001374D2 /* complex-circuit-100k-100k.r1cs */ = {isa = PBXFileReference; lastKnownFileType = file; name = "complex-circuit-100k-100k.r1cs"; path = "../../../../mopro/mopro-core/examples/circom/complex-circuit/target/complex-circuit-100k-100k.r1cs"; sourceTree = "<group>"; };
-		E678915E2B863268001374D2 /* complex-circuit-100k-100k.wasm */ = {isa = PBXFileReference; lastKnownFileType = file; name = "complex-circuit-100k-100k.wasm"; path = "../../../../mopro/mopro-core/examples/circom/complex-circuit/target/complex-circuit-100k-100k_js/complex-circuit-100k-100k.wasm"; sourceTree = "<group>"; };
+		E6814FED2B8D003C00899640 /* aadhaar-verifier.wasm */ = {isa = PBXFileReference; lastKnownFileType = file; name = "aadhaar-verifier.wasm"; path = "../../../../mopro/mopro-core/examples/circom/anonAadhaar/target/aadhaar-verifier_js/aadhaar-verifier.wasm"; sourceTree = "<group>"; };
+		E6814FEF2B8D005F00899640 /* aadhaar-verifier.r1cs */ = {isa = PBXFileReference; lastKnownFileType = file; name = "aadhaar-verifier.r1cs"; path = "../../../../mopro/mopro-core/examples/circom/anonAadhaar/target/aadhaar-verifier.r1cs"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -120,8 +120,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E678915E2B863268001374D2 /* complex-circuit-100k-100k.wasm */,
-				E678915C2B863243001374D2 /* complex-circuit-100k-100k.r1cs */,
+				E6814FEF2B8D005F00899640 /* aadhaar-verifier.r1cs */,
+				E6814FED2B8D003C00899640 /* aadhaar-verifier.wasm */,
 				13B07FAE1A68108700A75B9A /* ReactNativeExample */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* ReactNativeExampleTests */,
@@ -248,9 +248,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				E678915D2B863243001374D2 /* complex-circuit-100k-100k.r1cs in Resources */,
-				E678915F2B863268001374D2 /* complex-circuit-100k-100k.wasm in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E6814FEE2B8D003C00899640 /* aadhaar-verifier.wasm in Resources */,
+				E6814FF02B8D005F00899640 /* aadhaar-verifier.r1cs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

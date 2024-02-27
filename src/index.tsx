@@ -19,7 +19,7 @@ const MoproCircomBridge = NativeModules.MoproCircomBridge
 
 export async function setupMopro() {
   try {
-    const result = await MoproCircomBridge.setup();
+    const result = await MoproCircomBridge.initialize();
     console.log('Setup successful', result);
   } catch (e) {
     console.error('Setup failed', e);

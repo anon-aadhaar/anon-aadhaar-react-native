@@ -398,28 +398,80 @@ fileprivate struct FfiConverterData: FfiConverterRustBuffer {
     }
 }
 
+// @objc(MoproCircomBridge)
+// class MoproCircomBridge: NSObject {
+//     private var moproCircom: MoproCircom
+
+//     override init() {
+//         moproCircom = MoproCircom()
+//         super.init()
+//     }
+    
+//     @objc(setup:rejecter:)
+//     func setup(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+//         guard let wasmPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "wasm"),
+//               let r1csPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "r1cs") else {
+//             reject("E_FILE_NOT_FOUND", "Could not find files in bundle.", nil)
+//             return
+//         }
+        
+//         do {
+//             let _ = try moproCircom.setup(wasmPath: wasmPath, r1csPath: r1csPath)
+//             resolve(true)
+//         } catch let error {
+//             reject("E_SETUP", "Setup failed: \(error.localizedDescription)", error)
+//         }
+//     }
+    
+//     @objc(generateProof:resolver:rejecter:)
+//     func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+//         do {
+//             let inputs = circuitInputs as! [String: [String]]
+//             let result = try moproCircom.generateProof(circuitInputs: inputs)
+            
+//             let proofBase64 = result.proof.base64EncodedString()
+//             let inputsBase64 = result.inputs.base64EncodedString()
+            
+//             let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
+            
+//             resolve(resultDict)
+//         } catch let error {
+//             reject("E_GENERATE_PROOF", "Proof generation failed: \(error.localizedDescription)", error)
+//         }
+//     }
+    
+//     @objc(verifyProof:publicInput:resolver:rejecter:)
+//     func verifyProof(proof: String, publicInput: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+//         do {
+//             guard let proofData = Data(base64Encoded: proof),
+//                   let inputData = Data(base64Encoded: publicInput) else {
+//                 reject("E_INVALID_ARGS", "Invalid argument format for proof or publicInput", nil)
+//                 return
+//             }
+            
+//             let isValid = try moproCircom.verifyProof(proof: proofData, publicInput: inputData)
+//             resolve(isValid)
+//         } catch let error {
+//             reject("E_VERIFY_PROOF", "Proof verification failed: \(error.localizedDescription)", error)
+//         }
+//     }
+
+    
+//     @objc static func requiresMainQueueSetup() -> Bool {
+//       return false
+//     }
+// }
+
 @objc(MoproCircomBridge)
 class MoproCircomBridge: NSObject {
-    private var moproCircom: MoproCircom
-
-    override init() {
-        moproCircom = MoproCircom()
-        super.init()
-    }
     
-    @objc(setup:rejecter:)
-    func setup(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        guard let wasmPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "wasm"),
-              let r1csPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "r1cs") else {
-            reject("E_FILE_NOT_FOUND", "Could not find files in bundle.", nil)
-            return
-        }
-        
+    @objc(initialize:rejecter:)
+    func initialize(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         do {
-            let _ = try moproCircom.setup(wasmPath: wasmPath, r1csPath: r1csPath)
+            try initializeMopro()
             resolve(true)
         } catch let error {
-            reject("E_SETUP", "Setup failed: \(error.localizedDescription)", error)
+            reject("E_INITIALIZE", "Initialization failed: \(error.localizedDescription)", error)
         }
     }
     
@@ -427,7 +479,7 @@ class MoproCircomBridge: NSObject {
     func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         do {
             let inputs = circuitInputs as! [String: [String]]
-            let result = try moproCircom.generateProof(circuitInputs: inputs)
+            let result = try generateProof2(circuitInputs: inputs)
             
             let proofBase64 = result.proof.base64EncodedString()
             let inputsBase64 = result.inputs.base64EncodedString()
@@ -436,7 +488,7 @@ class MoproCircomBridge: NSObject {
             
             resolve(resultDict)
         } catch let error {
-            reject("E_GENERATE_PROOF", "Proof generation failed: \(error.localizedDescription)", error)
+            reject("E_GENERATE_PROOF_2", "Proof generation failed: \(error.localizedDescription)", error)
         }
     }
     
@@ -449,19 +501,17 @@ class MoproCircomBridge: NSObject {
                 return
             }
             
-            let isValid = try moproCircom.verifyProof(proof: proofData, publicInput: inputData)
+            let isValid = try verifyProof2(proof: proofData, publicInput: inputData)
             resolve(isValid)
         } catch let error {
-            reject("E_VERIFY_PROOF", "Proof verification failed: \(error.localizedDescription)", error)
+            reject("E_VERIFY_PROOF_2", "Proof verification failed: \(error.localizedDescription)", error)
         }
     }
-
     
     @objc static func requiresMainQueueSetup() -> Bool {
-      return false
+        return false
     }
 }
-
 
 public protocol MoproCircomProtocol {
     func generateProof(circuitInputs: [String: [String]])  throws -> GenerateProofResult

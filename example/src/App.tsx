@@ -4,6 +4,7 @@ import {
   generateProof,
   setupMopro,
   verifyProof,
+  AadhaarScanner,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import data from './input.json';
@@ -13,6 +14,8 @@ export default function App() {
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
+  const [cameraOn, setCameraOn] = useState<boolean>(true);
+  const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
     setup: number;
     proof: number;
@@ -35,6 +38,10 @@ export default function App() {
       console.log(e);
     }
   }, [setupReady]);
+
+  useEffect(() => {
+    if (qrCodeValue !== '') console.log('COUCOU QR => ', qrCodeValue);
+  }, [qrCodeValue]);
 
   const genProof = async () => {
     const startProof = Date.now();
@@ -70,6 +77,11 @@ export default function App() {
         />
         <Text>Prover State: {String(setupReady)}</Text>
       </View>
+      <AadhaarScanner
+        cameraOn={cameraOn}
+        setCameraOn={setCameraOn}
+        setQrCodeValue={setQrCodeValue}
+      />
       <Text>Setup Execution Time: {executionTime.setup}ms</Text>
       <TouchableOpacity style={styles.button} onPress={() => genProof()}>
         <Text style={styles.buttonText}>Prove</Text>

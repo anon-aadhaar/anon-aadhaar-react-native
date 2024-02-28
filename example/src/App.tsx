@@ -5,6 +5,7 @@ import {
   setupMopro,
   verifyProof,
   AadhaarScanner,
+  verifySignature,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import data from './input.json';
@@ -40,7 +41,13 @@ export default function App() {
   }, [setupReady]);
 
   useEffect(() => {
-    if (qrCodeValue !== '') console.log('COUCOU QR => ', qrCodeValue);
+    if (qrCodeValue !== '') {
+      verifySignature(qrCodeValue, true)
+        .then((isVerified) =>
+          console.log('QR Code signature veirified: ', isVerified)
+        )
+        .catch((e) => console.error(e));
+    }
   }, [qrCodeValue]);
 
   const genProof = async () => {

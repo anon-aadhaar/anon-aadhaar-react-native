@@ -34,10 +34,18 @@ export function AadhaarScanner({
   if (device == null) return null;
   return cameraOn ? (
     <Camera
-      style={StyleSheet.absoluteFill}
+      style={styles.camera}
       device={device}
       isActive={cameraOn}
       codeScanner={codeScanner}
     />
   ) : null;
 }
+
+const styles = StyleSheet.create({
+  camera: {
+    height: 460,
+    width: '92%',
+    alignSelf: 'center',
+  },
+});

@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {
   generateProof,
   setupMopro,
@@ -17,6 +23,8 @@ export default function App() {
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [cameraOn, setCameraOn] = useState<boolean>(false);
+  const [isProving, setIsProving] = useState<boolean>(false);
+  const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
   const [isQrScanned, setIsQrScanned] = useState<boolean>(false);
   const [sigVerified, setSigVerified] = useState<boolean>(false);
   const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
@@ -32,12 +40,6 @@ export default function App() {
     proof: number;
     verify: number;
   }>({ setup: 0, proof: 0, verify: 0 });
-
-  useEffect(() => {
-    if (qrCodeValue !== '') {
-      setIsQrScanned(true);
-    }
-  }, [qrCodeValue]);
 
   useEffect(() => {
     const startSetup = Date.now();
@@ -58,8 +60,11 @@ export default function App() {
 
   useEffect(() => {
     if (qrCodeValue !== '') {
+      setIsQrScanned(true);
+      setIsVerifyingSig(true);
       verifySignature(qrCodeValue)
         .then((isVerified) => {
+          setIsVerifyingSig(false);
           if (isVerified) {
             setSigVerified(true);
             circuitInputsFromQR(qrCodeValue).then((args) => {
@@ -68,16 +73,21 @@ export default function App() {
             });
           }
         })
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          setIsVerifyingSig(false);
+          console.error(e);
+        });
     }
   }, [qrCodeValue]);
 
   const genProof = async () => {
+    setIsProving(true);
     const startProof = Date.now();
     const { proof, inputs } = await generateProof(anonAadhaarArgs);
     setComplexProof(proof);
     setPublicInputs(inputs);
     setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
+    setIsProving(false);
   };
 
   const verifProof = async (_proof: any, _publicInputs: any) => {
@@ -105,7 +115,11 @@ export default function App() {
           style={styles.button}
           onPress={() => setCameraOn(true)}
         >
-          <Text style={styles.buttonText}>Scan QR Code</Text>
+          {isVerifyingSig ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text style={styles.buttonText}>Scan QR Code</Text>
+          )}
         </TouchableOpacity>
       )}
       <AadhaarScanner
@@ -113,39 +127,52 @@ export default function App() {
         setCameraOn={setCameraOn}
         setQrCodeValue={setQrCodeValue}
       />
+
       {isQrScanned && sigVerified && (
-        <Text>
-          QR Code Scanned and signature verified ✅. Proceed with Proof.
-        </Text>
+        <Text>QR Code Scanned and signature verified ✅.</Text>
       )}
-      {isQrScanned && (
-        <>
-          <TouchableOpacity style={styles.button} onPress={() => genProof()}>
-            <Text style={styles.buttonText}>Prove</Text>
-          </TouchableOpacity>
-          <Text>Proof Execution Time: {executionTime.proof}ms</Text>
-        </>
+
+      <TouchableOpacity
+        style={[
+          styles.button,
+          sigVerified ? styles.buttonEnabled : styles.buttonDisabled,
+        ]}
+        onPress={() => genProof()}
+      >
+        {isProving ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={styles.buttonText}>Prove</Text>
+        )}
+      </TouchableOpacity>
+      {complexProof ? (
+        <Text>Proof Execution Time: {executionTime.proof}ms</Text>
+      ) : (
+        <></>
       )}
-      {complexProof && (
-        <>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => verifProof(complexProof, publicInputs)}
-          >
-            <Text style={styles.buttonText}>Verify</Text>
-          </TouchableOpacity>
-          <Text>Verification Execution Time: {executionTime.verify}ms</Text>
-          <View style={styles.statusRow}>
-            <View
-              style={[
-                styles.statusIndicator,
-                { backgroundColor: proofVerified ? 'green' : 'red' },
-              ]}
-            />
-            <Text>Prover Verified: {String(proofVerified)}</Text>
-          </View>
-        </>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          complexProof ? styles.buttonEnabled : styles.buttonDisabled,
+        ]}
+        onPress={() => verifProof(complexProof, publicInputs)}
+      >
+        <Text style={styles.buttonText}>Verify</Text>
+      </TouchableOpacity>
+      {proofVerified ? (
+        <Text>Verification Execution Time: {executionTime.verify}ms</Text>
+      ) : (
+        <></>
       )}
+      <View style={styles.statusRow}>
+        <View
+          style={[
+            styles.statusIndicator,
+            { backgroundColor: proofVerified ? 'green' : 'red' },
+          ]}
+        />
+        <Text>Prover Verified: {String(proofVerified)}</Text>
+      </View>
     </View>
   );
 }
@@ -162,6 +189,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 20,
     color: 'white',
+  },
+  buttonEnabled: {
+    backgroundColor: '#64a8e3',
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
   },
   button: {
     backgroundColor: '#64a8e3',
@@ -190,5 +223,10 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 16,
     color: 'white',
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

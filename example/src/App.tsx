@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import {
@@ -8,20 +9,35 @@ import {
   verifySignature,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
-import data from './input.json';
+import { circuitInputsFromQR } from '../../src/generateInputs';
 
 export default function App() {
   const [setupReady, setSetupReady] = useState<boolean>(false);
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
-  const [cameraOn, setCameraOn] = useState<boolean>(true);
+  const [cameraOn, setCameraOn] = useState<boolean>(false);
+  const [isQrScanned, setIsQrScanned] = useState<boolean>(false);
+  const [sigVerified, setSigVerified] = useState<boolean>(false);
+  const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
+    aadhaarData: string[];
+    aadhaarDataLength: string[];
+    signature: string[];
+    pubKey: string[];
+    signalHash: string[];
+  } | null>(null);
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
     setup: number;
     proof: number;
     verify: number;
   }>({ setup: 0, proof: 0, verify: 0 });
+
+  useEffect(() => {
+    if (qrCodeValue !== '') {
+      setIsQrScanned(true);
+    }
+  }, [qrCodeValue]);
 
   useEffect(() => {
     const startSetup = Date.now();
@@ -42,32 +58,31 @@ export default function App() {
 
   useEffect(() => {
     if (qrCodeValue !== '') {
-      verifySignature(qrCodeValue, true)
-        .then((isVerified) =>
-          console.log('QR Code signature veirified: ', isVerified)
-        )
+      verifySignature(qrCodeValue)
+        .then((isVerified) => {
+          if (isVerified) {
+            setSigVerified(true);
+            circuitInputsFromQR(qrCodeValue).then((args) => {
+              console.log('Args for proof: ', args);
+              setAnonAadhaarArgs(args);
+            });
+          }
+        })
         .catch((e) => console.error(e));
     }
   }, [qrCodeValue]);
 
   const genProof = async () => {
     const startProof = Date.now();
-    const input = {
-      aadhaarData: data.aadhaar_data,
-      aadhaarDataLength: [data.aadhaarDataLength.toString()],
-      signature: data.signature,
-      pubKey: data.pub_key,
-      signalHash: [data.signalHash.toString()],
-    };
-    const { proof, inputs } = await generateProof(input);
+    const { proof, inputs } = await generateProof(anonAadhaarArgs);
     setComplexProof(proof);
     setPublicInputs(inputs);
     setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
   };
 
-  const verifProof = async (proof: any, publicInputs: any) => {
+  const verifProof = async (_proof: any, _publicInputs: any) => {
     const startVerif = Date.now();
-    const res = await verifyProof(proof, publicInputs);
+    const res = await verifyProof(_proof, _publicInputs);
     setProofVerified(res);
     setExecutionTime((prev) => ({ ...prev, verify: Date.now() - startVerif }));
   };
@@ -84,32 +99,53 @@ export default function App() {
         />
         <Text>Prover State: {String(setupReady)}</Text>
       </View>
+      <Text>Setup Execution Time: {executionTime.setup}ms</Text>
+      {!isQrScanned && (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setCameraOn(true)}
+        >
+          <Text style={styles.buttonText}>Scan QR Code</Text>
+        </TouchableOpacity>
+      )}
       <AadhaarScanner
         cameraOn={cameraOn}
         setCameraOn={setCameraOn}
         setQrCodeValue={setQrCodeValue}
       />
-      <Text>Setup Execution Time: {executionTime.setup}ms</Text>
-      <TouchableOpacity style={styles.button} onPress={() => genProof()}>
-        <Text style={styles.buttonText}>Prove</Text>
-      </TouchableOpacity>
-      <Text>Proof Execution Time: {executionTime.proof}ms</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => verifProof(complexProof, publicInputs)}
-      >
-        <Text style={styles.buttonText}>Verify</Text>
-      </TouchableOpacity>
-      <Text>Verification Execution Time: {executionTime.verify}ms</Text>
-      <View style={styles.statusRow}>
-        <View
-          style={[
-            styles.statusIndicator,
-            { backgroundColor: proofVerified ? 'green' : 'red' },
-          ]}
-        />
-        <Text>Prover Verified: {String(proofVerified)}</Text>
-      </View>
+      {isQrScanned && sigVerified && (
+        <Text>
+          QR Code Scanned and signature verified ✅. Proceed with Proof.
+        </Text>
+      )}
+      {isQrScanned && (
+        <>
+          <TouchableOpacity style={styles.button} onPress={() => genProof()}>
+            <Text style={styles.buttonText}>Prove</Text>
+          </TouchableOpacity>
+          <Text>Proof Execution Time: {executionTime.proof}ms</Text>
+        </>
+      )}
+      {complexProof && (
+        <>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => verifProof(complexProof, publicInputs)}
+          >
+            <Text style={styles.buttonText}>Verify</Text>
+          </TouchableOpacity>
+          <Text>Verification Execution Time: {executionTime.verify}ms</Text>
+          <View style={styles.statusRow}>
+            <View
+              style={[
+                styles.statusIndicator,
+                { backgroundColor: proofVerified ? 'green' : 'red' },
+              ]}
+            />
+            <Text>Prover Verified: {String(proofVerified)}</Text>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -119,6 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
+    backgroundColor: '#ffffff',
   },
   title: {
     fontSize: 24,
@@ -127,7 +164,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {
-    backgroundColor: '#841584',
+    backgroundColor: '#64a8e3',
     padding: 15,
     width: '90%',
     alignItems: 'center',

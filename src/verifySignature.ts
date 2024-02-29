@@ -1,11 +1,11 @@
 import {
-  fetchCertificateFile,
   convertBigIntToByteArray,
   decompressByteArray,
   uint8ArrayToHex,
 } from './util';
 import forge from 'node-forge';
 import { KEYUTIL, KJUR } from 'jsrsasign';
+import certificateTest from './certificate';
 
 /**
  * `verifySignature` verifies the digital signature of the provided data.
@@ -23,10 +23,7 @@ import { KEYUTIL, KJUR } from 'jsrsasign';
  * either from the production or testing environment based on the `testing` flag.
  * It then uses this public key to verify the signature.
  */
-export const verifySignature = async (
-  qrData: string,
-  useTestAadhaar: boolean
-): Promise<boolean> => {
+export const verifySignature = async (qrData: string): Promise<boolean> => {
   const bigIntData = BigInt(qrData);
 
   const byteArray = convertBigIntToByteArray(bigIntData);
@@ -44,15 +41,7 @@ export const verifySignature = async (
     decompressedByteArray.length - 256
   );
 
-  const certificate = await fetchCertificateFile(
-    `https://www.uidai.gov.in/images/authDoc/${
-      useTestAadhaar ? 'uidai_prod_cdup' : 'uidai_offline_publickey_26022021'
-    }.cer`
-  );
-
-  if (!certificate) throw Error('Error while fetching public key.');
-
-  const publicKey = forge.pki.certificateFromPem(certificate).publicKey;
+  const publicKey = forge.pki.certificateFromPem(certificateTest).publicKey;
   const publicKeyPem = forge.pki.publicKeyToPem(publicKey);
 
   // Get the public key object from PEM formatted string

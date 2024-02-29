@@ -1,5 +1,55 @@
-import React, { type Dispatch, type SetStateAction } from 'react';
-import { StyleSheet } from 'react-native';
+// import React, { type Dispatch, type SetStateAction } from 'react';
+// import { StyleSheet } from 'react-native';
+// import {
+//   useCodeScanner,
+//   Camera,
+//   useCameraDevice,
+// } from 'react-native-vision-camera';
+
+// type AadhaarScannerProps = {
+//   cameraOn: boolean;
+//   setCameraOn: Dispatch<SetStateAction<boolean>>;
+//   setQrCodeValue: Dispatch<SetStateAction<string>>;
+// };
+
+// export function AadhaarScanner({
+//   cameraOn,
+//   setCameraOn,
+//   setQrCodeValue,
+// }: AadhaarScannerProps) {
+//   const device = useCameraDevice('back');
+
+//   const codeScanner = useCodeScanner({
+//     codeTypes: ['qr', 'ean-13'],
+//     onCodeScanned: (codes) => {
+//       if (codes[0]?.value) {
+//         setQrCodeValue(codes[0]?.value);
+//         setCameraOn(false);
+//       }
+//     },
+//   });
+
+//   if (device == null) return null;
+//   return cameraOn ? (
+//     <Camera
+//       style={styles.camera}
+//       device={device}
+//       isActive={cameraOn}
+//       codeScanner={codeScanner}
+//     />
+//   ) : null;
+// }
+
+// const styles = StyleSheet.create({
+//   camera: {
+//     height: 460,
+//     width: '92%',
+//     alignSelf: 'center',
+//   },
+// });
+
+import React from 'react';
+import { Modal, StyleSheet, View } from 'react-native';
 import {
   useCodeScanner,
   Camera,
@@ -8,8 +58,8 @@ import {
 
 type AadhaarScannerProps = {
   cameraOn: boolean;
-  setCameraOn: Dispatch<SetStateAction<boolean>>;
-  setQrCodeValue: Dispatch<SetStateAction<string>>;
+  setCameraOn: React.Dispatch<React.SetStateAction<boolean>>;
+  setQrCodeValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export function AadhaarScanner({
@@ -29,23 +79,40 @@ export function AadhaarScanner({
     },
   });
 
-  console.log(device);
-
   if (device == null) return null;
-  return cameraOn ? (
-    <Camera
-      style={styles.camera}
-      device={device}
-      isActive={cameraOn}
-      codeScanner={codeScanner}
-    />
-  ) : null;
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={false}
+      style={styles.modal}
+      visible={cameraOn}
+      onRequestClose={() => {
+        setCameraOn(false);
+      }}
+    >
+      <View style={styles.modalView}>
+        <Camera
+          style={styles.camera}
+          device={device}
+          isActive={cameraOn}
+          codeScanner={codeScanner}
+        />
+      </View>
+    </Modal>
+  );
 }
 
 const styles = StyleSheet.create({
+  modal: { flex: 1 },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
   camera: {
-    height: 460,
-    width: '92%',
-    alignSelf: 'center',
+    flex: 1,
+    width: '100%',
   },
 });

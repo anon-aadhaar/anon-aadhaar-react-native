@@ -75,6 +75,7 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-builder-bob": "^0.23.2",
+    "react-native-fs": "^2.20.0",
     "react-native-vision-camera": "^3.9.0",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
@@ -89,6 +90,7 @@
     "pako": "*",
     "react": "*",
     "react-native": "*",
+    "react-native-fs": "*",
     "react-native-vision-camera": "*"
   },
   "workspaces": [

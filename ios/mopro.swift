@@ -398,82 +398,27 @@ fileprivate struct FfiConverterData: FfiConverterRustBuffer {
     }
 }
 
-// @objc(MoproCircomBridge)
-// class MoproCircomBridge: NSObject {
-//     private var moproCircom: MoproCircom
-
-//     override init() {
-//         moproCircom = MoproCircom()
-//         super.init()
-//     }
-    
-//     @objc(setup:rejecter:)
-//     func setup(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-//         guard let wasmPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "wasm"),
-//               let r1csPath = Bundle.main.path(forResource: "aadhaar-verifier", ofType: "r1cs") else {
-//             reject("E_FILE_NOT_FOUND", "Could not find files in bundle.", nil)
-//             return
-//         }
-        
-//         do {
-//             let _ = try moproCircom.setup(wasmPath: wasmPath, r1csPath: r1csPath)
-//             resolve(true)
-//         } catch let error {
-//             reject("E_SETUP", "Setup failed: \(error.localizedDescription)", error)
-//         }
-//     }
-    
-//     @objc(generateProof:resolver:rejecter:)
-//     func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-//         do {
-//             let inputs = circuitInputs as! [String: [String]]
-//             let result = try moproCircom.generateProof(circuitInputs: inputs)
-            
-//             let proofBase64 = result.proof.base64EncodedString()
-//             let inputsBase64 = result.inputs.base64EncodedString()
-            
-//             let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
-            
-//             resolve(resultDict)
-//         } catch let error {
-//             reject("E_GENERATE_PROOF", "Proof generation failed: \(error.localizedDescription)", error)
-//         }
-//     }
-    
-//     @objc(verifyProof:publicInput:resolver:rejecter:)
-//     func verifyProof(proof: String, publicInput: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-//         do {
-//             guard let proofData = Data(base64Encoded: proof),
-//                   let inputData = Data(base64Encoded: publicInput) else {
-//                 reject("E_INVALID_ARGS", "Invalid argument format for proof or publicInput", nil)
-//                 return
-//             }
-            
-//             let isValid = try moproCircom.verifyProof(proof: proofData, publicInput: inputData)
-//             resolve(isValid)
-//         } catch let error {
-//             reject("E_VERIFY_PROOF", "Proof verification failed: \(error.localizedDescription)", error)
-//         }
-//     }
-
-    
-//     @objc static func requiresMainQueueSetup() -> Bool {
-//       return false
-//     }
-// }
-
 @objc(MoproCircomBridge)
 class MoproCircomBridge: NSObject {
     
     @objc(initialize:rejecter:)
     func initialize(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         do {
-            try initializeMopro()
+            // Search for the dylib in all bundles (main bundle and all frameworks)
+            let allBundles = Bundle.allFrameworks + [Bundle.main]
+            guard let dylibPath = allBundles.first(where: { $0.path(forResource: "anonAadhaar", ofType: "dylib") != nil })?.path(forResource: "anonAadhaar", ofType: "dylib") else {
+                reject("E_NO_DYLIB", "Could not find anonAadhaar.dylib in any bundle.", nil)
+                return
+            }
+
+            // Now that we have the path, initialize the dylib with it
+            try initializeMoproDylib(dylibPath: dylibPath)
             resolve(true)
         } catch let error {
             reject("E_INITIALIZE", "Initialization failed: \(error.localizedDescription)", error)
         }
     }
+
     
     @objc(generateProof:resolver:rejecter:)
     func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -513,9 +458,11 @@ class MoproCircomBridge: NSObject {
     }
 }
 
+
+
 public protocol MoproCircomProtocol {
     func generateProof(circuitInputs: [String: [String]])  throws -> GenerateProofResult
-    func setup(wasmPath: String, r1csPath: String)  throws -> SetupResult
+    func initialize(arkzkeyPath: String, wasmPath: String)  throws
     func verifyProof(proof: Data, publicInput: Data)  throws -> Bool
     
 }
@@ -555,16 +502,14 @@ public class MoproCircom: MoproCircomProtocol {
         )
     }
 
-    public func setup(wasmPath: String, r1csPath: String) throws -> SetupResult {
-        return try  FfiConverterTypeSetupResult.lift(
-            try 
+    public func initialize(arkzkeyPath: String, wasmPath: String) throws {
+        try 
     rustCallWithError(FfiConverterTypeMoproError.lift) {
-    uniffi_mopro_ffi_fn_method_moprocircom_setup(self.pointer, 
-        FfiConverterString.lower(wasmPath),
-        FfiConverterString.lower(r1csPath),$0
+    uniffi_mopro_ffi_fn_method_moprocircom_initialize(self.pointer, 
+        FfiConverterString.lower(arkzkeyPath),
+        FfiConverterString.lower(wasmPath),$0
     )
 }
-        )
     }
 
     public func verifyProof(proof: Data, publicInput: Data) throws -> Bool {
@@ -624,15 +569,13 @@ public struct BenchmarkResult {
     public var numMsm: UInt32
     public var avgProcessingTime: Double
     public var totalProcessingTime: Double
-    public var allocatedMemory: UInt32
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(numMsm: UInt32, avgProcessingTime: Double, totalProcessingTime: Double, allocatedMemory: UInt32) {
+    public init(numMsm: UInt32, avgProcessingTime: Double, totalProcessingTime: Double) {
         self.numMsm = numMsm
         self.avgProcessingTime = avgProcessingTime
         self.totalProcessingTime = totalProcessingTime
-        self.allocatedMemory = allocatedMemory
     }
 }
 
@@ -648,9 +591,6 @@ extension BenchmarkResult: Equatable, Hashable {
         if lhs.totalProcessingTime != rhs.totalProcessingTime {
             return false
         }
-        if lhs.allocatedMemory != rhs.allocatedMemory {
-            return false
-        }
         return true
     }
 
@@ -658,7 +598,6 @@ extension BenchmarkResult: Equatable, Hashable {
         hasher.combine(numMsm)
         hasher.combine(avgProcessingTime)
         hasher.combine(totalProcessingTime)
-        hasher.combine(allocatedMemory)
     }
 }
 
@@ -668,8 +607,7 @@ public struct FfiConverterTypeBenchmarkResult: FfiConverterRustBuffer {
         return try BenchmarkResult(
             numMsm: FfiConverterUInt32.read(from: &buf), 
             avgProcessingTime: FfiConverterDouble.read(from: &buf), 
-            totalProcessingTime: FfiConverterDouble.read(from: &buf), 
-            allocatedMemory: FfiConverterUInt32.read(from: &buf)
+            totalProcessingTime: FfiConverterDouble.read(from: &buf)
         )
     }
 
@@ -677,7 +615,6 @@ public struct FfiConverterTypeBenchmarkResult: FfiConverterRustBuffer {
         FfiConverterUInt32.write(value.numMsm, into: &buf)
         FfiConverterDouble.write(value.avgProcessingTime, into: &buf)
         FfiConverterDouble.write(value.totalProcessingTime, into: &buf)
-        FfiConverterUInt32.write(value.allocatedMemory, into: &buf)
     }
 }
 
@@ -916,53 +853,6 @@ public func FfiConverterTypeProofCalldata_lift(_ buf: RustBuffer) throws -> Proo
 
 public func FfiConverterTypeProofCalldata_lower(_ value: ProofCalldata) -> RustBuffer {
     return FfiConverterTypeProofCalldata.lower(value)
-}
-
-
-public struct SetupResult {
-    public var provingKey: Data
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(provingKey: Data) {
-        self.provingKey = provingKey
-    }
-}
-
-
-extension SetupResult: Equatable, Hashable {
-    public static func ==(lhs: SetupResult, rhs: SetupResult) -> Bool {
-        if lhs.provingKey != rhs.provingKey {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(provingKey)
-    }
-}
-
-
-public struct FfiConverterTypeSetupResult: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SetupResult {
-        return try SetupResult(
-            provingKey: FfiConverterData.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: SetupResult, into buf: inout [UInt8]) {
-        FfiConverterData.write(value.provingKey, into: &buf)
-    }
-}
-
-
-public func FfiConverterTypeSetupResult_lift(_ buf: RustBuffer) throws -> SetupResult {
-    return try FfiConverterTypeSetupResult.lift(buf)
-}
-
-public func FfiConverterTypeSetupResult_lower(_ value: SetupResult) -> RustBuffer {
-    return FfiConverterTypeSetupResult.lower(value)
 }
 
 public enum MoproError {
@@ -1209,7 +1099,7 @@ private var initializationResult: InitializationResult {
     if (uniffi_mopro_ffi_checksum_method_moprocircom_generate_proof() != 64602) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_mopro_ffi_checksum_method_moprocircom_setup() != 57700) {
+    if (uniffi_mopro_ffi_checksum_method_moprocircom_initialize() != 36559) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_mopro_ffi_checksum_method_moprocircom_verify_proof() != 61522) {

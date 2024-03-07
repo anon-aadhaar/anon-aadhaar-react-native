@@ -129,7 +129,7 @@ export default function App() {
       />
 
       {isQrScanned && sigVerified && (
-        <Text>QR Code Scanned and signature verified ✅.</Text>
+        <Text>QR Code Scanned and signature verified ✅</Text>
       )}
 
       <TouchableOpacity

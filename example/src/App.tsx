@@ -61,15 +61,13 @@ export default function App() {
   useEffect(() => {
     if (qrCodeValue !== '') {
       setIsQrScanned(true);
-      setIsVerifyingSig(true);
       verifySignature(qrCodeValue)
         .then((isVerified) => {
-          setIsVerifyingSig(false);
           if (isVerified) {
             setSigVerified(true);
             circuitInputsFromQR(qrCodeValue).then((args) => {
-              console.log('Args for proof: ', args);
               setAnonAadhaarArgs(args);
+              setIsVerifyingSig(false);
             });
           }
         })
@@ -126,6 +124,7 @@ export default function App() {
         cameraOn={cameraOn}
         setCameraOn={setCameraOn}
         setQrCodeValue={setQrCodeValue}
+        setIsVerifyingSig={setIsVerifyingSig}
       />
 
       {isQrScanned && sigVerified && (

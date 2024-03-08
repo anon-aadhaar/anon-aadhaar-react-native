@@ -15,7 +15,6 @@ import certificateTest from './certificate';
  * the signature against the signed data.
  *
  * @param {string} qrData - The string representation of the data to be verified.
- * @param {boolean} useTestAadhaar - A flag indicating whether to use the test Aadhaar Data or real Aadhaar data.
  * @returns {Promise<boolean>} A promise that resolves to a boolean indicating if the signature is valid.
  *
  * @remarks

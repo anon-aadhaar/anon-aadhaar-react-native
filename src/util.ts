@@ -9,30 +9,6 @@ export function str2ab(str: string) {
   return buf;
 }
 
-/**
- * Fetch the public key certificate from the serverless function endpoint.
- * @param url Endpoint URL to fetch the public key.
- * @returns {Promise<string | null>} The official Aadhaar public key.
- */
-export const fetchCertificateFile = async (
-  certUrl: string
-): Promise<string | null> => {
-  try {
-    const response = await fetch(
-      `https://nodejs-serverless-function-express-eight-iota.vercel.app/api/get-raw-pk?url=${certUrl}`
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch public key from server`);
-    }
-
-    const { certData } = await response.json();
-    return certData;
-  } catch (error) {
-    console.error('Error fetching public key:', error);
-    return null;
-  }
-};
-
 export function convertBigIntToByteArray(bigInt: bigint) {
   const byteLength = Math.max(1, Math.ceil(bigInt.toString(2).length / 8));
 
@@ -51,6 +27,7 @@ export function decompressByteArray(byteArray: Uint8Array) {
   return decompressedArray;
 }
 
+// Utils from zk-email
 export function uint8ArrayToHex(byteArray: Uint8Array) {
   return Array.from(byteArray)
     .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -64,6 +41,7 @@ function int64toBytes(num: number): Uint8Array {
   return new Uint8Array(arr);
 }
 
+// Utils from zk-email
 export function mergeUInt8Arrays(a1: Uint8Array, a2: Uint8Array): Uint8Array {
   // sum of individual array lengths
   var mergedArray = new Uint8Array(a1.length + a2.length);
@@ -72,6 +50,7 @@ export function mergeUInt8Arrays(a1: Uint8Array, a2: Uint8Array): Uint8Array {
   return mergedArray;
 }
 
+// Utils from zk-email
 // Works only on 32 bit sha text lengths
 export function int8toBytes(num: number): Uint8Array {
   let arr = new ArrayBuffer(1); // an Int8 takes 4 bytes
@@ -80,12 +59,14 @@ export function int8toBytes(num: number): Uint8Array {
   return new Uint8Array(arr);
 }
 
+// Utils from zk-email
 export function assert(cond: boolean, errorMessage: string) {
   if (!cond) {
     throw new Error(errorMessage);
   }
 }
 
+// Utils from zk-email
 export function sha256Pad(
   prehash_prepad_m: Uint8Array,
   maxShaBytes: number
@@ -137,6 +118,7 @@ export function splitToWords(
   return words;
 }
 
+// Utils from zk-email
 export function Uint8ArrayToCharArray(a: Uint8Array): string[] {
   return Array.from(a).map((x) => x.toString());
 }

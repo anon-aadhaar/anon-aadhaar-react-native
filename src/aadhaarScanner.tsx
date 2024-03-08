@@ -10,12 +10,14 @@ type AadhaarScannerProps = {
   cameraOn: boolean;
   setCameraOn: React.Dispatch<React.SetStateAction<boolean>>;
   setQrCodeValue: React.Dispatch<React.SetStateAction<string>>;
+  setIsVerifyingSig: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function AadhaarScanner({
   cameraOn,
   setCameraOn,
   setQrCodeValue,
+  setIsVerifyingSig,
 }: AadhaarScannerProps) {
   const device = useCameraDevice('back');
 
@@ -25,6 +27,7 @@ export function AadhaarScanner({
       if (codes[0]?.value) {
         setQrCodeValue(codes[0]?.value);
         setCameraOn(false);
+        setIsVerifyingSig(true);
       }
     },
   });

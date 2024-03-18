@@ -75,12 +75,14 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'left',
     marginTop: 20,
+    fontFamily: 'Outfit-Bold',
   },
   subHeading: {
     fontSize: 16,
     color: '#b8b8b8',
     textAlign: 'left',
     marginTop: 10,
+    fontFamily: 'Outfit-Regular',
   },
   brandLogo: {
     width: 50,
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 70,
     paddingVertical: 10,
-    backgroundColor: '#306030',
+    backgroundColor: '#41644a',
     borderRadius: 50,
   },
   buttonText: {

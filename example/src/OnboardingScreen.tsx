@@ -1,4 +1,10 @@
-import React, { useState, type FunctionComponent } from 'react';
+import React, {
+  useState,
+  type FunctionComponent,
+  useEffect,
+  type SetStateAction,
+  type Dispatch,
+} from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,9 +15,11 @@ import {
   Dimensions,
 } from 'react-native';
 import messages from '../assets/messages.json';
+import { CircularProgress } from './CircleProgress';
 
 export type OnboardingScreenProps = {
-  setupReady: boolean;
+  setupReady?: boolean;
+  setCurrentScreen: Dispatch<SetStateAction<string>>;
 };
 
 const images = [
@@ -22,11 +30,15 @@ const images = [
   require('../assets/image5.png'),
 ];
 
+const setupTime = 70000; // 70 seconds in milliseconds
+
 export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   setupReady,
+  setCurrentScreen,
 }) => {
   const [counter, setCounter] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [setupProgress, setSetupProgress] = useState<number>(0);
 
   const incrementCounter = () => {
     setIsLoading(true);
@@ -36,6 +48,21 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   const onLoadEvent = () => {
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSetupProgress((prevProgress) => {
+        if (prevProgress < 1) {
+          return prevProgress + 1 / (setupTime / 1000);
+        } else {
+          clearInterval(interval);
+          return 1;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -56,10 +83,17 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
           </Text>
         </View>
         <View style={styles.footer}>
-          <Image
-            source={require('../assets/logo.png')}
-            style={styles.brandLogo}
-          />
+          <View style={styles.logoContainer}>
+            <CircularProgress
+              size={65}
+              strokeWidth={3}
+              progress={setupProgress}
+            />
+            <Image
+              source={require('../assets/logo.png')}
+              style={styles.brandLogo}
+            />
+          </View>
           {counter === 5 ? (
             setupReady ? (
               <TouchableOpacity
@@ -73,6 +107,15 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
                 <Text style={styles.buttonText}>Get started!</Text>
               </TouchableOpacity>
             )
+          ) : setupReady ? (
+            <TouchableOpacity style={styles.button}>
+              <Text
+                style={styles.buttonText}
+                onPress={() => setCurrentScreen('Main')}
+              >
+                Get started!
+              </Text>
+            </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.button} onPress={incrementCounter}>
               <Text style={styles.buttonText}>→</Text>
@@ -147,5 +190,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 24,
     color: '#FFFFFF',
+  },
+  logoContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

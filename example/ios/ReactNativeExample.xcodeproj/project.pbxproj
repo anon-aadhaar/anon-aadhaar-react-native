@@ -8,21 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ReactNativeExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ReactNativeExampleTests.m */; };
+		017945B206274520A2080942 /* Outfit-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */; };
 		08F8029BF4CCDB71FE4E05C2 /* libPods-ReactNativeExample-ReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95C513C94EFE9B2A8E4E7231 /* libPods-ReactNativeExample-ReactNativeExampleTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		91E1787BCDE8E86417A34746 /* libPods-ReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 812A16FF5323627D56542DA9 /* libPods-ReactNativeExample.a */; };
-		CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 407481BCA05145F69B088154 /* Outfit-Black.ttf */; };
-		8EBDC35B62F34BBF9E16171C /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */; };
 		3573A49363A04C70B2433036 /* Outfit-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5E0BC6AA40E437D82AA05D6 /* Outfit-ExtraBold.ttf */; };
-		CD6D3B608609441FB2F779C3 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */; };
-		C3A79DB10DB742F5A12812B6 /* Outfit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF80CFFA256443138A5869FD /* Outfit-Light.ttf */; };
-		B8ECFAEE9AB24C89A6FB50DE /* Outfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */; };
-		E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */; };
 		6082BFBEEA17432EB7F8992D /* Outfit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */; };
-		017945B206274520A2080942 /* Outfit-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8EBDC35B62F34BBF9E16171C /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */; };
+		91E1787BCDE8E86417A34746 /* libPods-ReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 812A16FF5323627D56542DA9 /* libPods-ReactNativeExample.a */; };
+		B8ECFAEE9AB24C89A6FB50DE /* Outfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */; };
+		C3A79DB10DB742F5A12812B6 /* Outfit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF80CFFA256443138A5869FD /* Outfit-Light.ttf */; };
+		CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 407481BCA05145F69B088154 /* Outfit-Black.ttf */; };
+		CD6D3B608609441FB2F779C3 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */; };
+		E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,22 +60,22 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReactNativeExample/main.m; sourceTree = "<group>"; };
 		36EA9A4F17E2B653FCCD3577 /* Pods-ReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeExample/Pods-ReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		3C5642208B9987584639C712 /* Pods-ReactNativeExample-ReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeExample-ReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeExample-ReactNativeExampleTests/Pods-ReactNativeExample-ReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		407481BCA05145F69B088154 /* Outfit-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Black.ttf"; path = "../assets/fonts/Outfit-Black.ttf"; sourceTree = "<group>"; };
+		51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Medium.ttf"; path = "../assets/fonts/Outfit-Medium.ttf"; sourceTree = "<group>"; };
+		63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Regular.ttf"; path = "../assets/fonts/Outfit-Regular.ttf"; sourceTree = "<group>"; };
 		78B2221A54921C64162B7B49 /* Pods-ReactNativeExample-ReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeExample-ReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeExample-ReactNativeExampleTests/Pods-ReactNativeExample-ReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		812A16FF5323627D56542DA9 /* libPods-ReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95C513C94EFE9B2A8E4E7231 /* libPods-ReactNativeExample-ReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeExample-ReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5E0BC6AA40E437D82AA05D6 /* Outfit-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-ExtraBold.ttf"; path = "../assets/fonts/Outfit-ExtraBold.ttf"; sourceTree = "<group>"; };
+		B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Bold.ttf"; path = "../assets/fonts/Outfit-Bold.ttf"; sourceTree = "<group>"; };
+		BF80CFFA256443138A5869FD /* Outfit-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Light.ttf"; path = "../assets/fonts/Outfit-Light.ttf"; sourceTree = "<group>"; };
+		CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-ExtraLight.ttf"; path = "../assets/fonts/Outfit-ExtraLight.ttf"; sourceTree = "<group>"; };
+		D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Thin.ttf"; path = "../assets/fonts/Outfit-Thin.ttf"; sourceTree = "<group>"; };
 		DA4B1BB8E4374D3F68C96DCF /* Pods-ReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeExample/Pods-ReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
+		E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-SemiBold.ttf"; path = "../assets/fonts/Outfit-SemiBold.ttf"; sourceTree = "<group>"; };
 		E625A2E42B98A11600B5A0EF /* libanon-aadhaar-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libanon-aadhaar-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		407481BCA05145F69B088154 /* Outfit-Black.ttf */ = {isa = PBXFileReference; name = "Outfit-Black.ttf"; path = "../assets/fonts/Outfit-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; name = "Outfit-Bold.ttf"; path = "../assets/fonts/Outfit-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A5E0BC6AA40E437D82AA05D6 /* Outfit-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Outfit-ExtraBold.ttf"; path = "../assets/fonts/Outfit-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Outfit-ExtraLight.ttf"; path = "../assets/fonts/Outfit-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BF80CFFA256443138A5869FD /* Outfit-Light.ttf */ = {isa = PBXFileReference; name = "Outfit-Light.ttf"; path = "../assets/fonts/Outfit-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */ = {isa = PBXFileReference; name = "Outfit-Medium.ttf"; path = "../assets/fonts/Outfit-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */ = {isa = PBXFileReference; name = "Outfit-Regular.ttf"; path = "../assets/fonts/Outfit-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */ = {isa = PBXFileReference; name = "Outfit-SemiBold.ttf"; path = "../assets/fonts/Outfit-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */ = {isa = PBXFileReference; name = "Outfit-Thin.ttf"; path = "../assets/fonts/Outfit-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,19 +171,8 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				36EA9A4F17E2B653FCCD3577 /* Pods-ReactNativeExample.debug.xcconfig */,
-				DA4B1BB8E4374D3F68C96DCF /* Pods-ReactNativeExample.release.xcconfig */,
-				3C5642208B9987584639C712 /* Pods-ReactNativeExample-ReactNativeExampleTests.debug.xcconfig */,
-				78B2221A54921C64162B7B49 /* Pods-ReactNativeExample-ReactNativeExampleTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		B7D90E0492DA4DFB9315DB99 /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				407481BCA05145F69B088154 /* Outfit-Black.ttf */,
 				B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */,
@@ -196,8 +185,19 @@
 				D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
+		};
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				36EA9A4F17E2B653FCCD3577 /* Pods-ReactNativeExample.debug.xcconfig */,
+				DA4B1BB8E4374D3F68C96DCF /* Pods-ReactNativeExample.release.xcconfig */,
+				3C5642208B9987584639C712 /* Pods-ReactNativeExample-ReactNativeExampleTests.debug.xcconfig */,
+				78B2221A54921C64162B7B49 /* Pods-ReactNativeExample-ReactNativeExampleTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 

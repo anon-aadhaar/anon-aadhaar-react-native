@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import {
   useCodeScanner,
   Camera,
@@ -52,6 +52,15 @@ export function AadhaarScanner({
           codeScanner={codeScanner}
         />
       </View>
+      <View style={styles.overlay}>
+        <Text style={styles.scannerText}>Read your secure Aadhaar QR code</Text>
+        <View style={styles.cutout}>
+          <View style={[styles.edgeStyle, styles.topLeftEdge]} />
+          <View style={[styles.edgeStyle, styles.topRightEdge]} />
+          <View style={[styles.edgeStyle, styles.bottomLeftEdge]} />
+          <View style={[styles.edgeStyle, styles.bottomRightEdge]} />
+        </View>
+      </View>
     </Modal>
   );
 }
@@ -62,10 +71,85 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
+  // camera: {
+  //   height: '100%',
+  //   width: '100%',
+  //   alignSelf: 'center',
+  // },
+  cutout: {
+    height: 350, // The size of the QR code cutout
+    width: 350,
+    borderColor: '#000', // Border color from your design
+  },
+  // overlay: {
+  //   position: 'absolute', // Overlay must be absolutely positioned
+  //   top: 0, // Full overlay over the camera view
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 0,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   backgroundColor: 'transparent', // Transparent background
+  // },
   camera: {
-    flex: 1,
-    width: '100%',
+    height: '100%', // Take up full height
+    width: '100%', // Take up full width
+    alignSelf: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cornerOverlay: {
+    position: 'absolute',
+    width: 30, // Width of the edge overlays
+    height: 30, // Height of the edge overlays
+  },
+  topLeftEdge: {
+    borderTopColor: 'orange', // Color of top edge
+    borderLeftColor: 'orange', // Color of left edge
+    top: 0,
+    left: 0,
+    width: 50, // Length of the edge lines, adjust as needed
+    height: 50, // Length of the edge lines, adjust as needed
+  },
+  topRightEdge: {
+    borderTopColor: 'white', // Color of top edge
+    borderRightColor: 'white', // Color of right edge
+    top: 0,
+    right: 0,
+    width: 50, // Length of the edge lines, adjust as needed
+    height: 50, // Length of the edge lines, adjust as needed
+  },
+  bottomLeftEdge: {
+    borderBottomColor: 'white', // Color of bottom edge
+    borderLeftColor: 'white', // Color of left edge
+    bottom: 0,
+    left: 0,
+    width: 50, // Length of the edge lines, adjust as needed
+    height: 50, // Length of the edge lines, adjust as needed
+  },
+  bottomRightEdge: {
+    borderBottomColor: 'green', // Color of bottom edge
+    borderRightColor: 'green', // Color of right edge
+    bottom: 0,
+    right: 0,
+    width: 50, // Length of the edge lines, adjust as needed
+    height: 50, // Length of the edge lines, adjust as needed
+  },
+  edgeStyle: {
+    position: 'absolute',
+    borderColor: 'transparent',
+    borderWidth: 10, // Width of the edge lines, adjust as needed
+  },
+  scannerText: {
+    position: 'absolute',
+    top: 50, // Adjust as needed
+    color: '#FFF', // White text to match your design
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });

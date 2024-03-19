@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { ProofModal } from './ProofModal';
 
 export type MainScreenProps = {
   //
@@ -21,6 +22,7 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           <TouchableOpacity style={styles.buttonWhite}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
+          <ProofModal buttonMessage="Start" />
         </View>
       </View>
     </SafeAreaView>

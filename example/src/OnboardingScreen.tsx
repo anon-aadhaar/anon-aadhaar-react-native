@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,23 +8,51 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import messages from '../assets/messages.json';
 
-export default function OnboardingScreen() {
+export type OnboardingScreenProps = {
+  setupReady: boolean;
+};
+
+const images = [
+  require('../assets/image1.png'),
+  require('../assets/image2.png'),
+  require('../assets/image3.png'),
+  require('../assets/image4.png'),
+  require('../assets/image5.png'),
+];
+
+export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
+  setupReady,
+}) => {
+  const [counter, setCounter] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const incrementCounter = () => {
+    setIsLoading(true);
+    setCounter((prevCounter) => (prevCounter === 5 ? 1 : prevCounter + 1));
+  };
+
+  const onLoadEvent = () => {
+    setIsLoading(false);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.content}>
         <View style={styles.scrollView}>
+          {isLoading && null}
           <Image
-            source={require('../assets/image.png')}
+            source={images[counter]}
             style={styles.topImage}
+            onLoad={onLoadEvent}
           />
+
           <Text style={styles.heading}>
-            Validate Aadhaar ownership seamlessly
+            {messages[counter.toString() as keyof typeof messages].headline}
           </Text>
           <Text style={styles.subHeading}>
-            Dive into the Anon Aadhaar protocol with this tool. It utilizes
-            zero-knowledge to ensure your privacy while impressing you from the
-            start.
+            {messages[counter.toString() as keyof typeof messages].subline}
           </Text>
         </View>
         <View style={styles.footer}>
@@ -32,14 +60,29 @@ export default function OnboardingScreen() {
             source={require('../assets/logo.png')}
             style={styles.brandLogo}
           />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>→</Text>
-          </TouchableOpacity>
+          {counter === 5 ? (
+            setupReady ? (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={incrementCounter}
+              >
+                <Text style={styles.buttonText}>Get started!</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.buttonDisabled}>
+                <Text style={styles.buttonText}>Get started!</Text>
+              </TouchableOpacity>
+            )
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={incrementCounter}>
+              <Text style={styles.buttonText}>→</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
@@ -92,7 +135,13 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 70,
     paddingVertical: 10,
-    backgroundColor: '#41644a',
+    backgroundColor: '#06753b',
+    borderRadius: 50,
+  },
+  buttonDisabled: {
+    paddingHorizontal: 70,
+    paddingVertical: 10,
+    backgroundColor: '#51785a',
     borderRadius: 50,
   },
   buttonText: {

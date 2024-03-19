@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {
   generateProof,
-  setupMopro,
   verifyProof,
   AadhaarScanner,
   verifySignature,
@@ -17,8 +16,7 @@ import {
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../src/generateInputs';
 
-export default function BenchmarkView() {
-  const [setupReady, setSetupReady] = useState<boolean>(false);
+export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
@@ -40,23 +38,6 @@ export default function BenchmarkView() {
     proof: number;
     verify: number;
   }>({ setup: 0, proof: 0, verify: 0 });
-
-  useEffect(() => {
-    const startSetup = Date.now();
-    try {
-      if (!setupReady) {
-        setupMopro().then(() => {
-          setSetupReady(true);
-          setExecutionTime((prev) => ({
-            ...prev,
-            setup: Date.now() - startSetup,
-          }));
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }, [setupReady]);
 
   useEffect(() => {
     if (qrCodeValue !== '') {

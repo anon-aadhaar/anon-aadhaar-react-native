@@ -1,6 +1,8 @@
 import {
   AadhaarScanner,
   circuitInputsFromQR,
+  generateProof,
+  verifyProof,
   verifySignature,
 } from '@anon-aadhaar/react-native';
 import React, { useEffect, useState } from 'react';
@@ -12,9 +14,11 @@ import {
   Pressable,
   View,
   ActivityIndicator,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 
-export const Screen1 = ({ setCurrentScreen }) => {
+export const Screen1 = ({ setCurrentScreen }: { setCurrentScreen: any }) => {
   return (
     <>
       <Text style={styles.header}>Instruction</Text>
@@ -40,75 +44,102 @@ export const Screen1 = ({ setCurrentScreen }) => {
 export const LoaderScreen = () => {
   return (
     <>
+      <Text />
       <ActivityIndicator />
-      <Text>We are verifying your document...</Text>
-    </>
-  );
-};
-
-export const SignatureVerifiedScreen = () => {
-  return (
-    <>
-      <Text>Your document is verified 🎉</Text>
+      <Text style={styles.resultText}>We are verifying your document...</Text>
+      <Text />
     </>
   );
 };
 
 const Screen2 = ({
-  setIsVerifyingSig,
   setCurrentScreen,
-  setAnonAadhaarArgs,
+  setQrCodeValue,
+}: {
+  setCurrentScreen: any;
+  setQrCodeValue: any;
 }) => {
   const [cameraOn, setCameraOn] = useState<boolean>(false);
-  const [qrCodeValue, setQrCodeValue] = useState<string>('');
-
-  useEffect(() => {
-    if (qrCodeValue !== '') {
-      verifySignature(qrCodeValue)
-        .then((isVerified) => {
-          if (isVerified) {
-            circuitInputsFromQR(qrCodeValue).then((args) => {
-              setAnonAadhaarArgs(args);
-              setIsVerifyingSig(false);
-              setCurrentScreen('sigVerified');
-            });
-          }
-        })
-        .catch((e) => {
-          setIsVerifyingSig(false);
-          console.error(e);
-        });
-    }
-  }, [qrCodeValue, setAnonAadhaarArgs, setCurrentScreen, setIsVerifyingSig]);
 
   return (
     <>
       <Text style={styles.header}>Read your secure Aadhaar QR code</Text>
 
-      <Pressable style={styles.actionButton}>
-        <Text style={styles.buttonText} onPress={() => setCameraOn(true)}>
-          Scan QR Code
-        </Text>
-      </Pressable>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => setCameraOn(true)}
+      >
+        <Text style={styles.buttonText}>Scan QR Code</Text>
+      </TouchableOpacity>
       <AadhaarScanner
         cameraOn={cameraOn}
         setCameraOn={setCameraOn}
         setQrCodeValue={setQrCodeValue}
-        setIsVerifyingSig={setIsVerifyingSig}
+        setCurrentScreen={setCurrentScreen}
       />
       <Text>OR</Text>
-      <Pressable style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton}>
         <Text style={styles.buttonText}>Upload PNG</Text>
-      </Pressable>
+      </TouchableOpacity>
       <View>{''}</View>
     </>
   );
 };
 
-export const ProofModal = ({ buttonMessage }: { buttonMessage: string }) => {
+const ProveScreen = ({
+  anonAadhaarArgs,
+  setProofVerified,
+  setProofs,
+}: {
+  anonAadhaarArgs: any;
+  setProofVerified: any;
+  setProofs: any;
+}) => {
+  const [isProving, setIsProving] = useState<boolean>(false);
+
+  const genProof = async () => {
+    setIsProving(true);
+    const { proof, inputs } = await generateProof(anonAadhaarArgs);
+    const res = await verifyProof(proof, inputs);
+    setProofs({ proof, inputs });
+    setProofVerified(res);
+    setIsProving(false);
+  };
+
+  return (
+    <>
+      <Text />
+      <Text style={styles.resultText}>Your document is verified 🎉</Text>
+      <Text />
+
+      {isProving ? (
+        <>
+          <ActivityIndicator size="large" color="#06753b" />
+          <Text style={styles.buttonText}>
+            Generating your proof of identity...
+          </Text>
+        </>
+      ) : (
+        <TouchableOpacity style={styles.buttonGreen} onPress={() => genProof()}>
+          <Text style={styles.buttonText}>Generate your proof</Text>
+        </TouchableOpacity>
+      )}
+      <View>{''}</View>
+    </>
+  );
+};
+
+export const ProofModal = ({
+  buttonMessage,
+  setProofs,
+}: {
+  buttonMessage: string;
+  setProofs: any;
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('screen1');
-  const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
+  const [qrCodeValue, setQrCodeValue] = useState<string>('');
+  const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
     aadhaarData: string[];
     aadhaarDataLength: string[];
@@ -118,12 +149,30 @@ export const ProofModal = ({ buttonMessage }: { buttonMessage: string }) => {
   } | null>(null);
 
   useEffect(() => {
-    if (anonAadhaarArgs) console.log(anonAadhaarArgs);
-  }, [anonAadhaarArgs]);
+    if (proofVerified) onCloseModal();
+  }, [proofVerified]);
+
+  const onCloseModal = () => {
+    setModalVisible(false);
+    setCurrentScreen('screen1');
+  };
 
   useEffect(() => {
-    if (isVerifyingSig === true) setCurrentScreen('Loading');
-  }, [isVerifyingSig]);
+    if (qrCodeValue !== '') {
+      verifySignature(qrCodeValue)
+        .then((isVerified) => {
+          if (isVerified) {
+            circuitInputsFromQR(qrCodeValue).then((args) => {
+              setAnonAadhaarArgs(args);
+              setCurrentScreen('sigVerified');
+            });
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [qrCodeValue, setAnonAadhaarArgs, setCurrentScreen]);
 
   return (
     <View style={styles.centeredView}>
@@ -136,37 +185,37 @@ export const ProofModal = ({ buttonMessage }: { buttonMessage: string }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {(() => {
-              switch (currentScreen) {
-                case 'screen1':
-                  return (
-                    <Screen1
-                      setModalVisible={setModalVisible}
-                      modalVisible={modalVisible}
-                      setCurrentScreen={setCurrentScreen}
-                    />
-                  );
-                case 'screen2':
-                  return (
-                    <Screen2
-                      isVerifyingSig={isVerifyingSig}
-                      setIsVerifyingSig={setIsVerifyingSig}
-                      setCurrentScreen={setCurrentScreen}
-                      setAnonAadhaarArgs={setAnonAadhaarArgs}
-                    />
-                  );
-                case 'Loading':
-                  return <LoaderScreen />;
-                case 'sigVerified':
-                  return <SignatureVerifiedScreen />;
-                default:
-                  return null;
-              }
-            })()}
+        <TouchableWithoutFeedback onPress={onCloseModal}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              {(() => {
+                switch (currentScreen) {
+                  case 'screen1':
+                    return <Screen1 setCurrentScreen={setCurrentScreen} />;
+                  case 'screen2':
+                    return (
+                      <Screen2
+                        setCurrentScreen={setCurrentScreen}
+                        setQrCodeValue={setQrCodeValue}
+                      />
+                    );
+                  case 'loading':
+                    return <LoaderScreen />;
+                  case 'sigVerified':
+                    return (
+                      <ProveScreen
+                        setProofVerified={setProofVerified}
+                        anonAadhaarArgs={anonAadhaarArgs}
+                        setProofs={setProofs}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })()}
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <Pressable
         style={styles.buttonWhite}
@@ -266,6 +315,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Outfit-Light',
     color: '#06753b',
+    textAlign: 'center',
+  },
+  resultText: {
+    fontSize: 20,
+    fontFamily: 'Outfit-Regular',
+    color: '#E86A33',
     textAlign: 'center',
   },
 });

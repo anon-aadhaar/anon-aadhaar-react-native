@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import messages from '../assets/messages.json';
 import { CircularProgress } from './CircleProgress';
+import { ProgressBar } from './ProgressBar';
 
 export type OnboardingScreenProps = {
   setupReady?: boolean;
@@ -36,14 +37,22 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   setupReady,
   setCurrentScreen,
 }) => {
-  const [counter, setCounter] = useState<number>(1);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [setupProgress, setSetupProgress] = useState<number>(0);
 
   const incrementCounter = () => {
     setIsLoading(true);
-    setCounter((prevCounter) => (prevCounter === 5 ? 1 : prevCounter + 1));
+    setActiveIndex((prevCounter) => (prevCounter === 4 ? 0 : prevCounter + 1));
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      incrementCounter();
+    }, 8000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const onLoadEvent = () => {
     setIsLoading(false);
@@ -70,17 +79,18 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
         <View style={styles.scrollView}>
           {isLoading && null}
           <Image
-            source={images[counter]}
+            source={images[activeIndex]}
             style={styles.topImage}
             onLoad={onLoadEvent}
           />
 
           <Text style={styles.heading}>
-            {messages[counter.toString() as keyof typeof messages].headline}
+            {messages[activeIndex.toString() as keyof typeof messages].headline}
           </Text>
           <Text style={styles.subHeading}>
-            {messages[counter.toString() as keyof typeof messages].subline}
+            {messages[activeIndex.toString() as keyof typeof messages].subline}
           </Text>
+          <ProgressBar currentIndex={activeIndex} itemCount={5} />
         </View>
         <View style={styles.footer}>
           <View style={styles.logoContainer}>
@@ -94,31 +104,17 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
               style={styles.brandLogo}
             />
           </View>
-          {counter === 5 ? (
-            setupReady ? (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={incrementCounter}
-              >
-                <Text style={styles.buttonText}>Get started!</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={styles.buttonDisabled}>
-                <Text style={styles.buttonText}>Get started!</Text>
-              </TouchableOpacity>
-            )
-          ) : setupReady ? (
-            <TouchableOpacity style={styles.button}>
-              <Text
-                style={styles.buttonText}
-                onPress={() => setCurrentScreen('Main')}
-              >
-                Get started!
-              </Text>
+
+          {setupReady ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentScreen('Main')}
+            >
+              <Text style={styles.buttonText}>Get started!</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.button} onPress={incrementCounter}>
-              <Text style={styles.buttonText}>→</Text>
+            <TouchableOpacity style={styles.buttonDisabled}>
+              <Text style={styles.buttonText}>Please wait...</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -145,7 +141,6 @@ const styles = StyleSheet.create({
     width: screenWidth - 40, // Assuming 20 padding on each side
     height: (screenWidth - 40) * (416 / 390),
     resizeMode: 'contain',
-    marginTop: 20,
   },
   footer: {
     flexDirection: 'row',
@@ -177,13 +172,13 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingHorizontal: 70,
-    paddingVertical: 10,
+    paddingVertical: 15,
     backgroundColor: '#06753b',
     borderRadius: 50,
   },
   buttonDisabled: {
     paddingHorizontal: 70,
-    paddingVertical: 10,
+    paddingVertical: 15,
     backgroundColor: '#51785a',
     borderRadius: 50,
   },

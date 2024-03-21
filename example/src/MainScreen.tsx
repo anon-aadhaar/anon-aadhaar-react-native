@@ -1,4 +1,4 @@
-import React, { type FunctionComponent } from 'react';
+import React, { useState, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,6 +13,8 @@ export type MainScreenProps = {
 };
 
 export const MainScreen: FunctionComponent<MainScreenProps> = () => {
+  const [proofs, setProofs] = useState();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.scrollView}>
@@ -22,8 +24,15 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           <TouchableOpacity style={styles.buttonWhite}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
-          <ProofModal buttonMessage="Start" />
+          <ProofModal buttonMessage="Start" setProofs={setProofs} />
         </View>
+        {proofs && (
+          <View style={styles.orangeSection}>
+            <Text style={styles.proofSectionText}>
+              Identity Proof #1 - 03/19/20204
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -77,5 +86,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Outfit-Light',
     color: '#06753b',
     textAlign: 'center',
+  },
+  orangeSection: {
+    justifyContent: 'space-between',
+    backgroundColor: '#ec834b',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding: 10,
+  },
+  proofSectionText: {
+    fontFamily: 'Outfit-Bold',
+    color: 'white',
+    textAlign: 'left',
   },
 });

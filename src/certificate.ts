@@ -1,3 +1,6 @@
+// This is the official test data public key certificate issued by the UIDAI
+// data on https://www.uidai.gov.in/en/916-developer-section/data-and-downloads-section/11349-uidai-certificate-details.html
+
 const certificateTest: string = `-----BEGIN CERTIFICATE-----
 MIIF+jCCBOKgAwIBAgIEANbI0DANBgkqhkiG9w0BAQsFADCBkzELMAkGA1UEBhMCSU4xKjAoBgNV
 BAoTIWVNdWRocmEgQ29uc3VtZXIgU2VydmljZXMgTGltaXRlZDEdMBsGA1UECxMUQ2VydGlmeWlu

@@ -29,6 +29,16 @@ export async function circuitInputsFromQR(qrData: string) {
 
   const [paddedMsg, messageLen] = sha256Pad(signedData, 512 * 3);
 
+  const delimiterIndices: number[] = [];
+  for (let i = 0; i < paddedMsg.length; i++) {
+    if (paddedMsg[i] === 255) {
+      delimiterIndices.push(i);
+    }
+    if (delimiterIndices.length === 18) {
+      break;
+    }
+  }
+
   const publicKey = forge.pki.certificateFromPem(certificateTest).publicKey;
 
   const pubKey = BigInt(
@@ -38,13 +48,19 @@ export async function circuitInputsFromQR(qrData: string) {
   const signature = BigInt('0x' + uint8ArrayToHex(signatureBytes));
 
   return {
-    aadhaarData: Uint8ArrayToCharArray(paddedMsg),
-    aadhaarDataLength: [messageLen.toString()],
-    signature: splitToWords(signature, BigInt(64), BigInt(32)),
-    pubKey: splitToWords(pubKey, BigInt(64), BigInt(32)),
+    qrDataPadded: Uint8ArrayToCharArray(paddedMsg),
+    qrDataPaddedLength: [messageLen.toString()],
+    nonPaddedDataLength: [signedData.length.toString()],
+    delimiterIndices: delimiterIndices.map((x) => x.toString()),
+    signature: splitToWords(signature, BigInt(121), BigInt(17)),
+    pubKey: splitToWords(pubKey, BigInt(121), BigInt(17)),
     // Value of hash(1) hardcoded
     signalHash: [
       '312829776796408387545637016147278514583116203736587368460269838669765409292',
     ],
+    revealGender: ['0'],
+    revealAgeAbove18: ['0'],
+    revealState: ['0'],
+    revealPinCode: ['0'],
   };
 }

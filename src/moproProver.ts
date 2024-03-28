@@ -36,6 +36,9 @@ export async function generateProof(circuitInputs: any): Promise<{
     const proof = result.proof;
     const inputs = result.inputs;
 
+    // console.log(proof);
+    // console.log(inputs);
+
     return { proof, inputs };
   } catch (error) {
     console.error(error);

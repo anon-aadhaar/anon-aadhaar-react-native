@@ -404,22 +404,24 @@ class MoproCircomBridge: NSObject {
     @objc(initialize:rejecter:)
     func initialize(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         do {
-            guard let resourcePath = Bundle.main.resourcePath else {
-                reject("E_NO_RESOURCE_PATH", "Could not retrieve the main bundle's resource path.", nil)
-                return
-            }
+            try initializeMopro()
+            resolve(true)
+            // guard let resourcePath = Bundle.main.resourcePath else {
+            //     reject("E_NO_RESOURCE_PATH", "Could not retrieve the main bundle's resource path.", nil)
+            //     return
+            // }
 
-            let dylibURL = URL(fileURLWithPath: resourcePath)
-                               .appendingPathComponent("CircuitBindings.xcframework")
-                               .appendingPathComponent("ios-arm64")
-                               .appendingPathComponent("anonAadhaar.dylib")
+            // let dylibURL = URL(fileURLWithPath: resourcePath)
+            //                    .appendingPathComponent("CircuitBindings.xcframework")
+            //                    .appendingPathComponent("ios-arm64")
+            //                    .appendingPathComponent("anonAadhaar.dylib")
 
-            if FileManager.default.fileExists(atPath: dylibURL.path) {
-                try initializeMoproDylib(dylibPath: dylibURL.path)
-                resolve(true)
-            } else {
-                reject("E_NO_DYLIB", "Could not find anonAadhaar.dylib in the CircuitBindings.xcframework bundle.", nil)
-            }
+            // if FileManager.default.fileExists(atPath: dylibURL.path) {
+            //     try initializeMoproDylib(dylibPath: dylibURL.path)
+            //     resolve(true)
+            // } else {
+            //     reject("E_NO_DYLIB", "Could not find anonAadhaar.dylib in the CircuitBindings.xcframework bundle.", nil)
+            // }
         } catch let error {
             reject("E_GENERATE_PROOF_2", "Initialization failed: \(error.localizedDescription)", error)
         }
@@ -431,9 +433,26 @@ class MoproCircomBridge: NSObject {
             let inputs = circuitInputs as! [String: [String]]
             let result = try generateProof2(circuitInputs: inputs)
             
+            print(result.inputs.self)
+            
+            // Convert the proof Data to ProofCalldata format
+            let proofCalldata = toEthereumProof(proof: result.proof)
+        
+            // Convert the inputs Data to [String] format
+            let inputsArray = toEthereumInputs(inputs: result.inputs)
+        
+            // Prepare the result dictionary with the new format
+            // let resultDict: [String: Any] = [
+            //    "proof": result.proof,
+            //    "inputs": result.inputs
+            // ]
+            
+            print(proofCalldata)
+            print(inputsArray)
+            
             let proofBase64 = result.proof.base64EncodedString()
             let inputsBase64 = result.inputs.base64EncodedString()
-            
+                        
             let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
             
             resolve(resultDict)
@@ -462,7 +481,6 @@ class MoproCircomBridge: NSObject {
         return false
     }
 }
-
 
 public protocol MoproCircomProtocol {
     func generateProof(circuitInputs: [String: [String]])  throws -> GenerateProofResult

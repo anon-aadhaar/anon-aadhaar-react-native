@@ -1,7 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export const ProgressBar = ({ currentIndex, itemCount }) => {
+export const ProgressBar = ({
+  currentIndex,
+  itemCount,
+}: {
+  currentIndex: number;
+  itemCount: number;
+}) => {
   return (
     <View style={styles.progressBarContainer}>
       {Array.from({ length: itemCount }, (_, index) => (
@@ -28,7 +34,7 @@ const styles = StyleSheet.create({
     height: 8, // Small height for dots
     borderRadius: 4, // Half of width/height to make it circular
     marginHorizontal: 4, // Spacing between dots
-    transition: 'all 0.2s ease-in-out', // Smooth transition for web, ignored in native
+    // transition: 'all 0.2s ease-in-out', // Smooth transition for web, ignored in native
   },
   activeDot: {
     backgroundColor: '#06753b', // Active dot color

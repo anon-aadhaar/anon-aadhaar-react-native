@@ -16,6 +16,12 @@ import {
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../src/generateInputs';
 
+const Toast = ({ message }: { message: string }) => (
+  <View style={styles.toastContainer}>
+    <Text style={styles.toastText}>{message}</Text>
+  </View>
+);
+
 export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
@@ -25,6 +31,9 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
   const [isQrScanned, setIsQrScanned] = useState<boolean>(false);
   const [sigVerified, setSigVerified] = useState<boolean>(false);
+  const [errorToastMessage, setErrorToastMessage] = useState<string | null>(
+    null
+  );
   const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
     qrDataPadded: string[];
     qrDataPaddedLength: string[];
@@ -65,25 +74,52 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
     }
   }, [qrCodeValue]);
 
+  const showToast = (message: string) => {
+    setErrorToastMessage(message);
+    setTimeout(() => setErrorToastMessage(null), 3000); // hide after 3 seconds
+  };
+
   const genProof = async () => {
-    setIsProving(true);
-    const startProof = Date.now();
-    const { proof, inputs } = await generateProof(anonAadhaarArgs);
-    setComplexProof(proof);
-    setPublicInputs(inputs);
-    setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
-    setIsProving(false);
+    try {
+      setIsProving(true);
+      const startProof = Date.now();
+      const { proof, inputs } = await generateProof(anonAadhaarArgs);
+      setComplexProof(proof);
+      setPublicInputs(inputs);
+      setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
+      setIsProving(false);
+    } catch (e) {
+      if (e instanceof Error) {
+        showToast(e.message);
+      } else {
+        throw new Error('generateProof: something went wrong!');
+      }
+    }
   };
 
   const verifProof = async (_proof: any, _publicInputs: any) => {
-    const startVerif = Date.now();
-    const res = await verifyProof(_proof, _publicInputs);
-    setProofVerified(res);
-    setExecutionTime((prev) => ({ ...prev, verify: Date.now() - startVerif }));
+    try {
+      const startVerif = Date.now();
+      const res = await verifyProof(_proof, _publicInputs);
+      console.log('Verification result: ', res);
+      setProofVerified(res);
+      setExecutionTime((prev) => ({
+        ...prev,
+        verify: Date.now() - startVerif,
+      }));
+    } catch (e) {
+      if (e instanceof Error) {
+        showToast(e.message);
+      } else {
+        throw new Error('verifProof: something went wrong!');
+      }
+    }
   };
 
   return (
     <View style={styles.container}>
+      {errorToastMessage && <Toast message={errorToastMessage} />}
+
       <Text style={styles.title}>Anon Aadhaar Mobile</Text>
       <View style={styles.statusRow}>
         <View
@@ -214,5 +250,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  toastContainer: {
+    position: 'absolute',
+    bottom: 50,
+    left: 20,
+    right: 20,
+    backgroundColor: 'red',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000, // Make sure it's above other elements
+  },
+  toastText: {
+    color: 'white',
   },
 });

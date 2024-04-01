@@ -32,10 +32,7 @@ class MoproCircomBridge: NSObject {
     func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         do {
             let inputs = circuitInputs as! [String: [String]]
-            print(inputs)
             let result = try generateProof2(circuitInputs: inputs)
-            
-            print(result.inputs.self)
             
             // Convert the proof Data to ProofCalldata format
             let proofCalldata = toEthereumProof(proof: result.proof)

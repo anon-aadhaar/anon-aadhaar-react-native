@@ -39,6 +39,8 @@ target 'AnonAadhaarApp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'CircuitBindings', :path => '../../ios/Frameworks/CircuitBindings.podspec'
+
   target 'AnonAadhaarAppTests' do
     inherit! :complete
     # Pods for testing

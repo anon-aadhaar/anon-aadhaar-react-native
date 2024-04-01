@@ -17,10 +17,11 @@ import {
 import messages from '../assets/messages.json';
 import { CircularProgress } from './CircleProgress';
 import { ProgressBar } from './ProgressBar';
+import type { Views } from './App';
 
 export type OnboardingScreenProps = {
   setupReady?: boolean;
-  setCurrentScreen: Dispatch<SetStateAction<string>>;
+  setCurrentScreen: Dispatch<SetStateAction<Views>>;
 };
 
 const images = [
@@ -75,6 +76,12 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <TouchableOpacity
+        style={styles.shortcut}
+        onPress={() => setCurrentScreen('Benchmark')}
+      >
+        <Text style={styles.buttonText}>Go to benchmark</Text>
+      </TouchableOpacity>
       <View style={styles.content}>
         <View style={styles.scrollView}>
           {isLoading && null}
@@ -175,6 +182,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#06753b',
     borderRadius: 50,
+  },
+  shortcut: {
+    paddingHorizontal: 70,
+    paddingVertical: 15,
   },
   buttonDisabled: {
     paddingHorizontal: 70,

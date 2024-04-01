@@ -10,6 +10,80 @@ import React
 import moproFFI
 #endif
 
+@objc(MoproCircomBridge)
+class MoproCircomBridge: NSObject {
+    
+    @objc(initialize:rejecter:)
+    func initialize(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard let dylibPath = Bundle.main.path(forResource: "anonAadhaar", ofType: "dylib", inDirectory: "Frameworks") else {
+            reject("E_NO_DYLIB_PATH", "Could not find the dylib in the framework bundle.", nil)
+            return
+        }
+
+        do {
+            try initializeMoproDylib(dylibPath: dylibPath)
+            resolve(true)
+        } catch {
+            reject("E_INITIALIZATION_FAILED", "Failed to initialize the dylib: \(error.localizedDescription)", error)
+        }
+    }
+    
+    @objc(generateProof:resolver:rejecter:)
+    func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        do {
+            let inputs = circuitInputs as! [String: [String]]
+            print(inputs)
+            let result = try generateProof2(circuitInputs: inputs)
+            
+            print(result.inputs.self)
+            
+            // Convert the proof Data to ProofCalldata format
+            let proofCalldata = toEthereumProof(proof: result.proof)
+        
+            // Convert the inputs Data to [String] format
+            let inputsArray = toEthereumInputs(inputs: result.inputs)
+        
+            // Prepare the result dictionary with the new format
+            // let resultDict: [String: Any] = [
+            //    "proof": result.proof,
+            //    "inputs": result.inputs
+            // ]
+            
+            print(proofCalldata)
+            print(inputsArray)
+            
+            let proofBase64 = result.proof.base64EncodedString()
+            let inputsBase64 = result.inputs.base64EncodedString()
+                        
+            let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
+            
+            resolve(resultDict)
+        } catch let error {
+            reject("E_GENERATE_PROOF_2", "Proof generation failed: \(error.localizedDescription)", error)
+        }
+    }
+    
+    @objc(verifyProof:publicInput:resolver:rejecter:)
+    func verifyProof(proof: String, publicInput: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        do {
+            guard let proofData = Data(base64Encoded: proof),
+                  let inputData = Data(base64Encoded: publicInput) else {
+                reject("E_INVALID_ARGS", "Invalid argument format for proof or publicInput", nil)
+                return
+            }
+            
+            let isValid = try verifyProof2(proof: proofData, publicInput: inputData)
+            resolve(isValid)
+        } catch let error {
+            reject("E_VERIFY_PROOF_2", "Proof verification failed: \(error.localizedDescription)", error)
+        }
+    }
+    
+    @objc static func requiresMainQueueSetup() -> Bool {
+        return false
+    }
+}
+
 fileprivate extension RustBuffer {
     // Allocate a new buffer, copying the contents of a `UInt8` array.
     init(bytes: [UInt8]) {
@@ -398,89 +472,6 @@ fileprivate struct FfiConverterData: FfiConverterRustBuffer {
     }
 }
 
-@objc(MoproCircomBridge)
-class MoproCircomBridge: NSObject {
-    
-    @objc(initialize:rejecter:)
-    func initialize(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        do {
-            try initializeMopro()
-            resolve(true)
-            // guard let resourcePath = Bundle.main.resourcePath else {
-            //     reject("E_NO_RESOURCE_PATH", "Could not retrieve the main bundle's resource path.", nil)
-            //     return
-            // }
-
-            // let dylibURL = URL(fileURLWithPath: resourcePath)
-            //                    .appendingPathComponent("CircuitBindings.xcframework")
-            //                    .appendingPathComponent("ios-arm64")
-            //                    .appendingPathComponent("anonAadhaar.dylib")
-
-            // if FileManager.default.fileExists(atPath: dylibURL.path) {
-            //     try initializeMoproDylib(dylibPath: dylibURL.path)
-            //     resolve(true)
-            // } else {
-            //     reject("E_NO_DYLIB", "Could not find anonAadhaar.dylib in the CircuitBindings.xcframework bundle.", nil)
-            // }
-        } catch let error {
-            reject("E_GENERATE_PROOF_2", "Initialization failed: \(error.localizedDescription)", error)
-        }
-    }
-    
-    @objc(generateProof:resolver:rejecter:)
-    func generateProof(circuitInputs: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        do {
-            let inputs = circuitInputs as! [String: [String]]
-            let result = try generateProof2(circuitInputs: inputs)
-            
-            print(result.inputs.self)
-            
-            // Convert the proof Data to ProofCalldata format
-            let proofCalldata = toEthereumProof(proof: result.proof)
-        
-            // Convert the inputs Data to [String] format
-            let inputsArray = toEthereumInputs(inputs: result.inputs)
-        
-            // Prepare the result dictionary with the new format
-            // let resultDict: [String: Any] = [
-            //    "proof": result.proof,
-            //    "inputs": result.inputs
-            // ]
-            
-            print(proofCalldata)
-            print(inputsArray)
-            
-            let proofBase64 = result.proof.base64EncodedString()
-            let inputsBase64 = result.inputs.base64EncodedString()
-                        
-            let resultDict = ["proof": proofBase64, "inputs": inputsBase64]
-            
-            resolve(resultDict)
-        } catch let error {
-            reject("E_GENERATE_PROOF_2", "Proof generation failed: \(error.localizedDescription)", error)
-        }
-    }
-    
-    @objc(verifyProof:publicInput:resolver:rejecter:)
-    func verifyProof(proof: String, publicInput: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        do {
-            guard let proofData = Data(base64Encoded: proof),
-                  let inputData = Data(base64Encoded: publicInput) else {
-                reject("E_INVALID_ARGS", "Invalid argument format for proof or publicInput", nil)
-                return
-            }
-            
-            let isValid = try verifyProof2(proof: proofData, publicInput: inputData)
-            resolve(isValid)
-        } catch let error {
-            reject("E_VERIFY_PROOF_2", "Proof verification failed: \(error.localizedDescription)", error)
-        }
-    }
-    
-    @objc static func requiresMainQueueSetup() -> Bool {
-        return false
-    }
-}
 
 public protocol MoproCircomProtocol {
     func generateProof(circuitInputs: [String: [String]])  throws -> GenerateProofResult

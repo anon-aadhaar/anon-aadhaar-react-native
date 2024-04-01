@@ -3,9 +3,11 @@ import { setupMopro } from '@anon-aadhaar/react-native';
 import { OnboardingScreen } from './OnboardingScreen';
 import { MainScreen } from './MainScreen';
 
+export type Views = 'Onboarding' | 'Main' | 'Benchmark';
+
 export default function App() {
   const [setupReady, setSetupReady] = useState<boolean>(false);
-  const [currentScreen, setCurrentScreen] = useState<string>('Onboarding');
+  const [currentScreen, setCurrentScreen] = useState<Views>('Onboarding');
 
   useEffect(() => {
     try {

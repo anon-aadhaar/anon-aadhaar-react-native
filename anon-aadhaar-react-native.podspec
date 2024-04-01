@@ -16,8 +16,6 @@ Pod::Spec.new do |s|
 
   s.vendored_frameworks = 'ios/Frameworks/MoproBindings.xcframework'
   s.source_files = "ios/Frameworks/MoproBindings.xcframework/ios-arm64/Headers/*.{h,m,swift}"
-  # This could be used to include dylib in the bundle, but might not work for release
-  # s.resource = 'ios/Frameworks/CircuitBindings.{xcframework}'
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
   # See https://github.com/facebook/react-native/blob/febf6b7f33fdb4904669f99d795eba4c0f95d7bf/scripts/cocoapods/new_architecture.rb#L79.

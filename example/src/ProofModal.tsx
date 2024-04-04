@@ -1,8 +1,8 @@
 import {
   AadhaarScanner,
   circuitInputsFromQR,
-  generateProof,
-  verifyProof,
+  groth16ProveWithZKeyFilePath,
+  groth16Verify,
   verifySignature,
 } from '@anon-aadhaar/react-native';
 import React, { useEffect, useState } from 'react';
@@ -87,11 +87,11 @@ const Screen2 = ({
 };
 
 const ProveScreen = ({
-  anonAadhaarArgs,
+  // anonAadhaarArgs,
   setProofVerified,
   setProofs,
 }: {
-  anonAadhaarArgs: any;
+  // anonAadhaarArgs: any;
   setProofVerified: any;
   setProofs: any;
 }) => {
@@ -100,9 +100,11 @@ const ProveScreen = ({
   const genProof = async () => {
     setIsProving(true);
     try {
-      const { proof, inputs } = await generateProof(anonAadhaarArgs);
-      const res = await verifyProof(proof, inputs);
-      setProofs({ proof, inputs });
+      // TODO Get path of zkey and witness
+      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath('', '');
+      // TODO Get path of the vk
+      const res = await groth16Verify(proof, pub_signals, '');
+      setProofs({ proof, pub_signals });
       setProofVerified(res);
       setIsProving(false);
     } catch (e) {
@@ -144,19 +146,19 @@ export const ProofModal = ({
   const [currentScreen, setCurrentScreen] = useState('screen1');
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
-  const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
-    qrDataPadded: string[];
-    qrDataPaddedLength: string[];
-    nonPaddedDataLength: string[];
-    delimiterIndices: string[];
-    signature: string[];
-    pubKey: string[];
-    signalHash: string[];
-    revealGender: string[];
-    revealAgeAbove18: string[];
-    revealState: string[];
-    revealPinCode: string[];
-  } | null>(null);
+  // const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
+  //   qrDataPadded: string[];
+  //   qrDataPaddedLength: string[];
+  //   nonPaddedDataLength: string[];
+  //   delimiterIndices: string[];
+  //   signature: string[];
+  //   pubKey: string[];
+  //   signalHash: string[];
+  //   revealGender: string[];
+  //   revealAgeAbove18: string[];
+  //   revealState: string[];
+  //   revealPinCode: string[];
+  // } | null>(null);
 
   useEffect(() => {
     if (proofVerified) onCloseModal();
@@ -172,17 +174,20 @@ export const ProofModal = ({
       verifySignature(qrCodeValue)
         .then((isVerified) => {
           if (isVerified) {
-            circuitInputsFromQR(qrCodeValue).then((args) => {
-              setAnonAadhaarArgs(args);
-              setCurrentScreen('sigVerified');
-            });
+            circuitInputsFromQR(qrCodeValue).then(() =>
+              // args
+              {
+                // setAnonAadhaarArgs(args);
+                setCurrentScreen('sigVerified');
+              }
+            );
           }
         })
         .catch((e) => {
           console.error(e);
         });
     }
-  }, [qrCodeValue, setAnonAadhaarArgs, setCurrentScreen]);
+  }, [qrCodeValue, setCurrentScreen]);
 
   return (
     <View style={styles.centeredView}>
@@ -215,7 +220,7 @@ export const ProofModal = ({
                     return (
                       <ProveScreen
                         setProofVerified={setProofVerified}
-                        anonAadhaarArgs={anonAadhaarArgs}
+                        // anonAadhaarArgs={anonAadhaarArgs}
                         setProofs={setProofs}
                       />
                     );

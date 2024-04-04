@@ -1,15 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
+import RNFS from 'react-native-fs';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import {
-  generateProof,
-  verifyProof,
+  groth16ProveWithZKeyFilePath,
+  groth16Verify,
   AadhaarScanner,
   verifySignature,
 } from '@anon-aadhaar/react-native';
@@ -22,7 +24,28 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
-export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
+const zkeyPath =
+  (Platform.OS === 'android'
+    ? RNFS.DocumentDirectoryPath
+    : RNFS.MainBundlePath) + '/circuit_final.zkey';
+
+function getWtnsFile(): Promise<string> {
+  const path =
+    (Platform.OS === 'android'
+      ? RNFS.DocumentDirectoryPath
+      : RNFS.MainBundlePath) + '/witness.wtns';
+  return RNFS.readFile(path, 'base64');
+}
+
+function getVerificationKey(): Promise<string> {
+  const path =
+    (Platform.OS === 'android'
+      ? RNFS.DocumentDirectoryPath
+      : RNFS.MainBundlePath) + '/vkey.json';
+  return RNFS.readFile(path, 'utf8');
+}
+
+export default function BenchmarkView({}) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
@@ -34,19 +57,19 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
   const [errorToastMessage, setErrorToastMessage] = useState<string | null>(
     null
   );
-  const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
-    qrDataPadded: string[];
-    qrDataPaddedLength: string[];
-    nonPaddedDataLength: string[];
-    delimiterIndices: string[];
-    signature: string[];
-    pubKey: string[];
-    signalHash: string[];
-    revealGender: string[];
-    revealAgeAbove18: string[];
-    revealState: string[];
-    revealPinCode: string[];
-  } | null>(null);
+  // const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
+  //   qrDataPadded: string[];
+  //   qrDataPaddedLength: string[];
+  //   nonPaddedDataLength: string[];
+  //   delimiterIndices: string[];
+  //   signature: string[];
+  //   pubKey: string[];
+  //   signalHash: string[];
+  //   revealGender: string[];
+  //   revealAgeAbove18: string[];
+  //   revealState: string[];
+  //   revealPinCode: string[];
+  // } | null>(null);
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
     setup: number;
@@ -61,10 +84,13 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
         .then((isVerified) => {
           if (isVerified) {
             setSigVerified(true);
-            circuitInputsFromQR(qrCodeValue).then((args) => {
-              setAnonAadhaarArgs(args);
-              setIsVerifyingSig(false);
-            });
+            circuitInputsFromQR(qrCodeValue).then(() =>
+              // args
+              {
+                // setAnonAadhaarArgs(args);
+                setIsVerifyingSig(false);
+              }
+            );
           }
         })
         .catch((e) => {
@@ -83,9 +109,13 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
     try {
       setIsProving(true);
       const startProof = Date.now();
-      const { proof, inputs } = await generateProof(anonAadhaarArgs);
+      const wF = await getWtnsFile();
+      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
+        zkeyPath,
+        wF
+      );
       setComplexProof(proof);
-      setPublicInputs(inputs);
+      setPublicInputs(pub_signals);
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
       setIsProving(false);
     } catch (e) {
@@ -97,10 +127,11 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
     }
   };
 
-  const verifProof = async (_proof: any, _publicInputs: any) => {
+  const verifProof = async (_proof: string, _publicInputs: string) => {
     try {
       const startVerif = Date.now();
-      const res = await verifyProof(_proof, _publicInputs);
+      const vkey = await getVerificationKey();
+      const res = await groth16Verify(_proof, _publicInputs, vkey);
       console.log('Verification result: ', res);
       setProofVerified(res);
       setExecutionTime((prev) => ({
@@ -121,15 +152,6 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
       {errorToastMessage && <Toast message={errorToastMessage} />}
 
       <Text style={styles.title}>Anon Aadhaar Mobile</Text>
-      <View style={styles.statusRow}>
-        <View
-          style={[
-            styles.statusIndicator,
-            { backgroundColor: setupReady ? 'green' : 'red' },
-          ]}
-        />
-        <Text>Prover State: {String(setupReady)}</Text>
-      </View>
       <Text>Setup Execution Time: {executionTime.setup}ms</Text>
       {!isQrScanned && (
         <TouchableOpacity
@@ -177,7 +199,11 @@ export default function BenchmarkView({ setupReady }: { setupReady: boolean }) {
           styles.button,
           complexProof ? styles.buttonEnabled : styles.buttonDisabled,
         ]}
-        onPress={() => verifProof(complexProof, publicInputs)}
+        onPress={() =>
+          complexProof && publicInputs
+            ? verifProof(complexProof, publicInputs)
+            : null
+        }
       >
         <Text style={styles.buttonText}>Verify</Text>
       </TouchableOpacity>

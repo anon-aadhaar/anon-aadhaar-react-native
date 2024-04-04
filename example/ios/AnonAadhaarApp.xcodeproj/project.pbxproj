@@ -12,18 +12,20 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		33DE0B9FED24787E64096ECE /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C956C9A69044E5D524B7F4D4 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */; };
 		3573A49363A04C70B2433036 /* Outfit-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5E0BC6AA40E437D82AA05D6 /* Outfit-ExtraBold.ttf */; };
+		3EC16D91704500862F6258B6 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F95D53E79C2118460BA66 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */; };
 		6082BFBEEA17432EB7F8992D /* Outfit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8EBDC35B62F34BBF9E16171C /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */; };
-		9C505A8B4A4B36AA11469AAD /* libPods-AnonAadhaarApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F8ED3852F16ED7C13CC05AB /* libPods-AnonAadhaarApp.a */; };
 		B8ECFAEE9AB24C89A6FB50DE /* Outfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */; };
 		C3A79DB10DB742F5A12812B6 /* Outfit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF80CFFA256443138A5869FD /* Outfit-Light.ttf */; };
 		CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 407481BCA05145F69B088154 /* Outfit-Black.ttf */; };
+		CC6E0D6095F77E24CBBA6129 /* libPods-AnonAadhaarApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA8488832217808B826CBFE /* libPods-AnonAadhaarApp.a */; };
 		CD6D3B608609441FB2F779C3 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */; };
+		E62930992BBF04EC00D339A9 /* circuit_final.zkey in Resources */ = {isa = PBXBuildFile; fileRef = E62930972BBF04EC00D339A9 /* circuit_final.zkey */; };
+		E629309A2BBF04EC00D339A9 /* vkey.json in Resources */ = {isa = PBXBuildFile; fileRef = E62930982BBF04EC00D339A9 /* vkey.json */; };
+		E629309C2BBF050C00D339A9 /* witness.wtns in Resources */ = {isa = PBXBuildFile; fileRef = E629309B2BBF050C00D339A9 /* witness.wtns */; };
 		E664D7352BADFEC50043738A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E664D7342BADFEC50043738A /* Assets.xcassets */; };
-		E69392232BBB0C83003413A7 /* CircuitBindings.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = E69392212BBB0C82003413A7 /* CircuitBindings.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */; };
 /* End PBXBuildFile section */
 
@@ -37,50 +39,39 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		E625A2F02B98A58E00B5A0EF /* Embed Libraries */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				E69392232BBB0C83003413A7 /* CircuitBindings.xcframework in Embed Libraries */,
-			);
-			name = "Embed Libraries";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* AnonAadhaarAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnonAadhaarAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AnonAadhaarAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnonAadhaarAppTests.m; sourceTree = "<group>"; };
+		0DA8488832217808B826CBFE /* libPods-AnonAadhaarApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaarApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* AnonAadhaarApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnonAadhaarApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AnonAadhaarApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = AnonAadhaarApp/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AnonAadhaarApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AnonAadhaarApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AnonAadhaarApp/main.m; sourceTree = "<group>"; };
-		2CA52555CFAFBA26EA79EF51 /* Pods-AnonAadhaarApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp.release.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp.release.xcconfig"; sourceTree = "<group>"; };
-		2F8ED3852F16ED7C13CC05AB /* libPods-AnonAadhaarApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaarApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D3440BF2EBCE28D9A21ACE1 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		213F95D53E79C2118460BA66 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaarApp-AnonAadhaarAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B30E2C11D9BA4399D0CA625 /* Pods-AnonAadhaarApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp.debug.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp.debug.xcconfig"; sourceTree = "<group>"; };
 		407481BCA05145F69B088154 /* Outfit-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Black.ttf"; path = "../assets/fonts/Outfit-Black.ttf"; sourceTree = "<group>"; };
-		43BA1191289F8C350C21C722 /* Pods-AnonAadhaarApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp.debug.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp.debug.xcconfig"; sourceTree = "<group>"; };
+		40A106593917659AEF28742B /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		51A42EFCD7C641DC85259BCE /* Outfit-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Medium.ttf"; path = "../assets/fonts/Outfit-Medium.ttf"; sourceTree = "<group>"; };
 		63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Regular.ttf"; path = "../assets/fonts/Outfit-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AnonAadhaarApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A5E0BC6AA40E437D82AA05D6 /* Outfit-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-ExtraBold.ttf"; path = "../assets/fonts/Outfit-ExtraBold.ttf"; sourceTree = "<group>"; };
-		AC9D7BE23529CEA92861BB61 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AFAA36DDBF34670EADC0F19D /* Pods-AnonAadhaarApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp.release.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp.release.xcconfig"; sourceTree = "<group>"; };
 		B5238EAADA8E49E7A6AAAA95 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Bold.ttf"; path = "../assets/fonts/Outfit-Bold.ttf"; sourceTree = "<group>"; };
 		BF80CFFA256443138A5869FD /* Outfit-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Light.ttf"; path = "../assets/fonts/Outfit-Light.ttf"; sourceTree = "<group>"; };
-		C956C9A69044E5D524B7F4D4 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaarApp-AnonAadhaarAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-ExtraLight.ttf"; path = "../assets/fonts/Outfit-ExtraLight.ttf"; sourceTree = "<group>"; };
 		D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Thin.ttf"; path = "../assets/fonts/Outfit-Thin.ttf"; sourceTree = "<group>"; };
 		E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-SemiBold.ttf"; path = "../assets/fonts/Outfit-SemiBold.ttf"; sourceTree = "<group>"; };
 		E625A2E42B98A11600B5A0EF /* libanon-aadhaar-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libanon-aadhaar-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E62930972BBF04EC00D339A9 /* circuit_final.zkey */ = {isa = PBXFileReference; lastKnownFileType = file; name = circuit_final.zkey; path = "../../../anon-aadhaar/packages/circuits/artifacts/circuit_final.zkey"; sourceTree = "<group>"; };
+		E62930982BBF04EC00D339A9 /* vkey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = vkey.json; path = "../../../anon-aadhaar/packages/circuits/artifacts/vkey.json"; sourceTree = "<group>"; };
+		E629309B2BBF050C00D339A9 /* witness.wtns */ = {isa = PBXFileReference; lastKnownFileType = file; name = witness.wtns; path = "../../../anon-aadhaar/packages/circuits/build/witness.wtns"; sourceTree = "<group>"; };
 		E664D7342BADFEC50043738A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E69392212BBB0C82003413A7 /* CircuitBindings.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = CircuitBindings.xcframework; path = ../../ios/Frameworks/CircuitBindings.xcframework; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F8B70D3B01442714B00E1EC6 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig"; path = "Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33DE0B9FED24787E64096ECE /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a in Frameworks */,
+				3EC16D91704500862F6258B6 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C505A8B4A4B36AA11469AAD /* libPods-AnonAadhaarApp.a in Frameworks */,
+				CC6E0D6095F77E24CBBA6129 /* libPods-AnonAadhaarApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,8 +130,8 @@
 				E69392212BBB0C82003413A7 /* CircuitBindings.xcframework */,
 				E625A2E42B98A11600B5A0EF /* libanon-aadhaar-react-native.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2F8ED3852F16ED7C13CC05AB /* libPods-AnonAadhaarApp.a */,
-				C956C9A69044E5D524B7F4D4 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */,
+				0DA8488832217808B826CBFE /* libPods-AnonAadhaarApp.a */,
+				213F95D53E79C2118460BA66 /* libPods-AnonAadhaarApp-AnonAadhaarAppTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -155,6 +146,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E629309B2BBF050C00D339A9 /* witness.wtns */,
+				E62930972BBF04EC00D339A9 /* circuit_final.zkey */,
+				E62930982BBF04EC00D339A9 /* vkey.json */,
 				13B07FAE1A68108700A75B9A /* AnonAadhaarApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AnonAadhaarAppTests */,
@@ -197,10 +191,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				43BA1191289F8C350C21C722 /* Pods-AnonAadhaarApp.debug.xcconfig */,
-				2CA52555CFAFBA26EA79EF51 /* Pods-AnonAadhaarApp.release.xcconfig */,
-				AC9D7BE23529CEA92861BB61 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */,
-				F8B70D3B01442714B00E1EC6 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */,
+				2B30E2C11D9BA4399D0CA625 /* Pods-AnonAadhaarApp.debug.xcconfig */,
+				AFAA36DDBF34670EADC0F19D /* Pods-AnonAadhaarApp.release.xcconfig */,
+				1D3440BF2EBCE28D9A21ACE1 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */,
+				40A106593917659AEF28742B /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -212,12 +206,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AnonAadhaarAppTests" */;
 			buildPhases = (
-				84EF0A1DE0F9A24265D832DB /* [CP] Check Pods Manifest.lock */,
+				312901C9539A85C804DF87E7 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				5E613429DFF4141D293AD731 /* [CP] Embed Pods Frameworks */,
-				E2EEF9770843062C3151DD68 /* [CP] Copy Pods Resources */,
+				14B0487F8F1D2FAC7DFA8720 /* [CP] Embed Pods Frameworks */,
+				8BCC9B138C7C524B0F54A9FF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -233,14 +227,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AnonAadhaarApp" */;
 			buildPhases = (
-				246009D9E6FA9BB7C464CBF8 /* [CP] Check Pods Manifest.lock */,
+				427E2C125AE289856C8DB486 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				E625A2F02B98A58E00B5A0EF /* Embed Libraries */,
-				0C2DDCC969E7A65E8F1236AD /* [CP] Embed Pods Frameworks */,
-				1732CB5C3462A8384D9E9DD8 /* [CP] Copy Pods Resources */,
+				F9CAE4B3EE295C37381DD577 /* [CP] Embed Pods Frameworks */,
+				EB90334249C9C57222B417D8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -299,7 +292,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E629309A2BBF04EC00D339A9 /* vkey.json in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				E629309C2BBF050C00D339A9 /* witness.wtns in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */,
 				8EBDC35B62F34BBF9E16171C /* Outfit-Bold.ttf in Resources */,
@@ -310,6 +305,7 @@
 				E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */,
 				6082BFBEEA17432EB7F8992D /* Outfit-SemiBold.ttf in Resources */,
 				E664D7352BADFEC50043738A /* Assets.xcassets in Resources */,
+				E62930992BBF04EC00D339A9 /* circuit_final.zkey in Resources */,
 				017945B206274520A2080942 /* Outfit-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,63 +329,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		0C2DDCC969E7A65E8F1236AD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1732CB5C3462A8384D9E9DD8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		246009D9E6FA9BB7C464CBF8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AnonAadhaarApp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5E613429DFF4141D293AD731 /* [CP] Embed Pods Frameworks */ = {
+		14B0487F8F1D2FAC7DFA8720 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -406,7 +346,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		84EF0A1DE0F9A24265D832DB /* [CP] Check Pods Manifest.lock */ = {
+		312901C9539A85C804DF87E7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -428,7 +368,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E2EEF9770843062C3151DD68 /* [CP] Copy Pods Resources */ = {
+		427E2C125AE289856C8DB486 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AnonAadhaarApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8BCC9B138C7C524B0F54A9FF /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -443,6 +405,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp-AnonAadhaarAppTests/Pods-AnonAadhaarApp-AnonAadhaarAppTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB90334249C9C57222B417D8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9CAE4B3EE295C37381DD577 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnonAadhaarApp/Pods-AnonAadhaarApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -478,7 +474,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC9D7BE23529CEA92861BB61 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */;
+			baseConfigurationReference = 1D3440BF2EBCE28D9A21ACE1 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -505,7 +501,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F8B70D3B01442714B00E1EC6 /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */;
+			baseConfigurationReference = 40A106593917659AEF28742B /* Pods-AnonAadhaarApp-AnonAadhaarAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -529,7 +525,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43BA1191289F8C350C21C722 /* Pods-AnonAadhaarApp.debug.xcconfig */;
+			baseConfigurationReference = 2B30E2C11D9BA4399D0CA625 /* Pods-AnonAadhaarApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
@@ -561,7 +557,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CA52555CFAFBA26EA79EF51 /* Pods-AnonAadhaarApp.release.xcconfig */;
+			baseConfigurationReference = AFAA36DDBF34670EADC0F19D /* Pods-AnonAadhaarApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;

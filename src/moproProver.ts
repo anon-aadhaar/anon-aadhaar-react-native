@@ -36,10 +36,17 @@ export async function generateProof(circuitInputs: any): Promise<{
     const proof = result.proof;
     const inputs = result.inputs;
 
+    // console.log(proof);
+    // console.log(inputs);
+
     return { proof, inputs };
   } catch (error) {
     console.error(error);
-    throw new Error('generateProof: something went wrong!');
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('generateProof: something went wrong!');
+    }
   }
 }
 
@@ -53,6 +60,10 @@ export async function verifyProof(
     return isVerified;
   } catch (error) {
     console.error(error);
-    throw new Error('verifyProof: something went wrong!');
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('verifyProof: something went wrong!');
+    }
   }
 }

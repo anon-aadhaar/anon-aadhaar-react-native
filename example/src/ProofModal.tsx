@@ -99,11 +99,15 @@ const ProveScreen = ({
 
   const genProof = async () => {
     setIsProving(true);
-    const { proof, inputs } = await generateProof(anonAadhaarArgs);
-    const res = await verifyProof(proof, inputs);
-    setProofs({ proof, inputs });
-    setProofVerified(res);
-    setIsProving(false);
+    try {
+      const { proof, inputs } = await generateProof(anonAadhaarArgs);
+      const res = await verifyProof(proof, inputs);
+      setProofs({ proof, inputs });
+      setProofVerified(res);
+      setIsProving(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -141,11 +145,17 @@ export const ProofModal = ({
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
-    aadhaarData: string[];
-    aadhaarDataLength: string[];
+    qrDataPadded: string[];
+    qrDataPaddedLength: string[];
+    nonPaddedDataLength: string[];
+    delimiterIndices: string[];
     signature: string[];
     pubKey: string[];
     signalHash: string[];
+    revealGender: string[];
+    revealAgeAbove18: string[];
+    revealState: string[];
+    revealPinCode: string[];
   } | null>(null);
 
   useEffect(() => {

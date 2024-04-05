@@ -54,6 +54,7 @@ export async function circuitInputsFromQR(qrData: string) {
     delimiterIndices: delimiterIndices.map((x) => x.toString()),
     signature: splitToWords(signature, BigInt(121), BigInt(17)),
     pubKey: splitToWords(pubKey, BigInt(121), BigInt(17)),
+    nullifierSeed: ['12345678'],
     // Value of hash(1) hardcoded
     signalHash: [
       '312829776796408387545637016147278514583116203736587368460269838669765409292',

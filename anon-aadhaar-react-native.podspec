@@ -15,10 +15,11 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Meyanis95/anon-aadhaar-react-native.git", :tag => "#{s.version}" }
 
   s.static_framework = true
-  s.source_files = "ios/**/*.{h,m,mm}"
+  s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.preserve_path = 'ios/Frameworks/*'
   s.vendored_frameworks = "ios/Frameworks/Rapidsnark.xcframework"
+  s.vendored_libraries = "ios/libwitnesscalc_aadhaar_verifier.a"
   s.ios.vendored_frameworks = "ios/Frameworks/Rapidsnark.xcframework"
   s.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }
   s.user_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }

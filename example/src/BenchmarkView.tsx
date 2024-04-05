@@ -1,19 +1,19 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import RNFS from 'react-native-fs';
+// import RNFS from 'react-native-fs';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Platform,
+  // Platform,
 } from 'react-native';
 import {
-  groth16ProveWithZKeyFilePath,
-  groth16Verify,
+  type AnonAadhaarArgs,
+  // groth16Verify,
   AadhaarScanner,
   verifySignature,
+  groth16FullProve,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../src/generateInputs';
@@ -24,31 +24,31 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
-const zkeyPath =
-  (Platform.OS === 'android'
-    ? RNFS.DocumentDirectoryPath
-    : RNFS.MainBundlePath) + '/circuit_final.zkey';
+// const zkeyPath =
+//   (Platform.OS === 'android'
+//     ? RNFS.DocumentDirectoryPath
+//     : RNFS.MainBundlePath) + '/circuit_final.zkey';
 
-function getWtnsFile(): Promise<string> {
-  const path =
-    (Platform.OS === 'android'
-      ? RNFS.DocumentDirectoryPath
-      : RNFS.MainBundlePath) + '/witness.wtns';
-  return RNFS.readFile(path, 'base64');
-}
+// function getWtnsFile(): Promise<string> {
+//   const path =
+//     (Platform.OS === 'android'
+//       ? RNFS.DocumentDirectoryPath
+//       : RNFS.MainBundlePath) + '/witness.wtns';
+//   return RNFS.readFile(path, 'base64');
+// }
 
-function getVerificationKey(): Promise<string> {
-  const path =
-    (Platform.OS === 'android'
-      ? RNFS.DocumentDirectoryPath
-      : RNFS.MainBundlePath) + '/vkey.json';
-  return RNFS.readFile(path, 'utf8');
-}
+// function getVerificationKey(): Promise<string> {
+//   const path =
+//     (Platform.OS === 'android'
+//       ? RNFS.DocumentDirectoryPath
+//       : RNFS.MainBundlePath) + '/vkey.json';
+//   return RNFS.readFile(path, 'utf8');
+// }
 
 export default function BenchmarkView({}) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
-  const [publicInputs, setPublicInputs] = useState<string | null>(null);
-  const [proofVerified, setProofVerified] = useState<boolean>(false);
+  // const [publicInputs, setPublicInputs] = useState<string | null>(null);
+  // const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [cameraOn, setCameraOn] = useState<boolean>(false);
   const [isProving, setIsProving] = useState<boolean>(false);
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
@@ -57,19 +57,8 @@ export default function BenchmarkView({}) {
   const [errorToastMessage, setErrorToastMessage] = useState<string | null>(
     null
   );
-  // const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
-  //   qrDataPadded: string[];
-  //   qrDataPaddedLength: string[];
-  //   nonPaddedDataLength: string[];
-  //   delimiterIndices: string[];
-  //   signature: string[];
-  //   pubKey: string[];
-  //   signalHash: string[];
-  //   revealGender: string[];
-  //   revealAgeAbove18: string[];
-  //   revealState: string[];
-  //   revealPinCode: string[];
-  // } | null>(null);
+  const [anonAadhaarArgs, setAnonAadhaarArgs] =
+    useState<AnonAadhaarArgs | null>(null);
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
     setup: number;
@@ -84,13 +73,10 @@ export default function BenchmarkView({}) {
         .then((isVerified) => {
           if (isVerified) {
             setSigVerified(true);
-            circuitInputsFromQR(qrCodeValue).then(() =>
-              // args
-              {
-                // setAnonAadhaarArgs(args);
-                setIsVerifyingSig(false);
-              }
-            );
+            circuitInputsFromQR(qrCodeValue).then((args) => {
+              setAnonAadhaarArgs(args);
+              setIsVerifyingSig(false);
+            });
           }
         })
         .catch((e) => {
@@ -109,14 +95,12 @@ export default function BenchmarkView({}) {
     try {
       setIsProving(true);
       const startProof = Date.now();
-      const wF = await getWtnsFile();
-      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
-        zkeyPath,
-        wF
-      );
-      setComplexProof(proof);
-      setPublicInputs(pub_signals);
+      if (!anonAadhaarArgs) throw Error('You must generate arguments first');
+      const result = await groth16FullProve(anonAadhaarArgs);
+      console.log(Date.now() - startProof);
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
+      setComplexProof(result.proof);
+      // setPublicInputs(result.inputs);
       setIsProving(false);
     } catch (e) {
       if (e instanceof Error) {
@@ -127,25 +111,25 @@ export default function BenchmarkView({}) {
     }
   };
 
-  const verifProof = async (_proof: string, _publicInputs: string) => {
-    try {
-      const startVerif = Date.now();
-      const vkey = await getVerificationKey();
-      const res = await groth16Verify(_proof, _publicInputs, vkey);
-      console.log('Verification result: ', res);
-      setProofVerified(res);
-      setExecutionTime((prev) => ({
-        ...prev,
-        verify: Date.now() - startVerif,
-      }));
-    } catch (e) {
-      if (e instanceof Error) {
-        showToast(e.message);
-      } else {
-        throw new Error('verifProof: something went wrong!');
-      }
-    }
-  };
+  // const verifProof = async (_proof: string, _publicInputs: string) => {
+  //   try {
+  //     const startVerif = Date.now();
+  //     const vkey = await getVerificationKey();
+  //     const res = await groth16Verify(_proof, _publicInputs, vkey);
+  //     console.log('Verification result: ', res);
+  //     setProofVerified(res);
+  //     setExecutionTime((prev) => ({
+  //       ...prev,
+  //       verify: Date.now() - startVerif,
+  //     }));
+  //   } catch (e) {
+  //     if (e instanceof Error) {
+  //       showToast(e.message);
+  //     } else {
+  //       throw new Error('verifProof: something went wrong!');
+  //     }
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -199,15 +183,15 @@ export default function BenchmarkView({}) {
           styles.button,
           complexProof ? styles.buttonEnabled : styles.buttonDisabled,
         ]}
-        onPress={() =>
-          complexProof && publicInputs
-            ? verifProof(complexProof, publicInputs)
-            : null
-        }
+        // onPress={() =>
+        //   complexProof && publicInputs
+        //     ? verifProof(complexProof, publicInputs)
+        //     : null
+        // }
       >
         <Text style={styles.buttonText}>Verify</Text>
       </TouchableOpacity>
-      {proofVerified ? (
+      {/* {proofVerified ? (
         <Text>Verification Execution Time: {executionTime.verify}ms</Text>
       ) : (
         <></>
@@ -220,7 +204,7 @@ export default function BenchmarkView({}) {
           ]}
         />
         <Text>Prover Verified: {String(proofVerified)}</Text>
-      </View>
+      </View> */}
     </View>
   );
 }

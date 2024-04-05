@@ -1,8 +1,8 @@
 import {
   AadhaarScanner,
   circuitInputsFromQR,
-  groth16ProveWithZKeyFilePath,
-  groth16Verify,
+  // groth16ProveWithZKeyFilePath,
+  // groth16Verify,
   verifySignature,
 } from '@anon-aadhaar/react-native';
 import React, { useEffect, useState } from 'react';
@@ -86,26 +86,28 @@ const Screen2 = ({
   );
 };
 
-const ProveScreen = ({
-  // anonAadhaarArgs,
-  setProofVerified,
-  setProofs,
-}: {
-  // anonAadhaarArgs: any;
-  setProofVerified: any;
-  setProofs: any;
-}) => {
+const ProveScreen = (
+  {
+    // anonAadhaarArgs,
+    // setProofVerified,
+    // setProofs,
+  }: {
+    // anonAadhaarArgs: any;
+    setProofVerified: any;
+    setProofs: any;
+  }
+) => {
   const [isProving, setIsProving] = useState<boolean>(false);
 
   const genProof = async () => {
     setIsProving(true);
     try {
       // TODO Get path of zkey and witness
-      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath('', '');
-      // TODO Get path of the vk
-      const res = await groth16Verify(proof, pub_signals, '');
-      setProofs({ proof, pub_signals });
-      setProofVerified(res);
+      // const { proof, pub_signals } = await groth16ProveWithZKeyFilePath('', '');
+      // // TODO Get path of the vk
+      // const res = await groth16Verify(proof, pub_signals, '');
+      // setProofs({ proof, pub_signals });
+      // setProofVerified(res);
       setIsProving(false);
     } catch (e) {
       console.error(e);

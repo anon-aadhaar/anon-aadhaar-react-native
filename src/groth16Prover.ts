@@ -35,8 +35,8 @@ export async function groth16FullProve(args: AnonAadhaarArgs) {
   return Groth16Prover.runProveAction(args);
 }
 
-// export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
-// export const DEFAULT_ERROR_BUFFER_SIZE = 256;
+export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
+export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 // export async function groth16Prove(
 //   zkey: string,
@@ -134,25 +134,12 @@ export async function groth16FullProve(args: AnonAadhaarArgs) {
 //   );
 // }
 
-// export function groth16Verify(
-//   proof: string,
-//   inputs: string,
-//   verificationKey: string,
-//   {
-//     errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-//   }: {
-//     errorBufferSize: number;
-//   } = {
-//     errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-//   }
-// ): Promise<boolean> {
-//   return Rapidsnark.groth16Verify(
-//     proof,
-//     inputs,
-//     verificationKey,
-//     errorBufferSize
-//   );
-// }
+export function groth16Verify(proof: string, inputs: string): Promise<boolean> {
+  const proofString = JSON.stringify(proof);
+  const inputsString = JSON.stringify(inputs);
+
+  return Groth16Prover.groth16Verify(proofString, inputsString);
+}
 
 // function groth16PublicSizeForZkeyBuf(
 //   zkey: string,

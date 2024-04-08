@@ -11,6 +11,11 @@ RCT_EXTERN_METHOD(runProveAction:(NSDictionary *)inputs
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(groth16Verify:(NSDictionary *)proof
+                  inputs:(NSDictionary *)inputs  
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+
 + (BOOL) requiresMainQueueSetup {
     return YES;
 }

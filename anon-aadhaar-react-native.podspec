@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.preserve_path = 'ios/Frameworks/*'
   s.vendored_frameworks = "ios/Frameworks/Rapidsnark.xcframework"
-  s.vendored_libraries = "ios/libwitnesscalc_aadhaar_verifier.a"
+  s.vendored_libraries = ["ios/libwitnesscalc_aadhaar_verifier.a", "ios/libfr.a", "ios/libfq.a"]
   s.ios.vendored_frameworks = "ios/Frameworks/Rapidsnark.xcframework"
   s.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }
   s.user_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }

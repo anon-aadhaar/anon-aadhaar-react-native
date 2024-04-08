@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {
   type AnonAadhaarArgs,
-  // groth16Verify,
+  groth16Verify,
   AadhaarScanner,
   verifySignature,
   groth16FullProve,
@@ -47,8 +47,8 @@ const Toast = ({ message }: { message: string }) => (
 
 export default function BenchmarkView({}) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
-  // const [publicInputs, setPublicInputs] = useState<string | null>(null);
-  // const [proofVerified, setProofVerified] = useState<boolean>(false);
+  const [publicInputs, setPublicInputs] = useState<string | null>(null);
+  const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [cameraOn, setCameraOn] = useState<boolean>(false);
   const [isProving, setIsProving] = useState<boolean>(false);
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
@@ -61,10 +61,9 @@ export default function BenchmarkView({}) {
     useState<AnonAadhaarArgs | null>(null);
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
-    setup: number;
     proof: number;
     verify: number;
-  }>({ setup: 0, proof: 0, verify: 0 });
+  }>({ proof: 0, verify: 0 });
 
   useEffect(() => {
     if (qrCodeValue !== '') {
@@ -97,12 +96,17 @@ export default function BenchmarkView({}) {
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
       const result = await groth16FullProve(anonAadhaarArgs);
+      const fullProofObject = JSON.parse(result);
+      console.log('Object received: ', fullProofObject);
       console.log(Date.now() - startProof);
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
-      setComplexProof(result.proof);
-      // setPublicInputs(result.inputs);
+      setComplexProof(fullProofObject.proof);
+      console.log('Complex Proof received: ', fullProofObject.proof);
+      setPublicInputs(fullProofObject.inputs);
+      console.log('Public Inputs received: ', fullProofObject.inputs);
       setIsProving(false);
     } catch (e) {
+      console.log('Catching error');
       if (e instanceof Error) {
         showToast(e.message);
       } else {
@@ -111,32 +115,30 @@ export default function BenchmarkView({}) {
     }
   };
 
-  // const verifProof = async (_proof: string, _publicInputs: string) => {
-  //   try {
-  //     const startVerif = Date.now();
-  //     const vkey = await getVerificationKey();
-  //     const res = await groth16Verify(_proof, _publicInputs, vkey);
-  //     console.log('Verification result: ', res);
-  //     setProofVerified(res);
-  //     setExecutionTime((prev) => ({
-  //       ...prev,
-  //       verify: Date.now() - startVerif,
-  //     }));
-  //   } catch (e) {
-  //     if (e instanceof Error) {
-  //       showToast(e.message);
-  //     } else {
-  //       throw new Error('verifProof: something went wrong!');
-  //     }
-  //   }
-  // };
+  const verifProof = async (_proof: string, _publicInputs: string) => {
+    try {
+      const startVerif = Date.now();
+      const res = await groth16Verify(_proof, _publicInputs);
+      console.log('Verification result: ', res);
+      setProofVerified(res);
+      setExecutionTime((prev) => ({
+        ...prev,
+        verify: Date.now() - startVerif,
+      }));
+    } catch (e) {
+      if (e instanceof Error) {
+        showToast(e.message);
+      } else {
+        throw new Error('verifProof: something went wrong!');
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
       {errorToastMessage && <Toast message={errorToastMessage} />}
 
       <Text style={styles.title}>Anon Aadhaar Mobile</Text>
-      <Text>Setup Execution Time: {executionTime.setup}ms</Text>
       {!isQrScanned && (
         <TouchableOpacity
           style={styles.button}
@@ -183,15 +185,15 @@ export default function BenchmarkView({}) {
           styles.button,
           complexProof ? styles.buttonEnabled : styles.buttonDisabled,
         ]}
-        // onPress={() =>
-        //   complexProof && publicInputs
-        //     ? verifProof(complexProof, publicInputs)
-        //     : null
-        // }
+        onPress={() =>
+          complexProof && publicInputs
+            ? verifProof(complexProof, publicInputs)
+            : null
+        }
       >
         <Text style={styles.buttonText}>Verify</Text>
       </TouchableOpacity>
-      {/* {proofVerified ? (
+      {proofVerified ? (
         <Text>Verification Execution Time: {executionTime.verify}ms</Text>
       ) : (
         <></>
@@ -204,7 +206,7 @@ export default function BenchmarkView({}) {
           ]}
         />
         <Text>Prover Verified: {String(proofVerified)}</Text>
-      </View> */}
+      </View>
     </View>
   );
 }

@@ -10,6 +10,10 @@ import libwitnesscalc_aadhaar_verifier
 import groth16_prover
 #endif
 
+#if canImport(groth16_verify)
+import groth16_verify
+#endif
+
 struct Proof: Codable {
     let piA: [String]
     let piB: [[String]]
@@ -101,6 +105,81 @@ class Prover: NSObject {
             reject("PROVER", "An error occurred during proof generation", error)
         }
     }
+
+    @objc(groth16Verify:inputs:resolve:reject:)
+    func groth16Verify(_ proof: String, _ inputs: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        do {
+            // Load the verification key from the main bundle
+            guard let fileURL = Bundle.main.url(forResource: "vkey", withExtension: "json"),
+                  let vkeyData = try? Data(contentsOf: fileURL) else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1001, userInfo: [NSLocalizedDescriptionKey: "File not found in the main bundle."])
+            }
+            
+            // Attempt to decode the verification key data
+            guard let vkeyString = String(data: vkeyData, encoding: .utf8) else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1004, userInfo: [NSLocalizedDescriptionKey: "Unable to decode verification key data."])
+            }
+            
+            // Allocate error buffer for potential verification errors
+            let errorSize = UInt(256)
+            let errorBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(errorSize))
+            defer {
+                errorBuffer.deallocate() // Ensure deallocation to avoid memory leaks
+            }
+
+            // Deserialize the proof and inputs from JSON strings
+            guard let proofData = proof.data(using: .utf8),
+                  let inputsData = inputs.data(using: .utf8) else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1007, userInfo: [NSLocalizedDescriptionKey: "Failed to convert proof or inputs string to data."])
+            }
+
+            let proofObjectRaw = try JSONSerialization.jsonObject(with: proofData, options: [])
+            let inputsArrayRaw = try JSONSerialization.jsonObject(with: inputsData, options: [])
+            
+            guard let proofObject = proofObjectRaw as? NSDictionary else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1009, userInfo: [NSLocalizedDescriptionKey: "Proof JSON is not a valid dictionary."])
+            }
+
+            guard let inputsArray = inputsArrayRaw as? [Any] else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1010, userInfo: [NSLocalizedDescriptionKey: "Inputs JSON is not a valid array."])
+            }
+
+            // Serialize objects back into JSON strings for C function
+            let serializedProofData = try JSONSerialization.data(withJSONObject: proofObject, options: [])
+            let serializedInputsData = try JSONSerialization.data(withJSONObject: inputsArray, options: [])
+            guard let serializedProofString = String(data: serializedProofData, encoding: .utf8),
+                  let serializedInputsString = String(data: serializedInputsData, encoding: .utf8) else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1011, userInfo: [NSLocalizedDescriptionKey: "Failed to serialize objects back to strings."])
+            }
+
+            // Convert JSON strings to C strings
+            let proofCString = serializedProofString.cString(using: .utf8)
+            let inputsCString = serializedInputsString.cString(using: .utf8)
+            let vkeyCString = vkeyString.cString(using: .utf8)
+
+            guard let proofC = proofCString, let inputsC = inputsCString, let vkeyC = vkeyCString else {
+                throw NSError(domain: "com.yourdomain.yourapp", code: 1008, userInfo: [NSLocalizedDescriptionKey: "Error converting JSON strings to C strings."])
+            }
+
+            // Assuming groth16_verify exists and is correctly implemented to accept C strings
+            // Call the C function with C strings
+            let result = groth16_verify(proofC, inputsC, vkeyC, errorBuffer, errorSize)
+            
+            // Check verification result
+            if result == 1 {
+                resolve(true)
+            } else {
+                // Error handling for verification failure
+                let errorMsg = String(cString: errorBuffer)
+                reject("VERIFIER", "Verification failed: \(errorMsg)", NSError(domain: "com.yourdomain.yourapp", code: 1006, userInfo: nil))
+            }
+        } catch {
+            // General error handling
+            reject("VERIFIER", "An error occurred: \(error.localizedDescription)", error)
+        }
+    }
+
+
 }
 
 public func calcWtns(inputsJson: Data) throws -> Data {

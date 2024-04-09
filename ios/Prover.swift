@@ -2,8 +2,8 @@ import Foundation
 import React
 import Security
 
-#if canImport(libwitnesscalc_aadhaar_verifier)
-import libwitnesscalc_aadhaar_verifier
+#if canImport(witnesscalc_aadhaar_verifier)
+import witnesscalc_aadhaar_verifier
 #endif
 
 #if canImport(groth16_prover)
@@ -185,7 +185,7 @@ class Prover: NSObject {
 public func calcWtns(inputsJson: Data) throws -> Data {
     var fileData: Data? = nil
 
-    if let fileURL = Bundle.main.url(forResource: "aadhaar_verifier", withExtension: "dat") {
+    if let fileURL = Bundle.main.url(forResource: "aadhaar-verifier", withExtension: "dat") {
         do {
             // Load the file's data
             fileData = try Data(contentsOf: fileURL)
@@ -195,8 +195,8 @@ public func calcWtns(inputsJson: Data) throws -> Data {
             throw error // Rethrow the error or handle it as needed
         }
     } else {
-        print("File aadhaar_verifier.dat not found in the main bundle.")
-        throw NSError(domain: "com.yourdomain.yourapp", code: 1001, userInfo: [NSLocalizedDescriptionKey: "File aadhaar_verifier.dat not found in the main bundle."])
+        print("File aadhaar-verifier.dat not found in the main bundle.")
+        throw NSError(domain: "com.yourdomain.yourapp", code: 1001, userInfo: [NSLocalizedDescriptionKey: "File aadhaar-verifier.dat not found in the main bundle."])
     }
 
     guard let data = fileData else {

@@ -25,7 +25,7 @@
 		E62930992BBF04EC00D339A9 /* circuit_final.zkey in Resources */ = {isa = PBXBuildFile; fileRef = E62930972BBF04EC00D339A9 /* circuit_final.zkey */; };
 		E629309A2BBF04EC00D339A9 /* vkey.json in Resources */ = {isa = PBXBuildFile; fileRef = E62930982BBF04EC00D339A9 /* vkey.json */; };
 		E629309C2BBF050C00D339A9 /* witness.wtns in Resources */ = {isa = PBXBuildFile; fileRef = E629309B2BBF050C00D339A9 /* witness.wtns */; };
-		E629309E2BC00F4000D339A9 /* aadhaar_verifier.dat in Resources */ = {isa = PBXBuildFile; fileRef = E629309D2BC00F4000D339A9 /* aadhaar_verifier.dat */; };
+		E64B40512BC4713100E3A917 /* aadhaar-verifier.dat in Resources */ = {isa = PBXBuildFile; fileRef = E64B40502BC4713100E3A917 /* aadhaar-verifier.dat */; };
 		E664D7352BADFEC50043738A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E664D7342BADFEC50043738A /* Assets.xcassets */; };
 		E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -70,7 +70,7 @@
 		E62930972BBF04EC00D339A9 /* circuit_final.zkey */ = {isa = PBXFileReference; lastKnownFileType = file; name = circuit_final.zkey; path = "../../../anon-aadhaar/packages/circuits/artifacts/circuit_final.zkey"; sourceTree = "<group>"; };
 		E62930982BBF04EC00D339A9 /* vkey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = vkey.json; path = "../../../anon-aadhaar/packages/circuits/artifacts/vkey.json"; sourceTree = "<group>"; };
 		E629309B2BBF050C00D339A9 /* witness.wtns */ = {isa = PBXFileReference; lastKnownFileType = file; name = witness.wtns; path = "../../../anon-aadhaar/packages/circuits/build/witness.wtns"; sourceTree = "<group>"; };
-		E629309D2BC00F4000D339A9 /* aadhaar_verifier.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = aadhaar_verifier.dat; path = ../../../witnesscalc/src/aadhaar_verifier.dat; sourceTree = "<group>"; };
+		E64B40502BC4713100E3A917 /* aadhaar-verifier.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = "aadhaar-verifier.dat"; path = "../../../circuits/build/aadhaar-verifier/aadhaar-verifier_cpp/aadhaar-verifier.dat"; sourceTree = "<group>"; };
 		E664D7342BADFEC50043738A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -146,7 +146,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E629309D2BC00F4000D339A9 /* aadhaar_verifier.dat */,
+				E64B40502BC4713100E3A917 /* aadhaar-verifier.dat */,
 				E629309B2BBF050C00D339A9 /* witness.wtns */,
 				E62930972BBF04EC00D339A9 /* circuit_final.zkey */,
 				E62930982BBF04EC00D339A9 /* vkey.json */,
@@ -299,9 +299,9 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */,
 				8EBDC35B62F34BBF9E16171C /* Outfit-Bold.ttf in Resources */,
+				E64B40512BC4713100E3A917 /* aadhaar-verifier.dat in Resources */,
 				3573A49363A04C70B2433036 /* Outfit-ExtraBold.ttf in Resources */,
 				CD6D3B608609441FB2F779C3 /* Outfit-ExtraLight.ttf in Resources */,
-				E629309E2BC00F4000D339A9 /* aadhaar_verifier.dat in Resources */,
 				C3A79DB10DB742F5A12812B6 /* Outfit-Light.ttf in Resources */,
 				B8ECFAEE9AB24C89A6FB50DE /* Outfit-Medium.ttf in Resources */,
 				E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */,

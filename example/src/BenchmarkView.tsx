@@ -1,19 +1,19 @@
 import * as React from 'react';
-// import RNFS from 'react-native-fs';
+import RNFS from 'react-native-fs';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  // Platform,
+  Platform,
 } from 'react-native';
 import {
   type AnonAadhaarArgs,
-  groth16Verify,
+  groth16ProveWithZKeyFilePath,
   AadhaarScanner,
   verifySignature,
-  groth16FullProve,
+  groth16Verify,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../src/generateInputs';
@@ -24,10 +24,15 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
-// const zkeyPath =
-//   (Platform.OS === 'android'
-//     ? RNFS.DocumentDirectoryPath
-//     : RNFS.MainBundlePath) + '/circuit_final.zkey';
+const zkeyPath =
+  (Platform.OS === 'android'
+    ? RNFS.DocumentDirectoryPath
+    : RNFS.MainBundlePath) + '/circuit_final.zkey';
+
+const DatFilePath =
+  (Platform.OS === 'android'
+    ? RNFS.DocumentDirectoryPath
+    : RNFS.MainBundlePath) + '/aadhaar-verifier.dat';
 
 // function getWtnsFile(): Promise<string> {
 //   const path =
@@ -37,13 +42,13 @@ const Toast = ({ message }: { message: string }) => (
 //   return RNFS.readFile(path, 'base64');
 // }
 
-// function getVerificationKey(): Promise<string> {
-//   const path =
-//     (Platform.OS === 'android'
-//       ? RNFS.DocumentDirectoryPath
-//       : RNFS.MainBundlePath) + '/vkey.json';
-//   return RNFS.readFile(path, 'utf8');
-// }
+function getVerificationKey(): Promise<string> {
+  const path =
+    (Platform.OS === 'android'
+      ? RNFS.DocumentDirectoryPath
+      : RNFS.MainBundlePath) + '/vkey.json';
+  return RNFS.readFile(path, 'utf8');
+}
 
 export default function BenchmarkView({}) {
   const [complexProof, setComplexProof] = useState<string | null>(null);
@@ -95,15 +100,17 @@ export default function BenchmarkView({}) {
       setIsProving(true);
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
-      const result = await groth16FullProve(anonAadhaarArgs);
-      const fullProofObject = JSON.parse(result);
-      console.log('Object received: ', fullProofObject);
+      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
+        zkeyPath,
+        DatFilePath,
+        anonAadhaarArgs
+      );
       console.log(Date.now() - startProof);
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
-      setComplexProof(fullProofObject.proof);
-      console.log('Complex Proof received: ', fullProofObject.proof);
-      setPublicInputs(fullProofObject.inputs);
-      console.log('Public Inputs received: ', fullProofObject.inputs);
+      setComplexProof(proof);
+      console.log('Complex Proof received: ', proof);
+      setPublicInputs(pub_signals);
+      console.log('Public Inputs received: ', pub_signals);
       setIsProving(false);
     } catch (e) {
       console.log('Catching error');
@@ -118,7 +125,11 @@ export default function BenchmarkView({}) {
   const verifProof = async (_proof: string, _publicInputs: string) => {
     try {
       const startVerif = Date.now();
-      const res = await groth16Verify(_proof, _publicInputs);
+      const res = await groth16Verify(
+        _proof,
+        _publicInputs,
+        await getVerificationKey()
+      );
       console.log('Verification result: ', res);
       setProofVerified(res);
       setExecutionTime((prev) => ({

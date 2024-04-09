@@ -14,6 +14,7 @@ import {
   AadhaarScanner,
   verifySignature,
   groth16Verify,
+  setupProver,
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../src/generateInputs';
@@ -24,33 +25,20 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
+// const zkeyPath = RNFS.LibraryDirectoryPath + '/circuit_final.zkey';
 const zkeyPath =
   (Platform.OS === 'android'
     ? RNFS.DocumentDirectoryPath
     : RNFS.MainBundlePath) + '/circuit_final.zkey';
-
-const DatFilePath =
-  (Platform.OS === 'android'
-    ? RNFS.DocumentDirectoryPath
-    : RNFS.MainBundlePath) + '/aadhaar-verifier.dat';
-
-// function getWtnsFile(): Promise<string> {
-//   const path =
-//     (Platform.OS === 'android'
-//       ? RNFS.DocumentDirectoryPath
-//       : RNFS.MainBundlePath) + '/witness.wtns';
-//   return RNFS.readFile(path, 'base64');
-// }
+const DatFilePath = RNFS.LibraryDirectoryPath + '/aadhaar-verifier.dat';
 
 function getVerificationKey(): Promise<string> {
-  const path =
-    (Platform.OS === 'android'
-      ? RNFS.DocumentDirectoryPath
-      : RNFS.MainBundlePath) + '/vkey.json';
+  const path = RNFS.LibraryDirectoryPath + '/vkey.json';
   return RNFS.readFile(path, 'utf8');
 }
 
 export default function BenchmarkView({}) {
+  const [ready, setReady] = useState<boolean>(false);
   const [complexProof, setComplexProof] = useState<string | null>(null);
   const [publicInputs, setPublicInputs] = useState<string | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
@@ -66,9 +54,10 @@ export default function BenchmarkView({}) {
     useState<AnonAadhaarArgs | null>(null);
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [executionTime, setExecutionTime] = useState<{
+    setup: number;
     proof: number;
     verify: number;
-  }>({ proof: 0, verify: 0 });
+  }>({ setup: 0, proof: 0, verify: 0 });
 
   useEffect(() => {
     if (qrCodeValue !== '') {
@@ -90,6 +79,14 @@ export default function BenchmarkView({}) {
     }
   }, [qrCodeValue]);
 
+  if (!ready) {
+    const startSetup = Date.now();
+    setupProver().then(() => {
+      setReady(true);
+      setExecutionTime((prev) => ({ ...prev, setup: Date.now() - startSetup }));
+    });
+  }
+
   const showToast = (message: string) => {
     setErrorToastMessage(message);
     setTimeout(() => setErrorToastMessage(null), 3000); // hide after 3 seconds
@@ -105,7 +102,6 @@ export default function BenchmarkView({}) {
         DatFilePath,
         anonAadhaarArgs
       );
-      console.log(Date.now() - startProof);
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
       setComplexProof(proof);
       console.log('Complex Proof received: ', proof);
@@ -150,6 +146,15 @@ export default function BenchmarkView({}) {
       {errorToastMessage && <Toast message={errorToastMessage} />}
 
       <Text style={styles.title}>Anon Aadhaar Mobile</Text>
+      <View style={styles.statusRow}>
+        <View
+          style={[
+            styles.statusIndicator,
+            { backgroundColor: ready ? 'green' : 'red' },
+          ]}
+        />
+        <Text>Prover State: {String(ready)}</Text>
+      </View>
       {!isQrScanned && (
         <TouchableOpacity
           style={styles.button}

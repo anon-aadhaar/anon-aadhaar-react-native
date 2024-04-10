@@ -7,7 +7,7 @@
 @implementation Rapidsnark
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSString *)zkey_file_path
+RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSArray *)chunkPaths
                   datPath:(nonnull NSString *)datPath
                   inputs:(nonnull NSDictionary *)inputs
                   proofBufferSize:(nonnull NSNumber *)proofBufferSize
@@ -21,7 +21,6 @@ RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSString *)zkey_file_pat
     NSMutableData *wtnsData = [NSMutableData dataWithLength:expectedWitnessSize];
     const void *wtns_buffer = [wtnsData bytes];
     unsigned long wtns_size = [wtnsData length];
-    const char *file_path = [zkey_file_path UTF8String];
 
     NSString *errorString = nil;
         // Calculate the witness from .dat file and inputs
@@ -42,8 +41,20 @@ RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSString *)zkey_file_pat
     unsigned long error_msg_maxsize = (unsigned long) [errBufferSize intValue];
     char error_msg[error_msg_maxsize];
 
-    int statusCode = groth16_prover_zkey_file(
-      file_path,
+    NSMutableData *zkeyData = [NSMutableData data];
+    for (NSString *chunkPath in chunkPaths) {
+    NSData *chunk = [NSData dataWithContentsOfFile:chunkPath];
+    [zkeyData appendData:chunk];
+    }
+
+    // Now `zkeyData` contains your combined zkey buffer, and you can get its size
+    unsigned long zkeySize = [zkeyData length];
+
+    // Convert `zkeyData` to a buffer for use with your C function
+    const void *zkeyBuffer = [zkeyData bytes];
+
+    int statusCode = groth16_prover(
+      zkeyBuffer, zkeySize,
       wtns_buffer, wtns_size,
       proof_buffer, &proof_size,
       public_buffer, &public_buffer_size,
@@ -122,6 +133,44 @@ RCT_EXPORT_METHOD(groth16PublicSizeForZkeyFile:(nonnull NSString *)zkey_file_pat
     } else {
       NSString *errorString = [NSString stringWithCString:error_msg encoding:NSUTF8StringEncoding];
       RCTLogError(@"Error:%@", errorString);
+      reject([NSString stringWithFormat:@"%d", status_code], errorString, nil);
+    }
+}
+
+RCT_EXPORT_METHOD(groth16PublicSizeForChunkedZkeyFile:(nonnull NSArray *)chunkPaths
+                  errBufferSize:(nonnull NSNumber *)errBufferSize
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    NSMutableData *zkeyData = [NSMutableData data];
+    for (NSString *chunkPath in chunkPaths) {
+        NSData *chunk = [NSData dataWithContentsOfFile:chunkPath];
+        [zkeyData appendData:chunk];
+    }
+
+    // Now `zkeyData` contains your combined zkey buffer, and you can get its size
+    unsigned long zkeySize = [zkeyData length];
+
+    // Convert `zkeyData` to a buffer for use with your C function
+    const void *zkeyBuffer = [zkeyData bytes];
+
+    unsigned long error_msg_maxsize = (unsigned long) [errBufferSize intValue];
+    char error_msg[error_msg_maxsize];
+
+    unsigned long public_buffer_size = 0;
+
+    int status_code = groth16_public_size_for_zkey_buf(
+    zkeyBuffer,zkeySize,
+      &public_buffer_size,
+      error_msg, error_msg_maxsize
+    );
+
+    if (status_code == PROVER_OK) {
+      resolve(@(public_buffer_size));
+    } else {
+      NSString *errorString = [NSString stringWithCString:error_msg encoding:NSUTF8StringEncoding];
+      RCTLogError(@"Error:%@", errorString);
+    RCTLogError(@"Error here in Chunked Zkey file size");
       reject([NSString stringWithFormat:@"%d", status_code], errorString, nil);
     }
 }

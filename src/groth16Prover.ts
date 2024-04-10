@@ -1,5 +1,7 @@
 import { NativeModules, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
+import fetchBlob from 'react-native-blob-util';
+// import { unzip } from 'react-native-zip-archive';
 
 const LINKING_ERROR =
   `The package 'react-native-rapidsnark' doesn't seem to be linked. Make sure: \n\n` +
@@ -22,54 +24,73 @@ export type AnonAadhaarArgs = {
 };
 
 const fileUrls = {
-  // zkey: 'https://d1re67zv2jtrxt.cloudfront.net/v2.0.0/circuit_final.zkey',
   'aadhaar-verifier.dat':
     'https://anon-aadhaar.s3.ap-south-1.amazonaws.com/v2.0.0/aadhaar-verifier.dat',
   'vkey.json': 'https://d1re67zv2jtrxt.cloudfront.net/v2.0.0/vkey.json',
+  'circuit_final': 'https://d1re67zv2jtrxt.cloudfront.net/v2.0.0/chunked_zkey/',
 };
 
-async function fetchAndStoreFile(url: string, filePath: string) {
-  // Fetching the file
-  const response = await fetch(url);
-  const blob = await response.blob();
-  const reader = new FileReader();
-  reader.readAsDataURL(blob);
+const chunkedDirectoryPath = `${RNFS.DocumentDirectoryPath}/chunked`;
 
-  return new Promise<void>((resolve, reject) => {
-    reader.onloadend = async () => {
-      try {
-        if (typeof reader.result === 'string') {
-          // Now safely assumed to be a string, so we can use the split method
-          const base64data = reader.result.split(',')[1]; // Remove the data URL scheme prefix
-          if (!base64data) throw Error('Reader result is undefined');
-          await RNFS.writeFile(filePath, base64data, 'base64');
-          resolve();
-        } else {
-          // Handle the unexpected case where result is not a string
-          reject(new Error('FileReader result is not a string.'));
-        }
-      } catch (error) {
-        reject(error);
-      }
-    };
-  });
+async function ensureDirectoryExists(path: string) {
+  const directoryExists = await RNFS.exists(path);
+  if (!directoryExists) {
+    await RNFS.mkdir(path);
+  }
+}
+
+async function downloadFile(url: string, path: string) {
+  const fileExtension = url.split('.').pop();
+  try {
+    const res = await fetchBlob
+      .config({
+        fileCache: true,
+        path: path,
+        appendExt: fileExtension,
+      })
+      .fetch('GET', url);
+
+    // if (fileExtension === 'gz') {
+    //   await unzip(res.path(), path);
+    //   console.log('File decompressed to ', path);
+    // }
+    console.log('The file is saved to ', res.path());
+  } catch (error) {
+    console.error('Download error:', error);
+  }
 }
 
 export async function setupProver() {
-  const directoryPath =
-    Platform.OS === 'android'
-      ? RNFS.DocumentDirectoryPath
-      : RNFS.LibraryDirectoryPath;
+  console.log('Starting setup!');
+  const directoryPath = RNFS.DocumentDirectoryPath;
 
   for (const [key, url] of Object.entries(fileUrls)) {
-    const filePath = `${directoryPath}/${key}`;
-    const fileExists = await RNFS.exists(filePath);
+    console.log('Round for key: ', key);
+    // If Zkey, loading zkey chunks
+    if (key === 'circuit_final') {
+      for (let i = 0; i < 10; i++) {
+        const filePath = `${directoryPath}/${key}_${i}.zkey`;
+        const fileExists = await RNFS.exists(filePath);
 
-    if (!fileExists) {
-      await fetchAndStoreFile(url, filePath);
+        if (fileExists) continue;
+
+        console.log('Fetching => ', url + key + `_${i}.gz`);
+        console.log('Stored ar => ', filePath);
+
+        await ensureDirectoryExists(chunkedDirectoryPath);
+
+        await downloadFile(url + key + `_${i}.gz`, filePath);
+      }
+    } else {
+      const filePath = `${directoryPath}/${key}`;
+      const fileExists = await RNFS.exists(filePath);
+
+      if (!fileExists) {
+        await downloadFile(url, filePath);
+      }
+
+      console.log(`${key} loaded at ${filePath}`);
     }
-
-    console.log(`${key} loaded at ${filePath}`);
   }
 }
 
@@ -88,7 +109,7 @@ export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 export async function groth16ProveWithZKeyFilePath(
-  zkey_path: string,
+  zkeys_paths: string[],
   datFilePath: string,
   inputs: AnonAadhaarArgs,
   {
@@ -107,13 +128,13 @@ export async function groth16ProveWithZKeyFilePath(
 ): Promise<{ proof: string; pub_signals: string }> {
   let public_buffer_size: number;
   if (!publicBufferSize) {
-    public_buffer_size = await groth16PublicSizeForZkeyFile(zkey_path);
+    public_buffer_size = await groth16PublicSizeForChunkedZkeyFile(zkeys_paths);
   } else {
     public_buffer_size = proofBufferSize;
   }
 
   return Rapidsnark.groth16ProveWithZKeyFilePath(
-    zkey_path,
+    zkeys_paths,
     datFilePath,
     inputs,
     proofBufferSize,
@@ -153,4 +174,20 @@ export function groth16PublicSizeForZkeyFile(
   }
 ): Promise<number> {
   return Rapidsnark.groth16PublicSizeForZkeyFile(zkeyPath, errorBufferSize);
+}
+
+export function groth16PublicSizeForChunkedZkeyFile(
+  zkeyChunksPaths: string[],
+  {
+    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+  }: {
+    errorBufferSize: number;
+  } = {
+    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
+  }
+): Promise<number> {
+  return Rapidsnark.groth16PublicSizeForChunkedZkeyFile(
+    zkeyChunksPaths,
+    errorBufferSize
+  );
 }

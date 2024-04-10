@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Platform,
+  // Platform,
 } from 'react-native';
 import {
   type AnonAadhaarArgs,
@@ -25,15 +25,11 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
-// const zkeyPath = RNFS.LibraryDirectoryPath + '/circuit_final.zkey';
-const zkeyPath =
-  (Platform.OS === 'android'
-    ? RNFS.DocumentDirectoryPath
-    : RNFS.MainBundlePath) + '/circuit_final.zkey';
-const DatFilePath = RNFS.LibraryDirectoryPath + '/aadhaar-verifier.dat';
+const zkeyChunksFolderPath = RNFS.DocumentDirectoryPath + '/chunked';
+const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
 
 function getVerificationKey(): Promise<string> {
-  const path = RNFS.LibraryDirectoryPath + '/vkey.json';
+  const path = RNFS.DocumentDirectoryPath + '/vkey.json';
   return RNFS.readFile(path, 'utf8');
 }
 
@@ -47,6 +43,7 @@ export default function BenchmarkView({}) {
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
   const [isQrScanned, setIsQrScanned] = useState<boolean>(false);
   const [sigVerified, setSigVerified] = useState<boolean>(false);
+  const [chunkPaths, setChunkPaths] = useState<string[]>([]);
   const [errorToastMessage, setErrorToastMessage] = useState<string | null>(
     null
   );
@@ -79,6 +76,22 @@ export default function BenchmarkView({}) {
     }
   }, [qrCodeValue]);
 
+  useEffect(() => {
+    let temp: string[] = [];
+    if (ready) {
+      for (let i = 0; i < 10; i++) {
+        let chunkPath = `${zkeyChunksFolderPath}/circuit_final_${i}.zkey`;
+        RNFS.exists(chunkPath).then((resp) => {
+          console.log(chunkPath);
+          console.log(resp);
+        });
+        temp.push(chunkPath);
+      }
+      console.log('Chunked paths: ', temp);
+      setChunkPaths(temp);
+    }
+  }, [ready]);
+
   if (!ready) {
     const startSetup = Date.now();
     setupProver().then(() => {
@@ -98,7 +111,7 @@ export default function BenchmarkView({}) {
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
       const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
-        zkeyPath,
+        chunkPaths,
         DatFilePath,
         anonAadhaarArgs
       );
@@ -154,6 +167,11 @@ export default function BenchmarkView({}) {
           ]}
         />
         <Text>Prover State: {String(ready)}</Text>
+        {ready ? (
+          <Text>Proof Execution Time: {executionTime.setup}ms</Text>
+        ) : (
+          <></>
+        )}
       </View>
       {!isQrScanned && (
         <TouchableOpacity

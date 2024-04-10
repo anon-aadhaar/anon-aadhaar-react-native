@@ -41,11 +41,13 @@ __metadata:
     pako: ^2.1.0
     react: 18.2.0
     react-native: 0.73.4
+    react-native-blob-util: ^0.19.8
     react-native-fs: ^2.20.0
     react-native-safe-area-context: ^4.9.0
     react-native-screens: ^3.29.0
     react-native-svg: ^15.1.0
     react-native-vision-camera: ^3.9.0
+    react-native-zip-archive: ^6.1.0
     yarn: ^1.22.22
   languageName: unknown
   linkType: soft
@@ -75,9 +77,11 @@ __metadata:
     prettier: ^3.0.3
     react: 18.2.0
     react-native: 0.73.4
+    react-native-blob-util: ^0.19.8
     react-native-builder-bob: ^0.23.2
     react-native-fs: ^2.20.0
     react-native-vision-camera: ^3.9.0
+    react-native-zip-archive: ^6.1.0
     release-it: ^15.0.0
     turbo: ^1.10.7
     typescript: ^5.2.2
@@ -4173,7 +4177,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base-64@npm:^0.1.0":
+"base-64@npm:0.1.0, base-64@npm:^0.1.0":
   version: 0.1.0
   resolution: "base-64@npm:0.1.0"
   checksum: 5a42938f82372ab5392cbacc85a5a78115cbbd9dbef9f7540fa47d78763a3a8bd7d598475f0d92341f66285afd377509851a9bb5c67bbecb89686e9255d5b3eb
@@ -11025,6 +11029,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-blob-util@npm:^0.19.8":
+  version: 0.19.8
+  resolution: "react-native-blob-util@npm:0.19.8"
+  dependencies:
+    base-64: 0.1.0
+    glob: ^10.3.10
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 32fd871c345457bbb1518eea1e3a32d4af7481c30de0f75dc13d154ed959033db6c15316f6e60451cba6accf0df74a618fc7d4677546fd6642ebbd3babfc614a
+  languageName: node
+  linkType: hard
+
 "react-native-builder-bob@npm:^0.23.2":
   version: 0.23.2
   resolution: "react-native-builder-bob@npm:0.23.2"
@@ -11117,6 +11134,16 @@ __metadata:
     react-native-worklets-core:
       optional: true
   checksum: 52cca29ed7b8d8fcc4ae8f5e8da71844d0a96dfa642833fbda611469dac9a2a9fbcace2d9c2a09ab735d1d91582815a05bd3b466889afbcc2bd1deae2112969b
+  languageName: node
+  linkType: hard
+
+"react-native-zip-archive@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "react-native-zip-archive@npm:6.1.0"
+  peerDependencies:
+    react: ">=16.8.6"
+    react-native: ">=0.60.0"
+  checksum: bb329e3dde9550a1ca51076034f912c1210df8c1697c8522329a16bd1980c9084dc29c3fda52418b1c6bf8423cca7dec3d0f8a7f6f999278a4111f07d7cdbb80
   languageName: node
   linkType: hard
 

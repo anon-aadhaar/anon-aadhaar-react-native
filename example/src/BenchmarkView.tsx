@@ -25,7 +25,8 @@ const Toast = ({ message }: { message: string }) => (
   </View>
 );
 
-const zkeyChunksFolderPath = RNFS.DocumentDirectoryPath + '/chunked';
+// const zkeyChunksFolderPath = RNFS.DocumentDirectoryPath + '/chunked';
+const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
 const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
 
 function getVerificationKey(): Promise<string> {
@@ -43,7 +44,7 @@ export default function BenchmarkView({}) {
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
   const [isQrScanned, setIsQrScanned] = useState<boolean>(false);
   const [sigVerified, setSigVerified] = useState<boolean>(false);
-  const [chunkPaths, setChunkPaths] = useState<string[]>([]);
+  // const [chunkPaths, setChunkPaths] = useState<string[]>([]);
   const [errorToastMessage, setErrorToastMessage] = useState<string | null>(
     null
   );
@@ -76,21 +77,21 @@ export default function BenchmarkView({}) {
     }
   }, [qrCodeValue]);
 
-  useEffect(() => {
-    let temp: string[] = [];
-    if (ready) {
-      for (let i = 0; i < 10; i++) {
-        let chunkPath = `${zkeyChunksFolderPath}/circuit_final_${i}.zkey`;
-        RNFS.exists(chunkPath).then((resp) => {
-          console.log(chunkPath);
-          console.log(resp);
-        });
-        temp.push(chunkPath);
-      }
-      console.log('Chunked paths: ', temp);
-      setChunkPaths(temp);
-    }
-  }, [ready]);
+  // useEffect(() => {
+  //   let temp: string[] = [];
+  //   if (ready) {
+  //     for (let i = 0; i < 10; i++) {
+  //       let chunkPath = `${zkeyChunksFolderPath}/circuit_final_${i}.zkey`;
+  //       RNFS.exists(chunkPath).then((resp) => {
+  //         console.log(chunkPath);
+  //         console.log(resp);
+  //       });
+  //       temp.push(chunkPath);
+  //     }
+  //     console.log('Chunked paths: ', temp);
+  //     setChunkPaths(temp);
+  //   }
+  // }, [ready]);
 
   if (!ready) {
     const startSetup = Date.now();
@@ -111,7 +112,7 @@ export default function BenchmarkView({}) {
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
       const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
-        chunkPaths,
+        zkeyFilePath,
         DatFilePath,
         anonAadhaarArgs
       );
@@ -122,7 +123,7 @@ export default function BenchmarkView({}) {
       console.log('Public Inputs received: ', pub_signals);
       setIsProving(false);
     } catch (e) {
-      console.log('Catching error');
+      setIsProving(false);
       if (e instanceof Error) {
         showToast(e.message);
       } else {

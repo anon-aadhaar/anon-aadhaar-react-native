@@ -22,7 +22,6 @@
 		CAD0031E8CF745F2A5F143C1 /* Outfit-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 407481BCA05145F69B088154 /* Outfit-Black.ttf */; };
 		CD6D3B608609441FB2F779C3 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD09D58399B048FE8395DAE6 /* Outfit-ExtraLight.ttf */; };
 		D81F5C6A2D64C5C69EDB0ADD /* libPods-AnonAadhaarApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4EA00CB3F766D66FB63C4A /* libPods-AnonAadhaarApp.a */; };
-		E64B40532BC5896B00E3A917 /* circuit_final.zkey in Resources */ = {isa = PBXBuildFile; fileRef = E64B40522BC5896B00E3A917 /* circuit_final.zkey */; };
 		E664D7352BADFEC50043738A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E664D7342BADFEC50043738A /* Assets.xcassets */; };
 		E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63190EB86E6E40848D5ED45A /* Outfit-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -64,7 +63,6 @@
 		D787DFF3AEA54B2E9A51287C /* Outfit-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-Thin.ttf"; path = "../assets/fonts/Outfit-Thin.ttf"; sourceTree = "<group>"; };
 		E29956B49D554488A397DF20 /* Outfit-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Outfit-SemiBold.ttf"; path = "../assets/fonts/Outfit-SemiBold.ttf"; sourceTree = "<group>"; };
 		E625A2E42B98A11600B5A0EF /* libanon-aadhaar-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libanon-aadhaar-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E64B40522BC5896B00E3A917 /* circuit_final.zkey */ = {isa = PBXFileReference; lastKnownFileType = file; name = circuit_final.zkey; path = "../../../anon-aadhaar/packages/circuits/artifacts/circuit_final.zkey"; sourceTree = "<group>"; };
 		E664D7342BADFEC50043738A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -140,7 +138,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E64B40522BC5896B00E3A917 /* circuit_final.zkey */,
 				13B07FAE1A68108700A75B9A /* AnonAadhaarApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AnonAadhaarAppTests */,
@@ -295,7 +292,6 @@
 				E7F7B56D11A040EA83AAF4F4 /* Outfit-Regular.ttf in Resources */,
 				6082BFBEEA17432EB7F8992D /* Outfit-SemiBold.ttf in Resources */,
 				E664D7352BADFEC50043738A /* Assets.xcassets in Resources */,
-				E64B40532BC5896B00E3A917 /* circuit_final.zkey in Resources */,
 				017945B206274520A2080942 /* Outfit-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -646,10 +642,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -718,10 +711,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

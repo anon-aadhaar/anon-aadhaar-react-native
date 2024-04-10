@@ -171,7 +171,11 @@
     ]
   },
   "dependencies": {
+    "@types/react-native-base64": "^0.2.2",
+    "@types/text-encoding": "^0.0.39",
+    "react-native-base64": "^0.2.1",
     "react-native-blob-util": "^0.19.8",
-    "react-native-zip-archive": "^6.1.0"
+    "react-native-zip-archive": "^6.1.0",
+    "text-encoding": "^0.7.0"
   }
 }

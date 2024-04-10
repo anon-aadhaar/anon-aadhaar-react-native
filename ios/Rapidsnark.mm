@@ -7,7 +7,7 @@
 @implementation Rapidsnark
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSArray *)chunkPaths
+RCT_EXPORT_METHOD(groth16ProveWithChunkedZKeyFilePath:(nonnull NSArray *)chunkPaths
                   datPath:(nonnull NSString *)datPath
                   inputs:(nonnull NSDictionary *)inputs
                   proofBufferSize:(nonnull NSNumber *)proofBufferSize
@@ -46,6 +46,77 @@ RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSArray *)chunkPaths
     NSData *chunk = [NSData dataWithContentsOfFile:chunkPath];
     [zkeyData appendData:chunk];
     }
+
+    // Now `zkeyData` contains your combined zkey buffer, and you can get its size
+    unsigned long zkeySize = [zkeyData length];
+
+    // Convert `zkeyData` to a buffer for use with your C function
+    const void *zkeyBuffer = [zkeyData bytes];
+
+    int statusCode = groth16_prover(
+      zkeyBuffer, zkeySize,
+      wtns_buffer, wtns_size,
+      proof_buffer, &proof_size,
+      public_buffer, &public_buffer_size,
+      error_msg, error_msg_maxsize
+    );
+
+    if (statusCode != PROVER_OK) {
+      NSString *errorString = [NSString stringWithCString:error_msg encoding:NSUTF8StringEncoding];
+      RCTLogError(@"Error:%@", errorString);
+      reject([NSString stringWithFormat:@"%d", statusCode], errorString, nil);
+      return;
+    }
+
+    NSString *proofResult = [NSString stringWithCString:proof_buffer encoding:NSUTF8StringEncoding];
+    NSString *publicResult = [NSString stringWithCString:public_buffer encoding:NSUTF8StringEncoding];
+
+    if (proofResult.length > 0) {
+      NSDictionary *resultDict = @{@"proof": proofResult, @"pub_signals": publicResult};
+      resolve(resultDict);
+    } else {
+      NSString *errorString = [NSString stringWithCString:error_msg encoding:NSUTF8StringEncoding];
+      RCTLogInfo(@"Error:%@", errorString);
+
+      reject([NSString stringWithFormat:@"%d", statusCode], errorString, nil);
+    }
+}
+
+RCT_EXPORT_METHOD(groth16ProveWithZKeyFilePath:(nonnull NSString *)zkeyFilePath
+                  datPath:(nonnull NSString *)datPath
+                  inputs:(nonnull NSDictionary *)inputs
+                  proofBufferSize:(nonnull NSNumber *)proofBufferSize
+                  publicBufferSize:(nonnull NSNumber *)publicBufferSize
+                  errBufferSize:(nonnull NSNumber *)errBufferSize
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    // Initialize empty witness buffer with expected size of about 33MB
+    const unsigned long expectedWitnessSize = 100 * 1024 * 1024; // 100MB for safety
+    NSMutableData *wtnsData = [NSMutableData dataWithLength:expectedWitnessSize];
+    const void *wtns_buffer = [wtnsData bytes];
+    unsigned long wtns_size = [wtnsData length];
+
+    NSString *errorString = nil;
+        // Calculate the witness from .dat file and inputs
+        if (!calculateWitnessFromDatAndInputs(datPath, inputs, &wtnsData, &errorString)) {
+            RCTLogError(@"Error calculating witness: %@", errorString);
+            reject(@"witness_calculation_error", errorString, nil);
+            return;
+        }
+    wtns_buffer = [wtnsData bytes];
+    wtns_size = [wtnsData length];
+
+    unsigned long proof_size = (unsigned long) [proofBufferSize intValue];
+    char proof_buffer[proof_size];
+
+    unsigned long public_buffer_size = (unsigned long) [publicBufferSize intValue];
+    char public_buffer[public_buffer_size];
+
+    unsigned long error_msg_maxsize = (unsigned long) [errBufferSize intValue];
+    char error_msg[error_msg_maxsize];
+
+    NSData *zkeyData = [NSData dataWithContentsOfFile:zkeyFilePath];
 
     // Now `zkeyData` contains your combined zkey buffer, and you can get its size
     unsigned long zkeySize = [zkeyData length];

@@ -77,22 +77,6 @@ export default function BenchmarkView({}) {
     }
   }, [qrCodeValue]);
 
-  // useEffect(() => {
-  //   let temp: string[] = [];
-  //   if (ready) {
-  //     for (let i = 0; i < 10; i++) {
-  //       let chunkPath = `${zkeyChunksFolderPath}/circuit_final_${i}.zkey`;
-  //       RNFS.exists(chunkPath).then((resp) => {
-  //         console.log(chunkPath);
-  //         console.log(resp);
-  //       });
-  //       temp.push(chunkPath);
-  //     }
-  //     console.log('Chunked paths: ', temp);
-  //     setChunkPaths(temp);
-  //   }
-  // }, [ready]);
-
   if (!ready) {
     const startSetup = Date.now();
     setupProver().then(() => {

@@ -76,26 +76,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
-  // camera: {
-  //   height: '100%',
-  //   width: '100%',
-  //   alignSelf: 'center',
-  // },
   cutout: {
     height: 350, // The size of the QR code cutout
     width: 350,
     borderColor: '#000', // Border color from your design
   },
-  // overlay: {
-  //   position: 'absolute', // Overlay must be absolutely positioned
-  //   top: 0, // Full overlay over the camera view
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 0,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: 'transparent', // Transparent background
-  // },
   camera: {
     height: '100%', // Take up full height
     width: '100%', // Take up full width

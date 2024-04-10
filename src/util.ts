@@ -1,4 +1,9 @@
 import pako from 'pako';
+import RNFS from 'react-native-fs';
+import base64 from 'react-native-base64';
+import { TextDecoder } from 'text-encoding';
+import { fileUrls } from './constants';
+import fetchBlob from 'react-native-blob-util';
 
 export function str2ab(str: string) {
   const buf = new ArrayBuffer(str.length);
@@ -123,42 +128,84 @@ export function Uint8ArrayToCharArray(a: Uint8Array): string[] {
   return Array.from(a).map((x) => x.toString());
 }
 
-export function utf8ArrayToStr(array: any) {
-  let out = '',
-    i = 0,
-    len = array.length;
-  let char2, char3;
+export async function setupProverWithChunkedZkey() {
+  console.log('Starting setup!');
+  const directoryPath = RNFS.DocumentDirectoryPath;
 
-  while (i < len) {
-    let c = array[i++];
-    switch (c >> 4) {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-        // 0xxxxxxx
-        out += String.fromCharCode(c);
-        break;
-      case 12:
-      case 13:
-        // 110x xxxx   10xx xxxx
-        char2 = array[i++];
-        out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f));
-        break;
-      case 14:
-        // 1110 xxxx  10xx xxxx  10xx xxxx
-        char2 = array[i++];
-        char3 = array[i++];
-        out += String.fromCharCode(
-          ((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0)
-        );
-        break;
+  for (const [key, url] of Object.entries(fileUrls)) {
+    console.log('Round for key: ', key);
+    // If Zkey, loading zkey chunks
+    if (key === 'circuit_final') {
+      for (let i = 0; i < 10; i++) {
+        const filePath = `${chunkedDirectoryPath}/${key}_${i}.zkey`;
+        const fileExists = await RNFS.exists(filePath);
+
+        if (fileExists) continue;
+
+        console.log('Fetching => ', url + key + `_${i}.gz`);
+        console.log('Stored at => ', filePath);
+
+        await ensureDirectoryExists(chunkedDirectoryPath);
+
+        await downloadFileForChunkedZkey(url + key + `_${i}.gz`, filePath);
+      }
+    } else {
+      const filePath = `${directoryPath}/${key}`;
+      const fileExists = await RNFS.exists(filePath);
+
+      if (!fileExists) {
+        await downloadFileForChunkedZkey(url, filePath);
+      }
+
+      console.log(`${key} loaded at ${filePath}`);
     }
   }
+}
 
-  return out;
+const chunkedDirectoryPath = `${RNFS.DocumentDirectoryPath}/chunked`;
+
+async function ensureDirectoryExists(path: string) {
+  const directoryExists = await RNFS.exists(path);
+  if (!directoryExists) {
+    await RNFS.mkdir(path);
+  }
+}
+
+async function downloadFileForChunkedZkey(url: string, targetPath: string) {
+  // Determine the file extension
+  const fileExtension = url.split('.').pop();
+  const tempPath = targetPath + (fileExtension === 'gz' ? '.gz' : '');
+
+  try {
+    // Download the file to a temporary path
+    await fetchBlob.config({ path: tempPath }).fetch('GET', url);
+    console.log('The file is temporarily saved to ', tempPath);
+
+    // If the file is a .gz file, read it, decompress it, and write the decompressed content
+    if (fileExtension === 'gz') {
+      // Read the .gz file as base64
+      const base64Data = await RNFS.readFile(tempPath, 'base64');
+      // Convert base64 to ArrayBuffer using react-native-base64
+      const binaryData = base64.decode(base64Data);
+      let bytes = new Uint8Array(binaryData.length);
+      for (let i = 0; i < binaryData.length; i++) {
+        bytes[i] = binaryData.charCodeAt(i);
+      }
+      // Decompress with pako
+      const decompressed = pako.ungzip(bytes);
+      // Convert the decompressed data back to a string to write it
+      const decoder = new TextDecoder('utf-8');
+      const decompressedStr = decoder.decode(decompressed);
+
+      // Write the decompressed data to the target path
+      await RNFS.writeFile(targetPath, decompressedStr, 'utf8');
+      console.log('File decompressed to ', targetPath);
+
+      // Optionally, remove the original .gz file after decompression
+      await RNFS.unlink(tempPath);
+      console.log('Original .gz file removed');
+    }
+  } catch (error) {
+    console.error('Error during file download or decompression:', error);
+  }
 }

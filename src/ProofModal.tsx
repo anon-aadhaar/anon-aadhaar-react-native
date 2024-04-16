@@ -20,6 +20,7 @@ import {
   groth16Verify,
   type AnonAadhaarArgs,
 } from './groth16Prover';
+import { getVerificationKey } from './util';
 
 const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
 const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
@@ -118,7 +119,11 @@ const ProveScreen = ({
         anonAadhaarArgs
       );
       // TODO Get path of the vk
-      const res = await groth16Verify(proof, pub_signals, '');
+      const res = await groth16Verify(
+        proof,
+        pub_signals,
+        await getVerificationKey()
+      );
       setProofs({ proof, pub_signals });
       setProofVerified(res);
       setIsProving(false);

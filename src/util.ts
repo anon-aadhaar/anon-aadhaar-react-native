@@ -1,4 +1,10 @@
 import pako from 'pako';
+import RNFS from 'react-native-fs';
+
+export function getVerificationKey(): Promise<string> {
+  const path = RNFS.DocumentDirectoryPath + '/vkey.json';
+  return RNFS.readFile(path, 'utf8');
+}
 
 export function str2ab(str: string) {
   const buf = new ArrayBuffer(str.length);

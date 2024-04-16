@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-awesome-library": ["./src/index"]
+      "@anon-aadhaar/react-native": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

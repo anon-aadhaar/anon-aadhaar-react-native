@@ -5,13 +5,13 @@ test
 ## Installation
 
 ```sh
-npm install react-native-awesome-library
+npm install @anon-aadhaar/react-native
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-awesome-library';
+import { multiply } from '@anon-aadhaar/react-native';
 
 // ...
 

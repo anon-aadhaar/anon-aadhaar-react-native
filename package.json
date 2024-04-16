@@ -1,5 +1,5 @@
 {
-  "name": "react-native-awesome-library",
+  "name": "@anon-aadhaar/react-native",
   "version": "0.1.0",
   "description": "test",
   "main": "lib/commonjs/index",
@@ -26,7 +26,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-awesome-library-example",
+    "example": "yarn workspace anonaadhaar",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",

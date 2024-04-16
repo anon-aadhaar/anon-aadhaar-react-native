@@ -1,4 +1,4 @@
-package com.awesomelibraryexample
+package com.anonaadhaar.anonaadhaar
 
 import android.app.Application
 import com.facebook.react.PackageList

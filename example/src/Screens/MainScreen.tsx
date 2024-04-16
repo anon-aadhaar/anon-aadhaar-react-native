@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ProofModal } from 'react-native-awesome-library';
+import { ProofModal } from '@anon-aadhaar/react-native';
 
 // const img = require('../assets/img-home.png');
 

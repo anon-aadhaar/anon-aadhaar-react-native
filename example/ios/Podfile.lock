@@ -1,4 +1,8 @@
 PODS:
+  - anon-aadhaar-react-native (0.1.0):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - boost (1.83.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -944,10 +948,6 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-awesome-library (0.1.0):
-    - glog
-    - RCT-Folly (= 2022.05.16.00)
-    - React-Core
   - react-native-blob-util (0.19.9):
     - React-Core
   - React-nativeconfig (0.73.6)
@@ -1129,6 +1129,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - anon-aadhaar-react-native (from `../..`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1181,7 +1182,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
-  - react-native-awesome-library (from `../..`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -1225,6 +1225,8 @@ SPEC REPOS:
     - SocketRocket
 
 EXTERNAL SOURCES:
+  anon-aadhaar-react-native:
+    :path: "../.."
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1280,8 +1282,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
-  react-native-awesome-library:
-    :path: "../.."
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
   React-nativeconfig:
@@ -1334,6 +1334,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  anon-aadhaar-react-native: 15d1678162da23daba15285b6af856f7383d2fb9
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
@@ -1373,7 +1374,6 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-awesome-library: 6f063b94be55c1a37d7be35855c5ca0dfa59a786
   react-native-blob-util: 18b510205c080a453574a7d2344d64673d0ad9af
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
@@ -1401,6 +1401,6 @@ SPEC CHECKSUMS:
   VisionCamera: 36c460338692788a0d377dce7d32f8ba049fb4f2
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: 2e9b6e922f07fff28bbd48f6b5d98d3f1a0d2d4f
+PODFILE CHECKSUM: bab1aa84a66b27402f9809b6cfddc8af62334f6b
 
 COCOAPODS: 1.15.2

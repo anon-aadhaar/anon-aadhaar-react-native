@@ -1,31 +1,31 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { OnboardingScreen } from './Screens/OnboardingScreen';
+import { MainScreen } from './Screens/MainScreen';
+// import BenchmarkView from './Screens/BenchmarkScreen';
+// import { setupProver } from '@anon-aadhaar/react-native';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-awesome-library';
+export type Views = 'Onboarding' | 'Main' | 'Benchmark';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [currentScreen, setCurrentScreen] = useState<Views>('Onboarding');
+  // const [setupReady, setSetupReady] = useState<boolean>(true);
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  // useEffect(() => {
+  //   setupProver().then(() => {
+  //     setSetupReady(true);
+  //   });
+  // }, [setupReady]);
 
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <>
+      {currentScreen === 'Onboarding' && (
+        <OnboardingScreen
+          setCurrentScreen={setCurrentScreen}
+          setupReady={true}
+        />
+      )}
+      {currentScreen === 'Main' && <MainScreen />}
+      {/* {currentScreen === 'Benchmark' && <BenchmarkView />} */}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});

@@ -1,4 +1,4 @@
-import React, { type FunctionComponent } from 'react';
+import React, { type FunctionComponent, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import { ProofModal } from '@anon-aadhaar/react-native';
+import { ProofModal } from 'react-native-awesome-library';
 
 // const img = require('../assets/img-home.png');
 
@@ -15,7 +15,7 @@ export type MainScreenProps = {
 };
 
 export const MainScreen: FunctionComponent<MainScreenProps> = () => {
-  // const [proofs, setProofs] = useState();
+  const [proofs, setProofs] = useState();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -27,15 +27,15 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           <TouchableOpacity style={styles.buttonWhite}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
-          {/* <ProofModal buttonMessage="Start" setProofs={setProofs} /> */}
+          <ProofModal buttonMessage="Start" setProofs={setProofs} />
         </View>
-        {/* {proofs && (
+        {proofs && (
           <View style={styles.orangeSection}>
             <Text style={styles.proofSectionText}>
               Identity Proof #1 - 03/19/20204
             </Text>
           </View>
-        )} */}
+        )}
       </View>
     </SafeAreaView>
   );

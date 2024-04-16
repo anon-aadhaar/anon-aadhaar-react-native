@@ -1,22 +1,5 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-awesome-library' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const AwesomeLibrary = NativeModules.AwesomeLibrary
-  ? NativeModules.AwesomeLibrary
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return AwesomeLibrary.multiply(a, b);
-}
+export * from './groth16Prover';
+export * from './aadhaarScanner';
+export * from './verifySignature';
+export * from './generateInputs';
+export * from './ProofModal';

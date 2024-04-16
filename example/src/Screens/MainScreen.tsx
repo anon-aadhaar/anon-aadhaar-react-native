@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ProofModal } from '@anon-aadhaar/react-native';
+import { ProveModal } from '@anon-aadhaar/react-native';
 
 // const img = require('../assets/img-home.png');
 
@@ -27,7 +27,7 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           <TouchableOpacity style={styles.buttonWhite}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
-          <ProofModal buttonMessage="Start" setProofs={setProofs} />
+          <ProveModal buttonMessage="Start" setProofs={setProofs} />
         </View>
         {proofs && (
           <View style={styles.orangeSection}>

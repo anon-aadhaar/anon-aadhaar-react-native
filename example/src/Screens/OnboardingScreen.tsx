@@ -8,7 +8,7 @@ import React, {
 import {
   SafeAreaView,
   View,
-  // Image,
+  Image,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -51,13 +51,13 @@ export type OnboardingScreenProps = {
   setCurrentScreen: Dispatch<SetStateAction<Views>>;
 };
 
-// const images = [
-//   require('../assets/image1.png'),
-//   require('../assets/image2.png'),
-//   require('../assets/image3.png'),
-//   require('../assets/image4.png'),
-//   require('../assets/image5.png'),
-// ];
+const images = [
+  require('../assets/image1.png'),
+  require('../assets/image2.png'),
+  require('../assets/image3.png'),
+  require('../assets/image4.png'),
+  require('../assets/image5.png'),
+];
 
 const setupTime = 10000; // 10 seconds in milliseconds
 
@@ -82,9 +82,9 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  // const onLoadEvent = () => {
-  //   setIsLoading(false);
-  // };
+  const onLoadEvent = () => {
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -112,11 +112,11 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
       <View style={styles.content}>
         <View style={styles.scrollView}>
           {isLoading && null}
-          {/* <Image
+          <Image
             source={images[activeIndex]}
             style={styles.topImage}
             onLoad={onLoadEvent}
-          /> */}
+          />
 
           <Text style={styles.heading}>
             {messages[activeIndex.toString() as keyof typeof messages].headline}
@@ -133,10 +133,10 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
               strokeWidth={3}
               progress={setupProgress}
             />
-            {/* <Image
+            <Image
               source={require('../assets/logo.png')}
               style={styles.brandLogo}
-            /> */}
+            />
           </View>
 
           {setupReady ? (

@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
+import { uploadAadhaarPNG } from './uploadPNG';
 
 export const Screen1 = ({ setCurrentScreen }: { setCurrentScreen: any }) => {
   return (
@@ -53,7 +54,7 @@ const Screen2 = ({
   setQrCodeValue,
 }: {
   setCurrentScreen: any;
-  setQrCodeValue: any;
+  setQrCodeValue: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [cameraOn, setCameraOn] = useState<boolean>(false);
 
@@ -74,7 +75,10 @@ const Screen2 = ({
         setCurrentScreen={setCurrentScreen}
       />
       <Text>OR</Text>
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => uploadAadhaarPNG(setQrCodeValue)}
+      >
         <Text style={styles.buttonText}>Upload PNG</Text>
       </TouchableOpacity>
       <View>{''}</View>

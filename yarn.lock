@@ -50,9 +50,11 @@ __metadata:
     react-native-blob-util: ^0.19.9
     react-native-builder-bob: ^0.23.2
     react-native-fs: ^2.20.0
+    react-native-image-picker: ^7.1.2
     react-native-svg: ^15.1.0
     react-native-vision-camera: ^3.9.2
     release-it: ^15.0.0
+    rn-qr-generator: ^1.4.0
     turbo: ^1.10.7
     typescript: ^5.2.2
   peerDependencies:
@@ -60,8 +62,10 @@ __metadata:
     react-native: "*"
     react-native-blob-util: "*"
     react-native-fs: "*"
+    react-native-image-picker: "*"
     react-native-svg: "*"
     react-native-vision-camera: "*"
+    rn-qr-generator: "*"
   languageName: unknown
   linkType: soft
 
@@ -3635,8 +3639,10 @@ __metadata:
     react-native: 0.73.6
     react-native-blob-util: ^0.19.9
     react-native-fs: ^2.20.0
+    react-native-image-picker: ^7.1.2
     react-native-svg: ^15.1.0
     react-native-vision-camera: ^3.9.2
+    rn-qr-generator: ^1.4.0
   languageName: unknown
   linkType: soft
 
@@ -11039,6 +11045,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-image-picker@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "react-native-image-picker@npm:7.1.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: af52328b7cb06c28549442f0d923cfa92dde8d5a968a642336df4c882f81adbf0e5e606a14de27f96883a76fa1e03230061c4080011c9107942edebc8e09c478
+  languageName: node
+  linkType: hard
+
 "react-native-svg@npm:^15.1.0":
   version: 15.1.0
   resolution: "react-native-svg@npm:15.1.0"
@@ -11633,6 +11649,15 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: 3ea587b981a19016297edb96d1ffe48af7e6af69660e3b371dbfc73722a73a0b0e9be5c88089fbeeb866c389c1098e07f64929c7414290504b855f54f901ab10
+  languageName: node
+  linkType: hard
+
+"rn-qr-generator@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "rn-qr-generator@npm:1.4.0"
+  peerDependencies:
+    react-native: ">=0.55"
+  checksum: 456b8681e3ebd123db7af484b43ca9f7b2bfb012d55c36462e14920110307848bcd5ce32f39573240087e8cb11d258e740468fc796d187da5bd379a3b7bab134
   languageName: node
   linkType: hard
 

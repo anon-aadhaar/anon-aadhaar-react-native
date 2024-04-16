@@ -1,6 +1,7 @@
 import { verifySignature } from './verifySignature';
 import { AadhaarScanner } from './aadhaarScanner';
 import { circuitInputsFromQR } from './generateInputs';
+import RNFS from 'react-native-fs';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -14,6 +15,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { uploadAadhaarPNG } from './uploadPNG';
+import {
+  groth16ProveWithZKeyFilePath,
+  groth16Verify,
+  type AnonAadhaarArgs,
+} from './groth16Prover';
+
+const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
+const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
 
 export const Screen1 = ({ setCurrentScreen }: { setCurrentScreen: any }) => {
   return (
@@ -52,9 +61,11 @@ export const LoaderScreen = () => {
 const Screen2 = ({
   setCurrentScreen,
   setQrCodeValue,
+  setIsVerifyingSig,
 }: {
   setCurrentScreen: any;
   setQrCodeValue: React.Dispatch<React.SetStateAction<string>>;
+  setIsVerifyingSig: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [cameraOn, setCameraOn] = useState<boolean>(false);
 
@@ -73,11 +84,12 @@ const Screen2 = ({
         setCameraOn={setCameraOn}
         setQrCodeValue={setQrCodeValue}
         setCurrentScreen={setCurrentScreen}
+        setIsVerifyingSig={setIsVerifyingSig}
       />
       <Text>OR</Text>
       <TouchableOpacity
         style={styles.actionButton}
-        onPress={() => uploadAadhaarPNG(setQrCodeValue)}
+        onPress={() => uploadAadhaarPNG(setQrCodeValue, setIsVerifyingSig)}
       >
         <Text style={styles.buttonText}>Upload PNG</Text>
       </TouchableOpacity>
@@ -86,28 +98,29 @@ const Screen2 = ({
   );
 };
 
-const ProveScreen = (
-  {
-    // anonAadhaarArgs,
-    // setProofVerified,
-    // setProofs,
-  }: {
-    // anonAadhaarArgs: any;
-    setProofVerified: any;
-    setProofs: any;
-  }
-) => {
+const ProveScreen = ({
+  anonAadhaarArgs,
+  setProofVerified,
+  setProofs,
+}: {
+  anonAadhaarArgs: AnonAadhaarArgs;
+  setProofVerified: any;
+  setProofs: any;
+}) => {
   const [isProving, setIsProving] = useState<boolean>(false);
 
   const genProof = async () => {
     setIsProving(true);
     try {
-      // TODO Get path of zkey and witness
-      // const { proof, pub_signals } = await groth16ProveWithZKeyFilePath('', '');
-      // // TODO Get path of the vk
-      // const res = await groth16Verify(proof, pub_signals, '');
-      // setProofs({ proof, pub_signals });
-      // setProofVerified(res);
+      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
+        zkeyFilePath,
+        DatFilePath,
+        anonAadhaarArgs
+      );
+      // TODO Get path of the vk
+      const res = await groth16Verify(proof, pub_signals, '');
+      setProofs({ proof, pub_signals });
+      setProofVerified(res);
       setIsProving(false);
     } catch (e) {
       console.error(e);
@@ -148,23 +161,18 @@ export const ProofModal = ({
   const [currentScreen, setCurrentScreen] = useState('screen1');
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
-  // const [anonAadhaarArgs, setAnonAadhaarArgs] = useState<{
-  //   qrDataPadded: string[];
-  //   qrDataPaddedLength: string[];
-  //   nonPaddedDataLength: string[];
-  //   delimiterIndices: string[];
-  //   signature: string[];
-  //   pubKey: string[];
-  //   signalHash: string[];
-  //   revealGender: string[];
-  //   revealAgeAbove18: string[];
-  //   revealState: string[];
-  //   revealPinCode: string[];
-  // } | null>(null);
+  const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
+  const [anonAadhaarArgs, setAnonAadhaarArgs] =
+    useState<AnonAadhaarArgs | null>(null);
 
   useEffect(() => {
     if (proofVerified) onCloseModal();
   }, [proofVerified]);
+
+  useEffect(() => {
+    if (isVerifyingSig) setCurrentScreen('loading');
+  }, [isVerifyingSig]);
+  setIsVerifyingSig;
 
   const onCloseModal = () => {
     setModalVisible(false);
@@ -176,13 +184,10 @@ export const ProofModal = ({
       verifySignature(qrCodeValue)
         .then((isVerified) => {
           if (isVerified) {
-            circuitInputsFromQR(qrCodeValue).then(() =>
-              // args
-              {
-                // setAnonAadhaarArgs(args);
-                setCurrentScreen('sigVerified');
-              }
-            );
+            circuitInputsFromQR(qrCodeValue).then((args) => {
+              setAnonAadhaarArgs(args);
+              setCurrentScreen('sigVerified');
+            });
           }
         })
         .catch((e) => {
@@ -214,17 +219,20 @@ export const ProofModal = ({
                       <Screen2
                         setCurrentScreen={setCurrentScreen}
                         setQrCodeValue={setQrCodeValue}
+                        setIsVerifyingSig={setIsVerifyingSig}
                       />
                     );
                   case 'loading':
                     return <LoaderScreen />;
                   case 'sigVerified':
                     return (
-                      <ProveScreen
-                        setProofVerified={setProofVerified}
-                        // anonAadhaarArgs={anonAadhaarArgs}
-                        setProofs={setProofs}
-                      />
+                      anonAadhaarArgs && (
+                        <ProveScreen
+                          setProofVerified={setProofVerified}
+                          anonAadhaarArgs={anonAadhaarArgs}
+                          setProofs={setProofs}
+                        />
+                      )
                     );
                   default:
                     return null;

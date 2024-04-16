@@ -23,7 +23,6 @@ import certificateTest from './certificate';
  * It then uses this public key to verify the signature.
  */
 export const verifySignature = async (qrData: string): Promise<boolean> => {
-  console.log('QR data received: ', qrData);
   const bigIntData = BigInt(qrData);
 
   const byteArray = convertBigIntToByteArray(bigIntData);

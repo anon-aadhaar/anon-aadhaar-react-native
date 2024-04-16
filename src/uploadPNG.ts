@@ -29,9 +29,9 @@ export const uploadAadhaarPNG = (
         throw Error(
           '[launchImageLibrary]: Error reading the image, no base64 found'
         );
+      if (setIsVerifyingSig) setIsVerifyingSig(true);
       decodeQRCodeFromImage(base64).then((qrCodeData) => {
         setQrCodeValue(qrCodeData);
-        if (setIsVerifyingSig) setIsVerifyingSig(true);
       });
     }
   });

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { Text, TouchableOpacity, View } from 'react-native';
 import { modalStyles } from './modalStyles';
 import { AadhaarScanner } from '../aadhaarScanner';

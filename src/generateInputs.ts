@@ -8,8 +8,24 @@ import {
 } from './util';
 import forge from 'node-forge';
 import certificateTest from './certificate';
+import { hash } from './hash';
+import type { FieldsToRevealArray } from './types';
 
-export async function circuitInputsFromQR(qrData: string) {
+interface GenerateArgsOptions {
+  qrData: string;
+  // certificateFile: string;
+  nullifierSeed: number;
+  fieldsToRevealArray?: FieldsToRevealArray;
+  signal?: string;
+}
+
+export async function circuitInputsFromQR({
+  qrData,
+  // certificateFile,
+  nullifierSeed,
+  fieldsToRevealArray,
+  signal,
+}: GenerateArgsOptions) {
   const bigIntData = BigInt(qrData);
 
   const byteArray = convertBigIntToByteArray(bigIntData);
@@ -47,6 +63,15 @@ export async function circuitInputsFromQR(qrData: string) {
 
   const signature = BigInt('0x' + uint8ArrayToHex(signatureBytes));
 
+  if (!fieldsToRevealArray) fieldsToRevealArray = [];
+
+  const fieldsToReveal = {
+    revealGender: fieldsToRevealArray.includes('revealGender'),
+    revealAgeAbove18: fieldsToRevealArray.includes('revealAgeAbove18'),
+    revealState: fieldsToRevealArray.includes('revealState'),
+    revealPinCode: fieldsToRevealArray.includes('revealPinCode'),
+  };
+
   return {
     qrDataPadded: Uint8ArrayToCharArray(paddedMsg),
     qrDataPaddedLength: [messageLen.toString()],
@@ -54,14 +79,12 @@ export async function circuitInputsFromQR(qrData: string) {
     delimiterIndices: delimiterIndices.map((x) => x.toString()),
     signature: splitToWords(signature, BigInt(121), BigInt(17)),
     pubKey: splitToWords(pubKey, BigInt(121), BigInt(17)),
-    nullifierSeed: ['12345678'],
+    nullifierSeed: [nullifierSeed],
     // Value of hash(1) hardcoded
-    signalHash: [
-      '312829776796408387545637016147278514583116203736587368460269838669765409292',
-    ],
-    revealGender: ['0'],
-    revealAgeAbove18: ['0'],
-    revealState: ['0'],
-    revealPinCode: ['0'],
+    signalHash: [signal ? hash(signal) : hash(1)],
+    revealGender: [fieldsToReveal.revealGender ? '1' : '0'],
+    revealAgeAbove18: [fieldsToReveal.revealAgeAbove18 ? '1' : '0'],
+    revealState: [fieldsToReveal.revealState ? '1' : '0'],
+    revealPinCode: [fieldsToReveal.revealPinCode ? '1' : '0'],
   };
 }

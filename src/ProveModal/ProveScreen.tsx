@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import {
   groth16ProveWithZKeyFilePath,
@@ -47,26 +48,28 @@ export const ProveScreen = ({
 
   return (
     <>
-      <Text />
-      <Text style={modalStyles.resultText}>Your document is verified 🎉</Text>
-      <Text />
-
       {isProving ? (
         <>
-          <ActivityIndicator size="large" color="#06753b" />
-          <Text style={modalStyles.buttonText}>
+          <Text style={modalStyles.header}>
             Generating your proof of identity...
           </Text>
+          <View style={{ height: '100%', justifyContent: 'center' }}>
+            <ActivityIndicator size="large" />
+          </View>
         </>
       ) : (
-        <TouchableOpacity
-          style={modalStyles.buttonGreen}
-          onPress={() => genProof()}
-        >
-          <Text style={modalStyles.buttonText}>Generate your proof</Text>
-        </TouchableOpacity>
+        <>
+          <Text style={modalStyles.header}>Your document is verified 🎉</Text>
+          <View style={{ height: '100%', justifyContent: 'center' }}>
+            <TouchableOpacity
+              style={modalStyles.buttonGreen}
+              onPress={() => genProof()}
+            >
+              <Text style={modalStyles.buttonText}>Generate your proof</Text>
+            </TouchableOpacity>
+          </View>
+        </>
       )}
-      <View>{''}</View>
     </>
   );
 };

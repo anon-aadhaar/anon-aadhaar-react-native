@@ -64,7 +64,10 @@ export default function BenchmarkView({}) {
         .then((isVerified: boolean) => {
           if (isVerified) {
             setSigVerified(true);
-            circuitInputsFromQR(qrCodeValue).then((args) => {
+            circuitInputsFromQR({
+              qrData: qrCodeValue,
+              nullifierSeed: 1234,
+            }).then((args) => {
               setAnonAadhaarArgs(args);
               setIsVerifyingSig(false);
             });

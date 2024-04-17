@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { verifySignature } from '../verifySignature';
 import { circuitInputsFromQR } from '../generateInputs';
 import React, { useEffect, useState } from 'react';
@@ -12,22 +13,21 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { type AnonAadhaarArgs } from '../groth16Prover';
-import { WelcomeScreen } from './WelcomeScreen';
 import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
 import { BlurView } from '@react-native-community/blur';
 
-type ModalScreens = 'loading' | 'sigVerified' | 'welcome' | 'uploadQR';
+type ModalScreens = 'loading' | 'prove' | 'uploadQR';
 
 export const LoaderScreen = () => {
   return (
     <>
-      <Text />
-      <ActivityIndicator />
-      <Text style={modalStyles.resultText}>
-        We are verifying your document...
+      <Text style={modalStyles.header}>
+        We are verifying the signature of your document...
       </Text>
-      <Text />
+      <View style={{ height: '100%', justifyContent: 'center' }}>
+        <ActivityIndicator size={'large'} />
+      </View>
     </>
   );
 };
@@ -40,7 +40,7 @@ export const ProveModal = ({
   setProofs: any;
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState<ModalScreens>('welcome');
+  const [currentScreen, setCurrentScreen] = useState<ModalScreens>('uploadQR');
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
@@ -58,7 +58,7 @@ export const ProveModal = ({
 
   const onCloseModal = () => {
     setModalVisible(false);
-    setCurrentScreen('welcome');
+    setCurrentScreen('uploadQR');
   };
 
   useEffect(() => {
@@ -66,9 +66,12 @@ export const ProveModal = ({
       verifySignature(qrCodeValue)
         .then((isVerified) => {
           if (isVerified) {
-            circuitInputsFromQR(qrCodeValue).then((args) => {
+            circuitInputsFromQR({
+              qrData: qrCodeValue,
+              nullifierSeed: 1234,
+            }).then((args) => {
               setAnonAadhaarArgs(args);
-              setCurrentScreen('sigVerified');
+              setCurrentScreen('prove');
             });
           }
         })
@@ -100,10 +103,6 @@ export const ProveModal = ({
               <View style={modalStyles.modalView}>
                 {(() => {
                   switch (currentScreen) {
-                    case 'welcome':
-                      return (
-                        <WelcomeScreen setCurrentScreen={setCurrentScreen} />
-                      );
                     case 'uploadQR':
                       return (
                         <UploadQR
@@ -114,7 +113,7 @@ export const ProveModal = ({
                       );
                     case 'loading':
                       return <LoaderScreen />;
-                    case 'sigVerified':
+                    case 'prove':
                       return (
                         anonAadhaarArgs && (
                           <ProveScreen

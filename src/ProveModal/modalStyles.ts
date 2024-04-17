@@ -89,10 +89,8 @@ export const modalStyles = StyleSheet.create({
     alignSelf: 'center',
     paddingHorizontal: 50,
     paddingVertical: 15,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#06753b',
-    borderRadius: 50,
+    backgroundColor: '#3E3B3B',
+    borderRadius: 5,
     marginTop: 20,
   },
   actionButton: {
@@ -107,8 +105,8 @@ export const modalStyles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    fontFamily: 'Outfit-Light',
-    color: '#06753b',
+    fontFamily: 'Outfit-Bold',
+    color: 'white',
     textAlign: 'center',
   },
   resultText: {

@@ -52,11 +52,11 @@ export type OnboardingScreenProps = {
 };
 
 const images = [
-  require('../assets/image1.png'),
-  require('../assets/image2.png'),
-  require('../assets/image3.png'),
-  require('../assets/image4.png'),
-  require('../assets/image5.png'),
+  require('../../assets/image1.png'),
+  require('../../assets/image2.png'),
+  require('../../assets/image3.png'),
+  require('../../assets/image4.png'),
+  require('../../assets/image5.png'),
 ];
 
 const setupTime = 10000; // 10 seconds in milliseconds
@@ -128,7 +128,7 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
               progress={setupProgress}
             />
             <Image
-              source={require('../assets/logo.png')}
+              source={require('../../assets/logo.png')}
               style={styles.brandLogo}
             />
           </View>

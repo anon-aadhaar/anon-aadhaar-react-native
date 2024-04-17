@@ -14,6 +14,15 @@
 		7645A852A242D785BCF6FB3A /* libPods-AnonAadhaar-AnonAadhaarTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37433A7ACB11CCA5DB012ED /* libPods-AnonAadhaar-AnonAadhaarTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		AB24054E78ED4E7F0449358F /* libPods-AnonAadhaar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 940150D599C983481BFCF7B3 /* libPods-AnonAadhaar.a */; };
+		E653B98C2BCFD07800686147 /* Outfit-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9822BCFD07800686147 /* Outfit-Black.ttf */; };
+		E653B98D2BCFD07800686147 /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9832BCFD07800686147 /* Outfit-Bold.ttf */; };
+		E653B98E2BCFD07800686147 /* Outfit-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9842BCFD07800686147 /* Outfit-ExtraBold.ttf */; };
+		E653B98F2BCFD07800686147 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9852BCFD07800686147 /* Outfit-ExtraLight.ttf */; };
+		E653B9902BCFD07800686147 /* Outfit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9862BCFD07800686147 /* Outfit-Light.ttf */; };
+		E653B9912BCFD07900686147 /* Outfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9872BCFD07800686147 /* Outfit-Medium.ttf */; };
+		E653B9922BCFD07900686147 /* Outfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9882BCFD07800686147 /* Outfit-Regular.ttf */; };
+		E653B9932BCFD07900686147 /* Outfit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B9892BCFD07800686147 /* Outfit-SemiBold.ttf */; };
+		E653B9942BCFD07900686147 /* Outfit-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E653B98A2BCFD07800686147 /* Outfit-Thin.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +51,15 @@
 		917B5B1631E010B5C94DE9AB /* Pods-AnonAadhaar-AnonAadhaarTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaar-AnonAadhaarTests.debug.xcconfig"; path = "Target Support Files/Pods-AnonAadhaar-AnonAadhaarTests/Pods-AnonAadhaar-AnonAadhaarTests.debug.xcconfig"; sourceTree = "<group>"; };
 		940150D599C983481BFCF7B3 /* libPods-AnonAadhaar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4C75EA493A8C9A31EB5C100 /* Pods-AnonAadhaar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnonAadhaar.release.xcconfig"; path = "Target Support Files/Pods-AnonAadhaar/Pods-AnonAadhaar.release.xcconfig"; sourceTree = "<group>"; };
+		E653B9822BCFD07800686147 /* Outfit-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Black.ttf"; sourceTree = "<group>"; };
+		E653B9832BCFD07800686147 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Bold.ttf"; sourceTree = "<group>"; };
+		E653B9842BCFD07800686147 /* Outfit-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-ExtraBold.ttf"; sourceTree = "<group>"; };
+		E653B9852BCFD07800686147 /* Outfit-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-ExtraLight.ttf"; sourceTree = "<group>"; };
+		E653B9862BCFD07800686147 /* Outfit-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Light.ttf"; sourceTree = "<group>"; };
+		E653B9872BCFD07800686147 /* Outfit-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Medium.ttf"; sourceTree = "<group>"; };
+		E653B9882BCFD07800686147 /* Outfit-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Regular.ttf"; sourceTree = "<group>"; };
+		E653B9892BCFD07800686147 /* Outfit-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-SemiBold.ttf"; sourceTree = "<group>"; };
+		E653B98A2BCFD07800686147 /* Outfit-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Thin.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F37433A7ACB11CCA5DB012ED /* libPods-AnonAadhaar-AnonAadhaarTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnonAadhaar-AnonAadhaarTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -116,6 +134,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E653B9812BCFD06300686147 /* Assets */,
 				13B07FAE1A68108700A75B9A /* AnonAadhaar */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AnonAadhaarTests */,
@@ -146,6 +165,31 @@
 				0450093765ED01C31F01B973 /* Pods-AnonAadhaar-AnonAadhaarTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E653B9812BCFD06300686147 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				E653B98B2BCFD07800686147 /* fonts */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		E653B98B2BCFD07800686147 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				E653B9822BCFD07800686147 /* Outfit-Black.ttf */,
+				E653B9832BCFD07800686147 /* Outfit-Bold.ttf */,
+				E653B9842BCFD07800686147 /* Outfit-ExtraBold.ttf */,
+				E653B9852BCFD07800686147 /* Outfit-ExtraLight.ttf */,
+				E653B9862BCFD07800686147 /* Outfit-Light.ttf */,
+				E653B9872BCFD07800686147 /* Outfit-Medium.ttf */,
+				E653B9882BCFD07800686147 /* Outfit-Regular.ttf */,
+				E653B9892BCFD07800686147 /* Outfit-SemiBold.ttf */,
+				E653B98A2BCFD07800686147 /* Outfit-Thin.ttf */,
+			);
+			name = fonts;
+			path = ../assets/fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,8 +285,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E653B9902BCFD07800686147 /* Outfit-Light.ttf in Resources */,
+				E653B98D2BCFD07800686147 /* Outfit-Bold.ttf in Resources */,
+				E653B9922BCFD07900686147 /* Outfit-Regular.ttf in Resources */,
+				E653B98F2BCFD07800686147 /* Outfit-ExtraLight.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				E653B98E2BCFD07800686147 /* Outfit-ExtraBold.ttf in Resources */,
+				E653B9932BCFD07900686147 /* Outfit-SemiBold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E653B9912BCFD07900686147 /* Outfit-Medium.ttf in Resources */,
+				E653B98C2BCFD07800686147 /* Outfit-Black.ttf in Resources */,
+				E653B9942BCFD07900686147 /* Outfit-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,10 +635,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -653,10 +703,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

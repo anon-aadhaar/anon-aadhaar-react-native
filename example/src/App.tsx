@@ -14,14 +14,14 @@ export default function App() {
     setupProver().then(() => {
       setSetupReady(true);
     });
-  }, [setupReady]);
+  }, []);
 
   return (
     <>
       {currentScreen === 'Onboarding' && (
         <OnboardingScreen
           setCurrentScreen={setCurrentScreen}
-          setupReady={true}
+          setupReady={setupReady}
         />
       )}
       {currentScreen === 'Main' && <MainScreen />}

@@ -16,6 +16,7 @@ import { type AnonAadhaarArgs } from '../groth16Prover';
 import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
 import { BlurView } from '@react-native-community/blur';
+import type { FieldsToRevealArray } from '../types';
 
 type ModalScreens = 'loading' | 'prove' | 'uploadQR';
 
@@ -34,10 +35,16 @@ export const LoaderScreen = () => {
 
 export const ProveModal = ({
   buttonMessage,
+  nullifierSeed,
+  fieldsToRevealArray,
   setProofs,
+  signal,
 }: {
   buttonMessage: string;
-  setProofs: any;
+  nullifierSeed: number;
+  fieldsToRevealArray?: FieldsToRevealArray;
+  signal?: string;
+  setProofs?: any;
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<ModalScreens>('uploadQR');
@@ -68,7 +75,9 @@ export const ProveModal = ({
           if (isVerified) {
             circuitInputsFromQR({
               qrData: qrCodeValue,
-              nullifierSeed: 1234,
+              nullifierSeed: nullifierSeed,
+              signal: signal,
+              fieldsToRevealArray: fieldsToRevealArray,
             }).then((args) => {
               setAnonAadhaarArgs(args);
               setCurrentScreen('prove');
@@ -79,7 +88,13 @@ export const ProveModal = ({
           console.error(e);
         });
     }
-  }, [qrCodeValue, setCurrentScreen]);
+  }, [
+    qrCodeValue,
+    setCurrentScreen,
+    nullifierSeed,
+    signal,
+    fieldsToRevealArray,
+  ]);
 
   return (
     <View style={modalStyles.centeredView}>
@@ -120,6 +135,8 @@ export const ProveModal = ({
                             setProofVerified={setProofVerified}
                             anonAadhaarArgs={anonAadhaarArgs}
                             setProofs={setProofs}
+                            signal={signal}
+                            fieldsToRevealArray={fieldsToRevealArray}
                           />
                         )
                       );

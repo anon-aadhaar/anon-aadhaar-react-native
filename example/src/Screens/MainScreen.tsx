@@ -1,4 +1,4 @@
-import React, { type FunctionComponent, useState } from 'react';
+import React, { type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,8 +15,6 @@ export type MainScreenProps = {
 };
 
 export const MainScreen: FunctionComponent<MainScreenProps> = () => {
-  const [proofs, setProofs] = useState();
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.scrollView}>
@@ -27,15 +25,20 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           <TouchableOpacity style={styles.buttonWhite}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
-          <ProveModal buttonMessage="Start" setProofs={setProofs} />
+          <ProveModal
+            buttonMessage="Start"
+            signal="0xa527e0029e720D5f31c8798DF7b107Fad54f40E6"
+            nullifierSeed={1234}
+            fieldsToRevealArray={['revealAgeAbove18', 'revealState']}
+          />
         </View>
-        {proofs && (
+        {/* {proofs && (
           <View style={styles.orangeSection}>
             <Text style={styles.proofSectionText}>
               Identity Proof #1 - 03/19/20204
             </Text>
           </View>
-        )}
+        )} */}
       </View>
     </SafeAreaView>
   );

@@ -14,10 +14,9 @@ export const modalStyles = StyleSheet.create({
   },
   modalView: {
     position: 'absolute',
-    // justifyContent: 'space-between',
     bottom: 0,
     width: '100%',
-    height: '60%',
+    height: '70%',
     backgroundColor: 'black',
     padding: 24,
     paddingTop: 40,
@@ -57,6 +56,33 @@ export const modalStyles = StyleSheet.create({
     fontSize: 18,
     color: '#F2AE7F',
   },
+  fieldToReveal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 4,
+    backgroundColor: '#3E3B3B',
+    marginBottom: 5,
+    marginTop: 5,
+    padding: 10,
+    paddingHorizontal: 18,
+    height: 'auto',
+  },
+  subhead: {
+    fontFamily: 'Outfit-Regular',
+    fontSize: 15,
+    color: '#B3ADAE',
+  },
+  fieldToRevealText: {
+    fontFamily: 'Outfit-Bold',
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingVertical: 6,
+  },
+  fieldToRevealContainer: {
+    width: '100%',
+  },
   header: {
     fontSize: 20,
     color: 'white',
@@ -73,6 +99,13 @@ export const modalStyles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  callout: {
+    fontFamily: 'Outfit-Regular',
+    fontSize: 16,
+    color: 'white',
+    flexWrap: 'wrap',
+    width: 'auto',
   },
   buttonWhite: {
     position: 'absolute',
@@ -93,6 +126,22 @@ export const modalStyles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
+  proveButton: {
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    backgroundColor: '#06753B',
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontFamily: 'Outfit-Bold',
+    color: 'white',
+    textAlign: 'center',
+    paddingHorizontal: 78,
+  },
   actionButton: {
     alignSelf: 'center',
     backgroundColor: 'white',
@@ -102,12 +151,6 @@ export const modalStyles = StyleSheet.create({
     borderColor: '#06753b',
     borderRadius: 50,
     marginTop: 20,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontFamily: 'Outfit-Bold',
-    color: 'white',
-    textAlign: 'center',
   },
   resultText: {
     fontSize: 20,
@@ -158,5 +201,8 @@ export const modalStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
+  },
+  flatList: {
+    flexGrow: 0,
   },
 });

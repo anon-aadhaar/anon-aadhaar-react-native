@@ -15,6 +15,9 @@ import { type AnonAadhaarArgs } from '../groth16Prover';
 import { WelcomeScreen } from './WelcomeScreen';
 import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
+import { BlurView } from '@react-native-community/blur';
+
+type ModalScreens = 'loading' | 'sigVerified' | 'welcome' | 'uploadQR';
 
 export const LoaderScreen = () => {
   return (
@@ -37,7 +40,7 @@ export const ProveModal = ({
   setProofs: any;
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState('screen1');
+  const [currentScreen, setCurrentScreen] = useState<ModalScreens>('welcome');
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [isVerifyingSig, setIsVerifyingSig] = useState<boolean>(false);
@@ -55,7 +58,7 @@ export const ProveModal = ({
 
   const onCloseModal = () => {
     setModalVisible(false);
-    setCurrentScreen('screen1');
+    setCurrentScreen('welcome');
   };
 
   useEffect(() => {
@@ -86,42 +89,49 @@ export const ProveModal = ({
           setModalVisible(!modalVisible);
         }}
       >
-        <TouchableWithoutFeedback onPress={onCloseModal}>
-          <View style={modalStyles.centeredView}>
-            <View style={modalStyles.modalView}>
-              {(() => {
-                switch (currentScreen) {
-                  case 'screen1':
-                    return (
-                      <WelcomeScreen setCurrentScreen={setCurrentScreen} />
-                    );
-                  case 'screen2':
-                    return (
-                      <UploadQR
-                        setCurrentScreen={setCurrentScreen}
-                        setQrCodeValue={setQrCodeValue}
-                        setIsVerifyingSig={setIsVerifyingSig}
-                      />
-                    );
-                  case 'loading':
-                    return <LoaderScreen />;
-                  case 'sigVerified':
-                    return (
-                      anonAadhaarArgs && (
-                        <ProveScreen
-                          setProofVerified={setProofVerified}
-                          anonAadhaarArgs={anonAadhaarArgs}
-                          setProofs={setProofs}
+        <BlurView
+          style={modalStyles.absolute}
+          blurType="dark"
+          blurAmount={10}
+          reducedTransparencyFallbackColor="dark"
+        >
+          <TouchableWithoutFeedback onPress={onCloseModal}>
+            <View style={modalStyles.centeredView}>
+              <View style={modalStyles.modalView}>
+                {(() => {
+                  switch (currentScreen) {
+                    case 'welcome':
+                      return (
+                        <WelcomeScreen setCurrentScreen={setCurrentScreen} />
+                      );
+                    case 'uploadQR':
+                      return (
+                        <UploadQR
+                          setCurrentScreen={setCurrentScreen}
+                          setQrCodeValue={setQrCodeValue}
+                          setIsVerifyingSig={setIsVerifyingSig}
                         />
-                      )
-                    );
-                  default:
-                    return null;
-                }
-              })()}
+                      );
+                    case 'loading':
+                      return <LoaderScreen />;
+                    case 'sigVerified':
+                      return (
+                        anonAadhaarArgs && (
+                          <ProveScreen
+                            setProofVerified={setProofVerified}
+                            anonAadhaarArgs={anonAadhaarArgs}
+                            setProofs={setProofs}
+                          />
+                        )
+                      );
+                    default:
+                      return null;
+                  }
+                })()}
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </BlurView>
       </Modal>
       <Pressable
         style={modalStyles.buttonWhite}

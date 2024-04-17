@@ -103,12 +103,6 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableOpacity
-        style={styles.shortcut}
-        onPress={() => setCurrentScreen('Benchmark')}
-      >
-        <Text style={styles.buttonText}>Go to benchmark</Text>
-      </TouchableOpacity>
       <View style={styles.content}>
         <View style={styles.scrollView}>
           {isLoading && null}

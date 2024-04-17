@@ -20,7 +20,7 @@ export const WelcomeScreen = ({
       </Text>
       <Pressable
         style={modalStyles.buttonGreen}
-        onPress={() => setCurrentScreen('screen2')}
+        onPress={() => setCurrentScreen('uploadQR')}
       >
         <Text style={modalStyles.buttonText}>Start</Text>
       </Pressable>

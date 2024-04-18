@@ -6,6 +6,7 @@ import { setupProver } from '@anon-aadhaar/react-native';
 import { AnonAadhaarProvider } from '../../src/provider/AnonAadhaarProvider';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AboutScreen } from './Screens/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,11 @@ export default function App() {
           <Stack.Screen
             name="Benchmark"
             component={BenchmarkView}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="About"
+            component={AboutScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

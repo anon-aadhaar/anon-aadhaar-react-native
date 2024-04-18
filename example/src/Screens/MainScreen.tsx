@@ -6,11 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  ProveModal,
-  getAnonAadhaarProof,
-  type AnonAadhaarProof,
-} from '@anon-aadhaar/react-native';
+import { ProveModal, useAnonAadhaar } from '@anon-aadhaar/react-native';
 
 // const img = require('../assets/img-home.png');
 
@@ -19,11 +15,15 @@ export type MainScreenProps = {
 };
 
 export const MainScreen: FunctionComponent<MainScreenProps> = () => {
-  const [proofs, setProofs] = useState<AnonAadhaarProof | null>(null);
+  const [anonAadhaarStatus] = useAnonAadhaar();
+  const [anonAadhaarProof, setAnonAadhaarProof] = useState<any>(null);
 
   useEffect(() => {
-    getAnonAadhaarProof().then((data) => console.log(data));
-  }, [proofs]);
+    console.log(anonAadhaarStatus);
+    if (anonAadhaarStatus.status === 'logged-in') {
+      setAnonAadhaarProof(anonAadhaarStatus.anonAadhaarProof);
+    }
+  }, [anonAadhaarStatus]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -41,16 +41,15 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
             nullifierSeed={1234}
             fieldsToRevealArray={['revealAgeAbove18', 'revealState']}
             useTestAadhaar={true}
-            setProofs={setProofs}
           />
         </View>
-        {/* {proofs && (
+        {anonAadhaarProof && (
           <View style={styles.orangeSection}>
             <Text style={styles.proofSectionText}>
               Identity Proof #1 - 03/19/20204
             </Text>
           </View>
-        )} */}
+        )}
       </View>
     </SafeAreaView>
   );

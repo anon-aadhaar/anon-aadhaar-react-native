@@ -2,14 +2,17 @@
 import React, { useEffect, useState, type FunctionComponent } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
+import { Footer } from '../Components/Footer';
 
 const img = require('../../assets/home.png');
 
 export type HomeScreenProps = {
-  //
+  navigation: any;
 };
 
-export const HomeScreen: FunctionComponent<HomeScreenProps> = () => {
+export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
+  navigation,
+}) => {
   const [anonAadhaarStatus] = useAnonAadhaar();
   const [anonAadhaarProof, setAnonAadhaarProof] = useState<any>(null);
 
@@ -59,6 +62,7 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = () => {
           </View>
         )}
       </View>
+      <Footer navigation={navigation} />
     </SafeAreaView>
   );
 };
@@ -87,6 +91,7 @@ const styles = StyleSheet.create({
   scrollView: {
     justifyContent: 'center',
     padding: 20,
+    flex: 1,
   },
   greenSection: {
     backgroundColor: '#06753B',

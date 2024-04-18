@@ -11,6 +11,8 @@ import {
 import { CircularProgress } from '../Components/CircleProgress';
 import { ProgressBar } from '../Components/ProgressBar';
 import * as messages from '../../assets/messages.json';
+import { icons } from '../Components/illustrations';
+import { SvgXml } from 'react-native-svg';
 
 export type OnboardingScreenProps = {
   setupReady?: boolean;
@@ -57,6 +59,9 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
       setSetupProgress((prevProgress) => {
         if (prevProgress < 1) {
           return prevProgress + 1 / (setupTime / 1000);
+        } else if (setupReady) {
+          clearInterval(interval);
+          return 1;
         } else {
           clearInterval(interval);
           return 1;
@@ -65,7 +70,7 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [setupReady]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -104,11 +109,11 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
               style={styles.button}
               onPress={() => navigation.navigate('Home')}
             >
-              <Text style={styles.buttonText}>Get started!</Text>
+              <SvgXml xml={icons.arrowRightLine} width="24" height="24" />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.buttonDisabled}>
-              <Text style={styles.buttonText}>Please wait...</Text>
+              <SvgXml xml={icons.arrowRightLine} width="24" height="24" />
             </TouchableOpacity>
           )}
         </View>

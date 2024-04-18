@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { OnboardingScreen } from './Screens/OnboardingScreen';
-import { MainScreen } from './Screens/MainScreen';
+import { HomeScreen } from './Screens/HomeScreen';
 import BenchmarkView from './Screens/BenchmarkScreen';
 import { setupProver } from '@anon-aadhaar/react-native';
 import { AnonAadhaarProvider } from '../../src/provider/AnonAadhaarProvider';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export type Views = 'Onboarding' | 'Main' | 'Benchmark';
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<Views>('Onboarding');
   const [setupReady, setSetupReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -19,14 +20,23 @@ export default function App() {
 
   return (
     <AnonAadhaarProvider>
-      {currentScreen === 'Onboarding' && (
-        <OnboardingScreen
-          setCurrentScreen={setCurrentScreen}
-          setupReady={setupReady}
-        />
-      )}
-      {currentScreen === 'Main' && <MainScreen />}
-      {currentScreen === 'Benchmark' && <BenchmarkView />}
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Onboarding">
+          <Stack.Screen name="Onboarding" options={{ headerShown: false }}>
+            {(props) => <OnboardingScreen {...props} setupReady={setupReady} />}
+          </Stack.Screen>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Benchmark"
+            component={BenchmarkView}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </AnonAadhaarProvider>
   );
 }

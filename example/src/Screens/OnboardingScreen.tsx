@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  type FunctionComponent,
-  useEffect,
-  type SetStateAction,
-  type Dispatch,
-} from 'react';
+import React, { useState, type FunctionComponent, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,39 +10,11 @@ import {
 } from 'react-native';
 import { CircularProgress } from '../Components/CircleProgress';
 import { ProgressBar } from '../Components/ProgressBar';
-import type { Views } from '../App';
-
-const messages = {
-  '0': {
-    headline: 'Validate Aadhaar ownership seamlessly',
-    subline:
-      'Dive into the Anon Aadhaar protocol with this tool. It utilizes zero-knowledge to ensure your privacy while impressing you from the start.',
-  },
-  '1': {
-    headline: 'Leveraging moon math on compact devices',
-    subline:
-      'Experience the unexpected as the technology orchestrates behind the scenes, transforming your device with computational capabilities.',
-  },
-  '2': {
-    headline: 'Authenticate your aadhaar via QR code',
-    subline:
-      'Simply upload Aadhaar QR code in PNG format, and let the magic happen. Let us guide you through the computational process.',
-  },
-  '3': {
-    headline: 'Embrace activities designed for real humans',
-    subline:
-      'With your verified proof, unlock the potential to engage in genuine human activities. All with authenticity and the liberty to speak freely.',
-  },
-  '4': {
-    headline: 'Foster a culture of uninhibited expression',
-    subline:
-      "Anon Aadhaar empower users to share their thoughts openly. Together, we're cultivating a society grounded in freedom of expression.",
-  },
-};
+import * as messages from '../../assets/messages.json';
 
 export type OnboardingScreenProps = {
   setupReady?: boolean;
-  setCurrentScreen: Dispatch<SetStateAction<Views>>;
+  navigation: any;
 };
 
 const images = [
@@ -63,7 +29,7 @@ const setupTime = 10000; // 10 seconds in milliseconds
 
 export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   setupReady,
-  setCurrentScreen,
+  navigation,
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -136,7 +102,7 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
           {setupReady ? (
             <TouchableOpacity
               style={styles.button}
-              onPress={() => setCurrentScreen('Main')}
+              onPress={() => navigation.navigate('Home')}
             >
               <Text style={styles.buttonText}>Get started!</Text>
             </TouchableOpacity>

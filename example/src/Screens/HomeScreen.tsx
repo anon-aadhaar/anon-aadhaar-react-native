@@ -5,11 +5,11 @@ import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
 
 const img = require('../../assets/home.png');
 
-export type MainScreenProps = {
+export type HomeScreenProps = {
   //
 };
 
-export const MainScreen: FunctionComponent<MainScreenProps> = () => {
+export const HomeScreen: FunctionComponent<HomeScreenProps> = () => {
   const [anonAadhaarStatus] = useAnonAadhaar();
   const [anonAadhaarProof, setAnonAadhaarProof] = useState<any>(null);
 

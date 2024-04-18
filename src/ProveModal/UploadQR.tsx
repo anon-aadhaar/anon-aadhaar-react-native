@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { Text, TouchableOpacity, View } from 'react-native';
 import { modalStyles } from './modalStyles';
-import { AadhaarScanner } from '../aadhaarScanner';
+import { AadhaarScanner } from './aadhaarScanner';
 import { uploadAadhaarPNG } from '../uploadPNG';
 import React, { useState } from 'react';
 import { SvgXml } from 'react-native-svg';

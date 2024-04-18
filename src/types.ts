@@ -57,3 +57,11 @@ export type AnonAadhaarArgs = {
   revealState: string[];
   revealPinCode: string[];
 };
+
+export interface GenerateArgsOptions {
+  qrData: string;
+  isTestAadhaar: boolean;
+  nullifierSeed: number;
+  fieldsToRevealArray?: FieldsToRevealArray;
+  signal?: string;
+}

@@ -9,15 +9,7 @@ import {
 import forge from 'node-forge';
 import { certificateTest, certificateProd } from './certificates';
 import { hash } from './hash';
-import type { AnonAadhaarArgs, FieldsToRevealArray } from './types';
-
-interface GenerateArgsOptions {
-  qrData: string;
-  isTestAadhaar: boolean;
-  nullifierSeed: number;
-  fieldsToRevealArray?: FieldsToRevealArray;
-  signal?: string;
-}
+import type { AnonAadhaarArgs, GenerateArgsOptions } from './types';
 
 export async function circuitInputsFromQR({
   qrData,

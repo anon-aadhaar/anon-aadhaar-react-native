@@ -55,11 +55,13 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/blur": "^4.4.0",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
+    "add": "^2.0.6",
     "commitlint": "^17.0.2",
     "del-cli": "^5.1.0",
     "eslint": "^8.51.0",
@@ -73,26 +75,32 @@
     "react-native-builder-bob": "^0.23.2",
     "react-native-fs": "^2.20.0",
     "react-native-image-picker": "^7.1.2",
+    "react-native-storage": "^1.0.1",
     "react-native-svg": "^15.1.0",
     "react-native-vision-camera": "^3.9.2",
     "release-it": "^15.0.0",
     "rn-qr-generator": "^1.4.0",
     "turbo": "^1.10.7",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "yarn": "^1.22.22"
   },
   "resolutions": {
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": "*",
     "@react-native-community/blur": "*",
+    "add": "*",
     "react": "*",
     "react-native": "*",
     "react-native-blob-util": "*",
     "react-native-fs": "*",
     "react-native-image-picker": "*",
+    "react-native-storage": "*",
     "react-native-svg": "*",
     "react-native-vision-camera": "*",
-    "rn-qr-generator": "*"
+    "rn-qr-generator": "*",
+    "yarn": "*"
   },
   "workspaces": [
     "example"

@@ -10,15 +10,19 @@
     "build:ios": "cd ios && xcodebuild -workspace anonaadhaar.xcworkspace -scheme anonaadhaar -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/blur": "^4.4.0",
+    "add": "^2.0.6",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-blob-util": "^0.19.9",
     "react-native-fs": "^2.20.0",
     "react-native-image-picker": "^7.1.2",
+    "react-native-storage": "^1.0.1",
     "react-native-svg": "^15.1.0",
     "react-native-vision-camera": "^3.9.2",
-    "rn-qr-generator": "^1.4.0"
+    "rn-qr-generator": "^1.4.0",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

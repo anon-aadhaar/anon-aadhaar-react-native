@@ -19,6 +19,7 @@ import {
 } from '@anon-aadhaar/react-native';
 import { useEffect, useState } from 'react';
 import { circuitInputsFromQR } from '../../../src/generateInputs';
+import type { AnonAadhaarProof } from '../../../src/types';
 
 const Toast = ({ message }: { message: string }) => (
   <View style={styles.toastContainer}>
@@ -37,8 +38,8 @@ function getVerificationKey(): Promise<string> {
 
 export default function BenchmarkView({}) {
   const [ready, setReady] = useState<boolean>(false);
-  const [complexProof, setComplexProof] = useState<string | null>(null);
-  const [publicInputs, setPublicInputs] = useState<string | null>(null);
+  const [anonAadhaarProof, setAnonAadhaarProof] =
+    useState<AnonAadhaarProof | null>(null);
   const [proofVerified, setProofVerified] = useState<boolean>(false);
   const [cameraOn, setCameraOn] = useState<boolean>(false);
   const [isProving, setIsProving] = useState<boolean>(false);
@@ -61,13 +62,15 @@ export default function BenchmarkView({}) {
   useEffect(() => {
     if (qrCodeValue !== '') {
       setIsQrScanned(true);
-      verifySignature(qrCodeValue)
+      // Set true in verify to specify using Test Aadhaar
+      verifySignature(qrCodeValue, true)
         .then((isVerified: boolean) => {
           if (isVerified) {
             setSigVerified(true);
             circuitInputsFromQR({
               qrData: qrCodeValue,
               nullifierSeed: 1234,
+              isTestAadhaar: true,
             }).then((args) => {
               setAnonAadhaarArgs(args);
               setIsVerifyingSig(false);
@@ -99,16 +102,14 @@ export default function BenchmarkView({}) {
       setIsProving(true);
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
-      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
+      const aaProof = await groth16ProveWithZKeyFilePath(
         zkeyFilePath,
         DatFilePath,
         anonAadhaarArgs
       );
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
-      setComplexProof(proof);
-      console.log('Complex Proof received: ', proof);
-      setPublicInputs(pub_signals);
-      console.log('Public Inputs received: ', pub_signals);
+      setAnonAadhaarProof(aaProof);
+      console.log('Anon Aadhaar Proof received: ', aaProof);
       setIsProving(false);
     } catch (e) {
       setIsProving(false);
@@ -120,14 +121,10 @@ export default function BenchmarkView({}) {
     }
   };
 
-  const verifProof = async (_proof: string, _publicInputs: string) => {
+  const verifProof = async (_proof: AnonAadhaarProof) => {
     try {
       const startVerif = Date.now();
-      const res = await groth16Verify(
-        _proof,
-        _publicInputs,
-        await getVerificationKey()
-      );
+      const res = await groth16Verify(_proof, await getVerificationKey());
       console.log('Verification result: ', res);
       setProofVerified(res);
       setExecutionTime((prev) => ({
@@ -198,7 +195,7 @@ export default function BenchmarkView({}) {
           <Text style={styles.buttonText}>Prove</Text>
         )}
       </TouchableOpacity>
-      {complexProof ? (
+      {anonAadhaarProof ? (
         <Text>Proof Execution Time: {executionTime.proof}ms</Text>
       ) : (
         <></>
@@ -206,13 +203,9 @@ export default function BenchmarkView({}) {
       <TouchableOpacity
         style={[
           styles.button,
-          complexProof ? styles.buttonEnabled : styles.buttonDisabled,
+          anonAadhaarProof ? styles.buttonEnabled : styles.buttonDisabled,
         ]}
-        onPress={() =>
-          complexProof && publicInputs
-            ? verifProof(complexProof, publicInputs)
-            : null
-        }
+        onPress={() => (anonAadhaarProof ? verifProof(anonAadhaarProof) : null)}
       >
         <Text style={styles.buttonText}>Verify</Text>
       </TouchableOpacity>

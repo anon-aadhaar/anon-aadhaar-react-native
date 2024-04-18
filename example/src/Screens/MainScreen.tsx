@@ -1,4 +1,4 @@
-import React, { type FunctionComponent } from 'react';
+import React, { useEffect, useState, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,7 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ProveModal } from '@anon-aadhaar/react-native';
+import {
+  ProveModal,
+  getAnonAadhaarProof,
+  type AnonAadhaarProof,
+} from '@anon-aadhaar/react-native';
 
 // const img = require('../assets/img-home.png');
 
@@ -15,6 +19,12 @@ export type MainScreenProps = {
 };
 
 export const MainScreen: FunctionComponent<MainScreenProps> = () => {
+  const [proofs, setProofs] = useState<AnonAadhaarProof | null>(null);
+
+  useEffect(() => {
+    getAnonAadhaarProof().then((data) => console.log(data));
+  }, [proofs]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.scrollView}>
@@ -27,9 +37,11 @@ export const MainScreen: FunctionComponent<MainScreenProps> = () => {
           </TouchableOpacity>
           <ProveModal
             buttonMessage="Start"
-            signal="0xa527e0029e720D5f31c8798DF7b107Fad54f40E6"
+            // signal="0xa527e0029e720D5f31c8798DF7b107Fad54f40E6"
             nullifierSeed={1234}
             fieldsToRevealArray={['revealAgeAbove18', 'revealState']}
+            useTestAadhaar={true}
+            setProofs={setProofs}
           />
         </View>
         {/* {proofs && (

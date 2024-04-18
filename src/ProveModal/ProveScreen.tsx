@@ -1,10 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import {
-  groth16ProveWithZKeyFilePath,
-  groth16Verify,
-  type AnonAadhaarArgs,
-} from '../groth16Prover';
+import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
 import { getVerificationKey } from '../util';
 import RNFS from 'react-native-fs';
 import {
@@ -15,7 +11,11 @@ import {
   View,
 } from 'react-native';
 import { modalStyles } from './modalStyles';
-import { fieldsLabel, type FieldsToRevealArray } from '../types';
+import {
+  fieldsLabel,
+  type FieldsToRevealArray,
+  type AnonAadhaarArgs,
+} from '../types';
 import { SvgXml } from 'react-native-svg';
 import { icons } from '../icons';
 
@@ -40,22 +40,23 @@ export const ProveScreen = ({
   const genProof = async () => {
     setIsProving(true);
     try {
-      const { proof, pub_signals } = await groth16ProveWithZKeyFilePath(
+      const anonAadhaarProof = await groth16ProveWithZKeyFilePath(
         zkeyFilePath,
         DatFilePath,
         anonAadhaarArgs
       );
       // TODO Get path of the vk
-      const res = await groth16Verify(
-        proof,
-        pub_signals,
+      const isVerified = await groth16Verify(
+        anonAadhaarProof,
         await getVerificationKey()
       );
-      if (setProofs) setProofs({ proof, pub_signals });
-      setProofVerified(res);
+      console.log('Proof is verified: ', isVerified);
+      if (setProofs) setProofs(anonAadhaarProof);
+      setProofVerified(isVerified);
       setIsProving(false);
     } catch (e) {
       console.error(e);
+      setIsProving(false);
     }
   };
 

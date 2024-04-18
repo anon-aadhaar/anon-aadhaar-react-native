@@ -19,3 +19,41 @@ export type FieldKey =
   | 'revealPinCode';
 
 export type FieldsToRevealArray = FieldKey[];
+
+export type NumericString = `${number}` | string;
+
+export type Groth16Proof = {
+  pi_a: NumericString[];
+  pi_b: NumericString[][];
+  pi_c: NumericString[];
+  protocol: string;
+  curve: string;
+};
+
+export type AnonAadhaarProof = {
+  groth16Proof: Groth16Proof; // 3 points on curve if we use groth16
+  pubkeyHash: string;
+  timestamp: string;
+  nullifierSeed: string;
+  nullifier: string;
+  signalHash: string;
+  ageAbove18: string;
+  gender: string;
+  state: string;
+  pincode: string;
+};
+
+export type AnonAadhaarArgs = {
+  qrDataPadded: string[];
+  qrDataPaddedLength: string[];
+  nonPaddedDataLength: string[];
+  delimiterIndices: string[];
+  signature: string[];
+  pubKey: string[];
+  nullifierSeed: string[];
+  signalHash: string[];
+  revealGender: string[];
+  revealAgeAbove18: string[];
+  revealState: string[];
+  revealPinCode: string[];
+};

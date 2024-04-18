@@ -7,13 +7,13 @@ import {
   uint8ArrayToHex,
 } from './util';
 import forge from 'node-forge';
-import certificateTest from './certificate';
+import { certificateTest, certificateProd } from './certificates';
 import { hash } from './hash';
-import type { FieldsToRevealArray } from './types';
+import type { AnonAadhaarArgs, FieldsToRevealArray } from './types';
 
 interface GenerateArgsOptions {
   qrData: string;
-  // certificateFile: string;
+  isTestAadhaar: boolean;
   nullifierSeed: number;
   fieldsToRevealArray?: FieldsToRevealArray;
   signal?: string;
@@ -21,11 +21,11 @@ interface GenerateArgsOptions {
 
 export async function circuitInputsFromQR({
   qrData,
-  // certificateFile,
+  isTestAadhaar,
   nullifierSeed,
   fieldsToRevealArray,
   signal,
-}: GenerateArgsOptions) {
+}: GenerateArgsOptions): Promise<AnonAadhaarArgs> {
   const bigIntData = BigInt(qrData);
 
   const byteArray = convertBigIntToByteArray(bigIntData);
@@ -55,7 +55,9 @@ export async function circuitInputsFromQR({
     }
   }
 
-  const publicKey = forge.pki.certificateFromPem(certificateTest).publicKey;
+  const publicKey = forge.pki.certificateFromPem(
+    isTestAadhaar ? certificateTest : certificateProd
+  ).publicKey;
 
   const pubKey = BigInt(
     '0x' + (publicKey as forge.pki.rsa.PublicKey).n.toString(16)
@@ -79,7 +81,7 @@ export async function circuitInputsFromQR({
     delimiterIndices: delimiterIndices.map((x) => x.toString()),
     signature: splitToWords(signature, BigInt(121), BigInt(17)),
     pubKey: splitToWords(pubKey, BigInt(121), BigInt(17)),
-    nullifierSeed: [nullifierSeed],
+    nullifierSeed: [String(nullifierSeed)],
     // Value of hash(1) hardcoded
     signalHash: [signal ? hash(signal) : hash(1)],
     revealGender: [fieldsToReveal.revealGender ? '1' : '0'],

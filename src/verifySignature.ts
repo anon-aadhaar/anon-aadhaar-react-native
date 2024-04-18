@@ -5,7 +5,7 @@ import {
 } from './util';
 import forge from 'node-forge';
 import { KEYUTIL, KJUR } from 'jsrsasign';
-import certificateTest from './certificate';
+import { certificateProd, certificateTest } from './certificates';
 
 /**
  * `verifySignature` verifies the digital signature of the provided data.
@@ -22,7 +22,10 @@ import certificateTest from './certificate';
  * either from the production or testing environment based on the `testing` flag.
  * It then uses this public key to verify the signature.
  */
-export const verifySignature = async (qrData: string): Promise<boolean> => {
+export const verifySignature = async (
+  qrData: string,
+  useTestAadhaar: boolean
+): Promise<boolean> => {
   const bigIntData = BigInt(qrData);
 
   const byteArray = convertBigIntToByteArray(bigIntData);
@@ -40,7 +43,9 @@ export const verifySignature = async (qrData: string): Promise<boolean> => {
     decompressedByteArray.length - 256
   );
 
-  const publicKey = forge.pki.certificateFromPem(certificateTest).publicKey;
+  const publicKey = forge.pki.certificateFromPem(
+    useTestAadhaar ? certificateTest : certificateProd
+  ).publicKey;
   const publicKeyPem = forge.pki.publicKeyToPem(publicKey);
 
   // Get the public key object from PEM formatted string

@@ -12,11 +12,10 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { type AnonAadhaarArgs } from '../groth16Prover';
 import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
 import { BlurView } from '@react-native-community/blur';
-import type { FieldsToRevealArray } from '../types';
+import type { FieldsToRevealArray, AnonAadhaarArgs } from '../types';
 
 type ModalScreens = 'loading' | 'prove' | 'uploadQR';
 
@@ -39,12 +38,14 @@ export const ProveModal = ({
   fieldsToRevealArray,
   setProofs,
   signal,
+  useTestAadhaar = false,
 }: {
   buttonMessage: string;
   nullifierSeed: number;
   fieldsToRevealArray?: FieldsToRevealArray;
   signal?: string;
   setProofs?: any;
+  useTestAadhaar?: boolean;
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<ModalScreens>('uploadQR');
@@ -66,11 +67,12 @@ export const ProveModal = ({
   const onCloseModal = () => {
     setModalVisible(false);
     setCurrentScreen('uploadQR');
+    setQrCodeValue('');
   };
 
   useEffect(() => {
     if (qrCodeValue !== '') {
-      verifySignature(qrCodeValue)
+      verifySignature(qrCodeValue, useTestAadhaar)
         .then((isVerified) => {
           if (isVerified) {
             circuitInputsFromQR({
@@ -78,6 +80,7 @@ export const ProveModal = ({
               nullifierSeed: nullifierSeed,
               signal: signal,
               fieldsToRevealArray: fieldsToRevealArray,
+              isTestAadhaar: useTestAadhaar,
             }).then((args) => {
               setAnonAadhaarArgs(args);
               setCurrentScreen('prove');
@@ -94,6 +97,7 @@ export const ProveModal = ({
     nullifierSeed,
     signal,
     fieldsToRevealArray,
+    useTestAadhaar,
   ]);
 
   return (

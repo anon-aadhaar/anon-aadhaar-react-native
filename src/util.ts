@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import pako from 'pako';
 import RNFS from 'react-native-fs';
 
@@ -127,4 +128,50 @@ export function splitToWords(
 // Utils from zk-email
 export function Uint8ArrayToCharArray(a: Uint8Array): string[] {
   return Array.from(a).map((x) => x.toString());
+}
+
+export function bigIntChunksToByteArray(
+  bigIntChunks: bigint[],
+  bytesPerChunk = 31
+) {
+  const bytes: number[] = [];
+
+  // Remove last chunks that are 0n
+  const cleanChunks = bigIntChunks
+    .reverse()
+    .reduce(
+      (acc: bigint[], item) =>
+        acc.length || item !== 0n ? [...acc, item] : [],
+      []
+    )
+    .reverse();
+
+  cleanChunks.forEach((bigInt, i) => {
+    let byteCount = 0;
+
+    while (bigInt > 0n) {
+      bytes.unshift(Number(bigInt & 0xffn));
+      bigInt >>= 8n;
+      byteCount++;
+    }
+
+    // Except for the last chunk, each chunk should be of size bytesPerChunk
+    // This will add 0s that were removed during the conversion because they are LSB
+    if (i < cleanChunks.length - 1) {
+      if (byteCount < bytesPerChunk) {
+        for (let j = 0; j < bytesPerChunk - byteCount; j++) {
+          bytes.unshift(0);
+        }
+      }
+    }
+  });
+
+  return bytes.reverse(); // reverse to convert little endian to big endian
+}
+
+// utils function to convert circuit output to string
+export function bigIntsToString(bigIntChunks: bigint[]) {
+  return bigIntChunksToByteArray(bigIntChunks)
+    .map((byte) => String.fromCharCode(byte))
+    .join('');
 }

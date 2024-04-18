@@ -1,13 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import { verifySignature } from '../verifySignature';
 import { circuitInputsFromQR } from '../generateInputs';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { modalStyles } from './modalStyles';
 import {
   Alert,
   Modal,
   Text,
-  Pressable,
   View,
   ActivityIndicator,
   TouchableWithoutFeedback,
@@ -33,21 +32,22 @@ export const LoaderScreen = () => {
 };
 
 export const ProveModal = ({
-  buttonMessage,
   nullifierSeed,
   fieldsToRevealArray,
   setProofs,
   signal,
+  modalVisible,
+  setModalVisible,
   useTestAadhaar = false,
 }: {
-  buttonMessage: string;
+  modalVisible: boolean;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   nullifierSeed: number;
   fieldsToRevealArray?: FieldsToRevealArray;
   signal?: string;
   setProofs?: any;
   useTestAadhaar?: boolean;
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<ModalScreens>('uploadQR');
   const [qrCodeValue, setQrCodeValue] = useState<string>('');
   const [proofVerified, setProofVerified] = useState<boolean>(false);
@@ -55,20 +55,22 @@ export const ProveModal = ({
   const [anonAadhaarArgs, setAnonAadhaarArgs] =
     useState<AnonAadhaarArgs | null>(null);
 
+  const onCloseModal = useCallback(() => {
+    setModalVisible(false);
+    setCurrentScreen('uploadQR');
+    setQrCodeValue('');
+  }, [setModalVisible]);
+
   useEffect(() => {
-    if (proofVerified) onCloseModal();
-  }, [proofVerified]);
+    if (proofVerified) {
+      onCloseModal();
+    }
+  }, [onCloseModal, proofVerified]);
 
   useEffect(() => {
     if (isVerifyingSig) setCurrentScreen('loading');
   }, [isVerifyingSig]);
   setIsVerifyingSig;
-
-  const onCloseModal = () => {
-    setModalVisible(false);
-    setCurrentScreen('uploadQR');
-    setQrCodeValue('');
-  };
 
   useEffect(() => {
     if (qrCodeValue !== '') {
@@ -153,12 +155,6 @@ export const ProveModal = ({
           </TouchableWithoutFeedback>
         </BlurView>
       </Modal>
-      <Pressable
-        style={modalStyles.buttonWhite}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={modalStyles.buttonText}>{buttonMessage}</Text>
-      </Pressable>
     </View>
   );
 };

@@ -7,6 +7,7 @@ import { AnonAadhaarProvider } from '../../src/provider/AnonAadhaarProvider';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AboutScreen } from './Screens/AboutScreen';
+import { ProofScreen } from './Screens/ProofScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,15 @@ export default function App() {
           <Stack.Screen name="Onboarding" options={{ headerShown: false }}>
             {(props) => <OnboardingScreen {...props} setupReady={setupReady} />}
           </Stack.Screen>
+
+          <Stack.Screen name="Proof" options={{ headerShown: false }}>
+            {(props) => <ProofScreen {...props} />}
+          </Stack.Screen>
+          {/* <Stack.Screen
+            name="Proof"
+            component={ProofScreen}
+            options={{ headerShown: false }}
+          /> */}
           <Stack.Screen
             name="Home"
             component={HomeScreen}

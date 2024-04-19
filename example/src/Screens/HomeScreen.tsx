@@ -1,8 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState, type FunctionComponent } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
+  AnonAadhaarProve,
+  useAnonAadhaar,
+  type AnonAadhaarProof,
+} from '@anon-aadhaar/react-native';
 import { Footer } from '../Components/Footer';
+import { icons } from '../Components/illustrations';
+import { SvgXml } from 'react-native-svg';
 
 const img = require('../../assets/home.png');
 
@@ -14,11 +27,12 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
   navigation,
 }) => {
   const [anonAadhaarStatus] = useAnonAadhaar();
-  const [anonAadhaarProof, setAnonAadhaarProof] = useState<any>(null);
+  const [anonAadhaarProof, setAnonAadhaarProof] =
+    useState<AnonAadhaarProof | null>(null);
 
   useEffect(() => {
-    console.log(anonAadhaarStatus);
     if (anonAadhaarStatus.status === 'logged-in') {
+      console.log(anonAadhaarStatus.anonAadhaarProof);
       setAnonAadhaarProof(anonAadhaarStatus.anonAadhaarProof);
     }
   }, [anonAadhaarStatus]);
@@ -53,13 +67,32 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
           </View>
         </View>
         {anonAadhaarProof && (
-          <View style={styles.proofSection}>
-            <Image
-              source={require('../../assets/logo.png')}
-              style={{ width: 40, height: 40, marginRight: 16 }}
-            />
-            <Text style={styles.proofSectionText}>View my proof</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.proofSection}
+            onPress={() =>
+              navigation.navigate('Proof', {
+                anonAadhaarProof: anonAadhaarProof,
+              })
+            }
+          >
+            <View style={styles.aaLogoContainer}>
+              <View style={styles.aaLogo}>
+                <SvgXml xml={icons.logoFrame} width="40" height="40" />
+              </View>
+            </View>
+            <Text style={[styles.proofSectionText, { marginLeft: 10 }]}>
+              View my proof
+            </Text>
+            <View
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: '50%',
+              }}
+            >
+              <SvgXml xml={icons.arrowRightLine} width="40" height="40" />
+            </View>
+          </TouchableOpacity>
         )}
       </View>
       <Footer navigation={navigation} />
@@ -80,6 +113,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: 'Outfit-Bold',
   },
+  aaLogo: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -14 }, { translateY: -14 }],
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -98,6 +137,14 @@ const styles = StyleSheet.create({
     height: 480,
     marginVertical: 20,
     borderRadius: 10,
+  },
+  aaLogoContainer: {
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    width: 40,
+    height: 40,
   },
   tag: {
     backgroundColor: 'black',

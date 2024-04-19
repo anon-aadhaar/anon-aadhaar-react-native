@@ -26,6 +26,12 @@ export const icons: { [key in MyIconType]: string } = {
     '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"><g clip-path="url(#a)"><path fill="#FEF5EE" d="M5 5h30a1.667 1.667 0 0 1 1.667 1.667v26.666A1.666 1.666 0 0 1 35 35H5a1.667 1.667 0 0 1-1.667-1.667V6.667A1.667 1.667 0 0 1 5 5m28.333 13.333H6.667v13.334h26.666zm0-3.333V8.333H6.667V15zM25 10h6.667v3.333H25z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h40v40H0z"/></clipPath></defs></svg>',
   arrowRightLine:
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><g clip-path="url(#a)"><path fill="#FEF5EE" d="m16.172 11-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>',
+  fileCopyLine:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><path fill="#fff" d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1.001 1.001 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1zM5.002 8 5 20h10V8zM9 6h8v10h2V4H9z"/></svg>',
+  deleteBinLine:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><path fill="#ED3636" d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm1 2H6v12h12zm-9 3h2v6H9zm4 0h2v6h-2zM9 4v2h6V4z"/></svg>',
+  logoFrame:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none"><g clip-path="url(#a)"><path fill="#FD8B0E" d="M13.15.791V4.2c0 .07-.056.126-.126.126H5.562c-.652 0-1.18.526-1.18 1.176v7.495c0 .07-.056.125-.126.125H.792a.125.125 0 0 1-.125-.125V8.938c0-.57.228-1.12.633-1.524l6.134-6.109c.404-.402.952-.63 1.525-.631l4.064-.008c.07 0 .127.056.127.125"/><path fill="#FEF5EE" fill-rule="evenodd" d="M14.93 4.2V.792c0-.07.057-.125.127-.125l4.064.007a2.169 2.169 0 0 1 1.525.631l6.13 6.11c.406.404.634.953.634 1.524v4.058c0 .07-.055.125-.125.125h-3.462a.125.125 0 0 1-.126-.125V5.5c0-.65-.527-1.176-1.18-1.176h-7.461a.125.125 0 0 1-.126-.125m-1.78 19.6v3.408l.002.002c0 .07-.058.125-.127.125l-4.066-.008a2.168 2.168 0 0 1-1.525-.631L1.3 20.585a2.153 2.153 0 0 1-.633-1.524v-4.058c0-.07.056-.125.125-.125h3.463c.07 0 .126.056.126.125V22.5c0 .65.528 1.175 1.18 1.175h7.464c.07 0 .125.056.125.126" clip-rule="evenodd"/><path fill="#009A08" d="M14.93 27.208V23.8c0-.07.056-.126.126-.126h7.461c.652 0 1.18-.526 1.18-1.175v-7.496c0-.07.056-.125.126-.125h3.462c.07 0 .125.056.125.125v4.058c0 .571-.228 1.12-.633 1.524l-6.134 6.11c-.405.405-.954.63-1.525.632l-4.065.008a.126.126 0 0 1-.128-.126z"/></g><defs><clipPath id="a"><path fill="#fff" d="M.667.667h26.747v26.667H.667z"/></clipPath></defs></svg>',
 };
 export type MyIconType =
   | 'aalogo'
@@ -37,8 +43,11 @@ export type MyIconType =
   | 'pngIcon'
   | 'qrIcon'
   | 'rainbowLineGreen'
+  | 'deleteBinLine'
   | 'rainbowLine'
   | 'telegramLine'
   | 'window2Line'
   | 'arrowRightLine'
+  | 'fileCopyLine'
+  | 'logoFrame'
   | 'home5Line';

@@ -191,11 +191,11 @@ export function groth16PublicSizeForChunkedZkeyFile(
   );
 }
 
-async function saveProof(proof: AnonAadhaarProof) {
+async function saveProof(anonAadhaarProof: AnonAadhaarProof) {
   await storage.save({
     key: 'anonAadhaar', // Note: Do not use underscore("_") in key!
     data: {
-      proof: proof,
+      anonAadhaarProof,
     },
 
     // if expires not specified, the defaultExpires will be applied instead.

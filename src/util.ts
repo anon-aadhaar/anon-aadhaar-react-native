@@ -1,6 +1,7 @@
 /* eslint-disable no-bitwise */
 import pako from 'pako';
 import RNFS from 'react-native-fs';
+import storage from './storage';
 
 export function getVerificationKey(): Promise<string> {
   const path = RNFS.DocumentDirectoryPath + '/vkey.json';
@@ -174,4 +175,10 @@ export function bigIntsToString(bigIntChunks: bigint[]) {
   return bigIntChunksToByteArray(bigIntChunks)
     .map((byte) => String.fromCharCode(byte))
     .join('');
+}
+
+export async function cleanAnonAadhaarState() {
+  return await storage.remove({
+    key: 'anonAadhaar',
+  });
 }

@@ -15,8 +15,10 @@ import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
 import { BlurView } from '@react-native-community/blur';
 import type { FieldsToRevealArray, AnonAadhaarArgs } from '../types';
+import { icons } from '../icons';
+import { SvgXml } from 'react-native-svg';
 
-type ModalScreens = 'loading' | 'prove' | 'uploadQR';
+type ModalScreens = 'loading' | 'prove' | 'uploadQR' | 'error';
 
 export const LoaderScreen = () => {
   return (
@@ -26,6 +28,17 @@ export const LoaderScreen = () => {
       </Text>
       <View style={{ height: '100%', justifyContent: 'center' }}>
         <ActivityIndicator size={'large'} />
+      </View>
+    </>
+  );
+};
+
+export const ErrorScreen = () => {
+  return (
+    <>
+      <Text style={modalStyles.header}>Your signature is invalid...</Text>
+      <View style={{ height: '100%', justifyContent: 'center' }}>
+        <SvgXml xml={icons.errorFrame} width="100" height="100" />
       </View>
     </>
   );
@@ -59,6 +72,7 @@ export const ProveModal = ({
     setModalVisible(false);
     setCurrentScreen('uploadQR');
     setQrCodeValue('');
+    setIsVerifyingSig(false);
   }, [setModalVisible]);
 
   useEffect(() => {
@@ -70,7 +84,6 @@ export const ProveModal = ({
   useEffect(() => {
     if (isVerifyingSig) setCurrentScreen('loading');
   }, [isVerifyingSig]);
-  setIsVerifyingSig;
 
   useEffect(() => {
     if (qrCodeValue !== '') {
@@ -87,9 +100,12 @@ export const ProveModal = ({
               setAnonAadhaarArgs(args);
               setCurrentScreen('prove');
             });
+          } else {
+            setCurrentScreen('error');
           }
         })
         .catch((e) => {
+          setCurrentScreen('error');
           console.error(e);
         });
     }
@@ -134,6 +150,8 @@ export const ProveModal = ({
                       );
                     case 'loading':
                       return <LoaderScreen />;
+                    case 'error':
+                      return <ErrorScreen />;
                     case 'prove':
                       return (
                         anonAadhaarArgs && (

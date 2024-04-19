@@ -37,7 +37,7 @@ export const ProveScreen = ({
   signal: string | undefined;
   fieldsToRevealArray: FieldsToRevealArray | undefined;
 }) => {
-  const [isProving, setIsProving] = useState<boolean>(true);
+  const [isProving, setIsProving] = useState<boolean>(false);
   const { setProofState } = useContext(AnonAadhaarContext);
 
   const genProof = async () => {

@@ -64,9 +64,10 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
             This mobile application has been developed by the core contributors
             of the Anon Aadhaar team, aiming to demonstrate the capabilities of
             the Anon Aadhaar protocol within a mobile environment. We have
-            incorporated MoPro as the primary proving system to enhance the user
-            experience. If you are interested in learning more, we invite you to
-            join our Telegram group for further information.
+            incorporated RapidSnark and witnescalc as the primary proving system
+            to enhance the user experience. If you are interested in learning
+            more, we invite you to join our Telegram group for further
+            information.
           </Text>
 
           <View style={{ marginTop: 5 }}>

@@ -27,7 +27,7 @@ const images = [
   require('../../assets/image5.png'),
 ];
 
-const setupTime = 10000; // 10 seconds in milliseconds
+const setupTime = 60000; // 60 seconds in milliseconds
 
 export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   setupReady,
@@ -36,6 +36,10 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [setupProgress, setSetupProgress] = useState<number>(0);
+
+  useEffect(() => {
+    if (setupReady) setSetupProgress(1);
+  }, [setupReady]);
 
   const incrementCounter = () => {
     setIsLoading(true);
@@ -59,9 +63,6 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
       setSetupProgress((prevProgress) => {
         if (prevProgress < 1) {
           return prevProgress + 1 / (setupTime / 1000);
-        } else if (setupReady) {
-          clearInterval(interval);
-          return 1;
         } else {
           clearInterval(interval);
           return 1;

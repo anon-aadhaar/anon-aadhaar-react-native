@@ -12,6 +12,7 @@ import { CircularProgress } from '../Components/CircleProgress';
 import { ProgressBar } from '../Components/ProgressBar';
 import * as messages from '../../assets/messages.json';
 import { icons } from '../Components/illustrations';
+import LottieView from 'lottie-react-native';
 import { SvgXml } from 'react-native-svg';
 
 export type OnboardingScreenProps = {
@@ -19,12 +20,19 @@ export type OnboardingScreenProps = {
   navigation: any;
 };
 
-const images = [
-  require('../../assets/image1.png'),
-  require('../../assets/image2.png'),
-  require('../../assets/image3.png'),
-  require('../../assets/image4.png'),
-  require('../../assets/image5.png'),
+// const images = [
+//   require('../../assets/image1.png'),
+//   require('../../assets/image2.png'),
+//   require('../../assets/image3.png'),
+//   require('../../assets/image4.png'),
+//   require('../../assets/image5.png'),
+// ];
+const lotties = [
+  require('../../assets/lotties/1.Validate.json'),
+  require('../../assets/lotties/2.Leveraging.json'),
+  require('../../assets/lotties/3.Authenticate.json'),
+  require('../../assets/lotties/4.Embrace.json'),
+  require('../../assets/lotties/5.Foster.json'),
 ];
 
 const setupTime = 60000; // 60 seconds in milliseconds
@@ -54,9 +62,9 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  const onLoadEvent = () => {
-    setIsLoading(false);
-  };
+  // const onLoadEvent = () => {
+  //   setIsLoading(false);
+  // };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,10 +86,16 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
       <View style={styles.content}>
         <View style={styles.scrollView}>
           {isLoading && null}
-          <Image
+          {/* <Image
             source={images[activeIndex]}
             style={styles.topImage}
             onLoad={onLoadEvent}
+          /> */}
+          <LottieView
+            source={lotties[activeIndex]}
+            style={styles.topImage}
+            autoPlay
+            loop
           />
 
           <Text style={styles.heading}>

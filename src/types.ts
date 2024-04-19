@@ -57,7 +57,6 @@ export type AnonAadhaarArgs = {
   revealAgeAbove18: string[];
   revealState: string[];
   revealPinCode: string[];
-  signal: string;
 };
 
 export interface GenerateArgsOptions {

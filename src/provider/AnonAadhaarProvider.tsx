@@ -57,6 +57,9 @@ export function AnonAadhaarProvider(
 ) {
   // Read state from local storage on page load
   const [useTestAadhaar, setUseTestAadhaar] = useState<boolean>(false);
+  const [proofState, setProofState] = useState<'created' | 'deleted' | null>(
+    null
+  );
   const [appName, setAppName] = useState<string>('The current application');
   const [state, setState] = useState<AnonAadhaarState>({
     status: 'logged-out',
@@ -72,48 +75,22 @@ export function AnonAadhaarProvider(
       setAppName(anonAadhaarProviderProps._appName);
   }, [anonAadhaarProviderProps._appName]);
 
-  //   useEffect(() => {
-  //     let anonAadhaarInitArgs: InitArgs;
-  //     if (anonAadhaarProviderProps._artifactslinks) {
-  //       anonAadhaarInitArgs = {
-  //         wasmURL: anonAadhaarProviderProps._artifactslinks.wasm_url,
-  //         zkeyURL: anonAadhaarProviderProps._artifactslinks.zkey_url,
-  //         vkeyURL: anonAadhaarProviderProps._artifactslinks.vkey_url,
-  //       };
-  //     } else {
-  //       anonAadhaarInitArgs = {
-  //         wasmURL: artifactUrls.v2.wasm,
-  //         zkeyURL: artifactUrls.v2.chunked,
-  //         vkeyURL: artifactUrls.v2.vk,
-  //       };
-  //     }
-
-  //     init(anonAadhaarInitArgs)
-  //       .then()
-  //       .catch((e) => {
-  //         throw Error(e);
-  //       });
-  //   }, [anonAadhaarProviderProps._artifactslinks]);
-
-  // Write state to local storage whenever a login starts, succeeds, or fails
-  //   const setAndWriteState = (newState: AnonAadhaarState) => {
-  //     console.log(`[ANON-AADHAAR] new state ${shallowToString(newState)}`);
-  //     setState(newState);
-  //     writeToLocalStorage(newState);
-  //   };
-
   // Receive Proof from local storage
   React.useEffect(() => {
-    getAnonAadhaarProof().then((proof: AnonAadhaarProof) => {
-      if (!proof) return;
-      setState({ status: 'logged-in', anonAadhaarProof: proof });
-    });
-  }, []);
+    if (proofState === 'deleted') {
+      setState({ status: 'logged-out' });
+    } else {
+      getAnonAadhaarProof().then((proof: AnonAadhaarProof) => {
+        if (!proof) return;
+        setState({ status: 'logged-in', anonAadhaarProof: proof });
+      });
+    }
+  }, [proofState]);
 
   // Provide context
   const val = React.useMemo(
-    () => ({ state, useTestAadhaar, appName }),
-    [state, useTestAadhaar, appName]
+    () => ({ state, useTestAadhaar, appName, setProofState }),
+    [state, useTestAadhaar, appName, setProofState]
   );
 
   return (
@@ -136,7 +113,7 @@ export async function getAnonAadhaarProof() {
     .catch((err) => {
       // any exception including data not found
       // goes to catch()
-      console.warn(err.message);
+      //   console.warn(err.message);
       switch (err.name) {
         case 'NotFoundError':
           // TODO;

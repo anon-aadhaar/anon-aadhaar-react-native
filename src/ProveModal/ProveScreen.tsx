@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
 import { getVerificationKey } from '../util';
 import RNFS from 'react-native-fs';
@@ -18,9 +18,10 @@ import {
 } from '../types';
 import { SvgXml } from 'react-native-svg';
 import { icons } from '../icons';
+import { AnonAadhaarContext } from '../hooks/useAnonAadhaar';
 
 const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
-const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
+const datFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
 
 export const ProveScreen = ({
   anonAadhaarArgs,
@@ -36,20 +37,23 @@ export const ProveScreen = ({
   fieldsToRevealArray: FieldsToRevealArray | undefined;
 }) => {
   const [isProving, setIsProving] = useState<boolean>(false);
+  const { setProofState } = useContext(AnonAadhaarContext);
 
   const genProof = async () => {
     setIsProving(true);
     try {
-      const anonAadhaarProof = await groth16ProveWithZKeyFilePath(
+      const anonAadhaarProof = await groth16ProveWithZKeyFilePath({
         zkeyFilePath,
-        DatFilePath,
-        anonAadhaarArgs
-      );
+        datFilePath,
+        inputs: anonAadhaarArgs,
+        signal,
+      });
       // TODO Get path of the vk
       const isVerified = await groth16Verify(
         anonAadhaarProof,
         await getVerificationKey()
       );
+      setProofState('created');
       console.log('Proof is verified: ', isVerified);
       if (setProofs) setProofs(anonAadhaarProof);
       setProofVerified(isVerified);

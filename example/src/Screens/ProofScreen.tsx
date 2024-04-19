@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { type FunctionComponent } from 'react';
+import React, { useContext, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,12 +9,15 @@ import {
 } from 'react-native';
 import { Footer } from '../Components/Footer';
 import {
+  AnonAadhaarContext,
   bigIntsToString,
   cleanAnonAadhaarState,
   type AnonAadhaarProof,
 } from '@anon-aadhaar/react-native';
 import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-toast-message';
 
 type ProofScreenProps = {
   route: any;
@@ -27,9 +30,22 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
 }) => {
   const { anonAadhaarProof } = route.params;
   const proof: AnonAadhaarProof = anonAadhaarProof.anonAadhaarProof;
+  const { setProofState } = useContext(AnonAadhaarContext);
+
+  const copyToClipboard = () => {
+    Clipboard.setString(JSON.stringify(proof));
+  };
+
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Proof copied to clipboard.',
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Toast />
       <View style={styles.scrollView}>
         {anonAadhaarProof ? (
           <>
@@ -41,8 +57,9 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                   styles.actionButton,
                   { justifyContent: 'space-around' },
                 ]}
-                onPress={async () => {
-                  await cleanAnonAadhaarState();
+                onPress={() => {
+                  copyToClipboard();
+                  showToast();
                 }}
               >
                 <Text style={styles.infoText}>Copy Proof</Text>
@@ -59,6 +76,8 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                 ]}
                 onPress={async () => {
                   await cleanAnonAadhaarState();
+                  setProofState('deleted');
+                  navigation.navigate('Home');
                 }}
               >
                 <Text style={[styles.infoText, { color: '#ED3636' }]}>

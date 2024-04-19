@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState, type FunctionComponent } from 'react';
+import React, { useEffect, type FunctionComponent } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -8,11 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  AnonAadhaarProve,
-  useAnonAadhaar,
-  type AnonAadhaarProof,
-} from '@anon-aadhaar/react-native';
+import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
 import { Footer } from '../Components/Footer';
 import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
@@ -27,13 +23,10 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
   navigation,
 }) => {
   const [anonAadhaarStatus] = useAnonAadhaar();
-  const [anonAadhaarProof, setAnonAadhaarProof] =
-    useState<AnonAadhaarProof | null>(null);
 
   useEffect(() => {
     if (anonAadhaarStatus.status === 'logged-in') {
       console.log(anonAadhaarStatus.anonAadhaarProof);
-      setAnonAadhaarProof(anonAadhaarStatus.anonAadhaarProof);
     }
   }, [anonAadhaarStatus]);
 
@@ -66,12 +59,12 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
             />
           </View>
         </View>
-        {anonAadhaarProof && (
+        {anonAadhaarStatus.status === 'logged-in' && (
           <TouchableOpacity
             style={styles.proofSection}
             onPress={() =>
               navigation.navigate('Proof', {
-                anonAadhaarProof: anonAadhaarProof,
+                anonAadhaarProof: anonAadhaarStatus.anonAadhaarProof,
               })
             }
           >

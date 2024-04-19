@@ -29,7 +29,7 @@ const Toast = ({ message }: { message: string }) => (
 
 // const zkeyChunksFolderPath = RNFS.DocumentDirectoryPath + '/chunked';
 const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
-const DatFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
+const datFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
 
 function getVerificationKey(): Promise<string> {
   const path = RNFS.DocumentDirectoryPath + '/vkey.json';
@@ -102,11 +102,11 @@ export default function BenchmarkView({}) {
       setIsProving(true);
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
-      const aaProof = await groth16ProveWithZKeyFilePath(
+      const aaProof = await groth16ProveWithZKeyFilePath({
         zkeyFilePath,
-        DatFilePath,
-        anonAadhaarArgs
-      );
+        datFilePath,
+        inputs: anonAadhaarArgs,
+      });
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
       setAnonAadhaarProof(aaProof);
       console.log('Anon Aadhaar Proof received: ', aaProof);

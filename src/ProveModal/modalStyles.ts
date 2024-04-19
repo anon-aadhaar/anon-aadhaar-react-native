@@ -121,8 +121,9 @@ export const modalStyles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 15,
     backgroundColor: '#06753B',
-    borderRadius: 5,
+    borderRadius: 8,
     marginTop: 20,
+    paddingHorizontal: 81,
   },
   buttonText: {
     fontSize: 20,

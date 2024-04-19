@@ -52,9 +52,17 @@ export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 export async function groth16ProveWithZKeyFilePath(
-  zkeyFilePath: string,
-  datFilePath: string,
-  inputs: AnonAadhaarArgs,
+  {
+    zkeyFilePath,
+    datFilePath,
+    inputs,
+    signal,
+  }: {
+    zkeyFilePath: string;
+    datFilePath: string;
+    inputs: AnonAadhaarArgs;
+    signal?: string;
+  },
   {
     proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
     publicBufferSize,
@@ -100,7 +108,7 @@ export async function groth16ProveWithZKeyFilePath(
       gender: public_signals_array[4],
       state: public_signals_array[5],
       pincode: public_signals_array[6],
-      signal: inputs.signal,
+      signal: signal ? signal : '1',
     };
 
     await saveProof(fullProof);

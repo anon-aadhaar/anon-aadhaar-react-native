@@ -80,5 +80,6 @@ export async function circuitInputsFromQR({
     revealAgeAbove18: [fieldsToReveal.revealAgeAbove18 ? '1' : '0'],
     revealState: [fieldsToReveal.revealState ? '1' : '0'],
     revealPinCode: [fieldsToReveal.revealPinCode ? '1' : '0'],
+    signal: signal!,
   };
 }

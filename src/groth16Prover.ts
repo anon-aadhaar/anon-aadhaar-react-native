@@ -100,6 +100,7 @@ export async function groth16ProveWithZKeyFilePath(
       gender: public_signals_array[4],
       state: public_signals_array[5],
       pincode: public_signals_array[6],
+      signal: inputs.signal,
     };
 
     await saveProof(fullProof);

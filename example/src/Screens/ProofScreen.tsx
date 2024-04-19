@@ -107,7 +107,7 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
               </Text>
               <View style={styles.fieldToRevealContainer}>
                 <View style={styles.fieldToReveal}>
-                  <Text style={styles.callout}>{proof.pubkeyHash}</Text>
+                  <Text style={styles.callout}>{proof.signal}</Text>
                 </View>
               </View>
             </View>

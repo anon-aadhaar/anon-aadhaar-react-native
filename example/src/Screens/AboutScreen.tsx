@@ -86,7 +86,7 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
             </Text>
             <Switch
               trackColor={{ false: '#767577', true: '#9DB8A1' }}
-              thumbColor={useTestAadhaar ? '#EC834B' : '#f4f3f4'}
+              thumbColor={useTestAadhaar ? '#06753B' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={useTestAadhaar}

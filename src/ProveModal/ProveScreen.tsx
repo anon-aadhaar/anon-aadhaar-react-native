@@ -55,7 +55,6 @@ export const ProveScreen = ({
         await getVerificationKey()
       );
       setProofState('created');
-      console.log('Proof is verified: ', isVerified);
       if (setProofs) setProofs(anonAadhaarProof);
       setProofVerified(isVerified);
       setIsProving(false);

@@ -13,8 +13,6 @@ import { Footer } from '../Components/Footer';
 import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
 
-const img = require('../../assets/home.png');
-
 export type HomeScreenProps = {
   navigation: any;
 };
@@ -35,7 +33,10 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
       <View style={styles.scrollView}>
         <Text style={styles.heading}>Hey Anon,</Text>
         <View style={styles.greenSection}>
-          <Image source={img} style={styles.topImage} />
+          <Image
+            source={require('../../assets/home.png')}
+            style={styles.topImage}
+          />
           <View style={{ padding: 15, marginTop: 10 }}>
             <View style={styles.tag}>
               <Text style={styles.callout}>
@@ -79,8 +80,8 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
             <View
               style={{
                 position: 'absolute',
-                right: 10,
                 top: '50%',
+                right: 10,
               }}
             >
               <SvgXml xml={icons.arrowRightLine} width="40" height="40" />

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { type FunctionComponent } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { icons } from './illustrations';

@@ -31,11 +31,6 @@ export default function App() {
           <Stack.Screen name="Proof" options={{ headerShown: false }}>
             {(props) => <ProofScreen {...props} />}
           </Stack.Screen>
-          {/* <Stack.Screen
-            name="Proof"
-            component={ProofScreen}
-            options={{ headerShown: false }}
-          /> */}
           <Stack.Screen
             name="Home"
             component={HomeScreen}

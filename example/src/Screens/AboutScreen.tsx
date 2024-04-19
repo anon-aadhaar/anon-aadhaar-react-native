@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Linking,
 } from 'react-native';
 import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
@@ -21,21 +22,36 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
       <View style={styles.scrollView}>
         <Text style={styles.heading}>Resources</Text>
 
-        <TouchableOpacity style={styles.infoContainer}>
+        <TouchableOpacity
+          style={styles.infoContainer}
+          onPress={() => {
+            Linking.openURL('https://anon-aadhaar-documentation.vercel.app/');
+          }}
+        >
           <View style={[styles.infoIcon, { backgroundColor: '#06753B' }]}>
             <SvgXml xml={icons.bookMarkLine} width="40" height="40" />
           </View>
           <Text style={styles.infoText}>Anon Aadhaar Documentation</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.infoContainer}>
+        <TouchableOpacity
+          style={styles.infoContainer}
+          onPress={() => {
+            Linking.openURL('https://quick-setup.vercel.app/');
+          }}
+        >
           <View style={[styles.infoIcon, { backgroundColor: '#E86A33' }]}>
             <SvgXml xml={icons.window2Line} width="40" height="40" />
           </View>
           <Text style={styles.infoText}>Other sample app - Web version</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.infoContainer}>
+        <TouchableOpacity
+          style={styles.infoContainer}
+          onPress={() => {
+            Linking.openURL('https://t.me/anon_aadhaar');
+          }}
+        >
           <View style={[styles.infoIcon, { backgroundColor: '#189DCF' }]}>
             <SvgXml xml={icons.telegramLine} width="40" height="40" />
           </View>
@@ -54,8 +70,13 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
           </Text>
 
           <View style={{ marginTop: 5 }}>
-            <Text style={styles.footnote}>Release date: April, 2024</Text>
-            <Text style={styles.footnote}>Version: 1.0</Text>
+            <Text style={styles.footnote}>
+              <Text style={{ fontWeight: 'bold' }}>Release date:</Text> April,
+              2024
+            </Text>
+            <Text style={styles.footnote}>
+              <Text style={{ fontWeight: 'bold' }}>Version:</Text> 1.0
+            </Text>
           </View>
         </View>
       </View>

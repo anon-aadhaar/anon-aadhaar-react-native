@@ -4,7 +4,7 @@ import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
 import { getVerificationKey } from '../util';
 import RNFS from 'react-native-fs';
 import {
-  ActivityIndicator,
+  //   ActivityIndicator,
   FlatList,
   Text,
   TouchableOpacity,
@@ -19,6 +19,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { icons } from '../icons';
 import { AnonAadhaarContext } from '../hooks/useAnonAadhaar';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
 const datFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
@@ -36,7 +37,7 @@ export const ProveScreen = ({
   signal: string | undefined;
   fieldsToRevealArray: FieldsToRevealArray | undefined;
 }) => {
-  const [isProving, setIsProving] = useState<boolean>(false);
+  const [isProving, setIsProving] = useState<boolean>(true);
   const { setProofState } = useContext(AnonAadhaarContext);
 
   const genProof = async () => {
@@ -72,7 +73,21 @@ export const ProveScreen = ({
             Generating your proof of identity...
           </Text>
           <View style={{ height: '100%', justifyContent: 'center' }}>
-            <ActivityIndicator size="large" />
+            {/* <ActivityIndicator size="large" /> */}
+            <CountdownCircleTimer
+              isPlaying
+              duration={10}
+              colors={['#06753B', '#06753B']}
+              colorsTime={[7, 5]}
+            >
+              {({ remainingTime }) => (
+                <Text
+                  style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}
+                >
+                  {remainingTime}
+                </Text>
+              )}
+            </CountdownCircleTimer>
           </View>
         </>
       ) : (

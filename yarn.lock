@@ -62,6 +62,7 @@ __metadata:
     react-native: 0.73.6
     react-native-blob-util: ^0.19.9
     react-native-builder-bob: ^0.23.2
+    react-native-countdown-circle-timer: ^3.2.1
     react-native-fs: ^2.20.0
     react-native-image-picker: ^7.1.2
     react-native-safe-area-context: ^4.9.0
@@ -83,6 +84,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-blob-util: "*"
+    react-native-countdown-circle-timer: "*"
     react-native-fs: "*"
     react-native-image-picker: "*"
     react-native-safe-area-context: "*"
@@ -3808,6 +3810,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.73.6
     react-native-blob-util: ^0.19.9
+    react-native-countdown-circle-timer: ^3.2.1
     react-native-fs: ^2.20.0
     react-native-image-picker: ^7.1.2
     react-native-safe-area-context: ^4.9.0
@@ -11517,6 +11520,17 @@ __metadata:
   bin:
     bob: bin/bob
   checksum: 1bee701c21f28f10c5737c8000e7fd6d8f641cf46fe7de03f5086d9951d2c5f3cb45375e292519b85f44a28f907e37f6c7bff324cfb1913b3bee0cb4db2efeb7
+  languageName: node
+  linkType: hard
+
+"react-native-countdown-circle-timer@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "react-native-countdown-circle-timer@npm:3.2.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.50.0"
+    react-native-svg: ">=6.2.1"
+  checksum: 05509e4ff20748952dfc409ac2bb92be8c3e8f5d9fb44457f99f6557ec51bd43043d11aa9082b809e424c442048c4da71edcf27461b4ce9ffd509d18999113de
   languageName: node
   linkType: hard
 

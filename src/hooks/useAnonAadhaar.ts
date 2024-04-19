@@ -6,7 +6,7 @@ import type { AnonAadhaarProof } from '../types';
  * and a function to initiate the login process. This hook is designed to be used within components that are
  * nested inside `AnonAadhaarProvider`.
  *
- * @returns { [AnonAadhaarState, (request: AnonAadhaarRequest) => void] }
+ * @returns { [AnonAadhaarState, (request: AnonAadhaarRequest) => void, (state: boolean) => void;] }
  * An array containing:
  *   - `AnonAadhaarState`: The current state of the Anon Aadhaar authentication process. This includes any relevant
  *     data about the current authentication status, user information, or error states.
@@ -16,10 +16,17 @@ import type { AnonAadhaarProof } from '../types';
 export function useAnonAadhaar(): [
   AnonAadhaarState,
   (state: ProofState) => void,
+  (state: boolean) => void,
+  boolean,
 ] {
   const val = useContext(AnonAadhaarContext);
 
-  return [val.state, val.setProofState];
+  return [
+    val.state,
+    val.setProofState,
+    val.setUseTestAadhaar,
+    val.useTestAadhaar,
+  ];
 }
 
 export interface AnonAadhaarContextVal {
@@ -27,6 +34,7 @@ export interface AnonAadhaarContextVal {
   useTestAadhaar: boolean;
   appName: string;
   setProofState: (state: ProofState) => void;
+  setUseTestAadhaar: (state: boolean) => void;
 }
 
 export type ProofState = 'created' | 'deleted' | null;
@@ -50,6 +58,9 @@ export type AnonAadhaarState = {
 export const AnonAadhaarContext = createContext<AnonAadhaarContextVal>({
   state: { status: 'logged-out' },
   useTestAadhaar: true,
+  setUseTestAadhaar: () => {
+    // setUseTestAadhaar
+  },
   appName: '',
   setProofState: () => {
     // setProofState

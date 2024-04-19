@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { type FunctionComponent } from 'react';
+import React, { useContext, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,16 +7,22 @@ import {
   TouchableOpacity,
   View,
   Linking,
+  Switch,
 } from 'react-native';
 import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
 import { Footer } from '../Components/Footer';
+import Divider from '../Components/Divider';
+import { AnonAadhaarContext } from '@anon-aadhaar/react-native';
 
 type AboutProps = {
   navigation: any;
 };
 
 export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
+  const { useTestAadhaar, setUseTestAadhaar } = useContext(AnonAadhaarContext);
+  const toggleSwitch = () => setUseTestAadhaar(!useTestAadhaar);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.scrollView}>
@@ -58,6 +64,37 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
           <Text style={styles.infoText}>Telegram community chat</Text>
         </TouchableOpacity>
 
+        <View style={{ marginTop: 10 }}>
+          <Divider />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingVertical: 5,
+            }}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 18,
+                marginVertical: 10,
+                fontWeight: 'bold',
+              }}
+            >
+              Use test mode:{' '}
+            </Text>
+            <Switch
+              trackColor={{ false: '#767577', true: '#9DB8A1' }}
+              thumbColor={useTestAadhaar ? '#EC834B' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={useTestAadhaar}
+            />
+          </View>
+          <Divider />
+        </View>
+
         <View style={{ gap: 5 }}>
           <Text style={styles.title}>About</Text>
           <Text style={styles.footnote}>
@@ -88,8 +125,8 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   infoIcon: {
-    width: 95,
-    height: 95,
+    width: 80,
+    height: 80,
     backgroundColor: '#E93CAE',
     alignItems: 'center',
     justifyContent: 'center',
@@ -120,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'left',
-    marginTop: 20,
+    marginTop: 10,
     fontFamily: 'Outfit-Bold',
   },
   scrollView: {
@@ -142,7 +179,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: '100%',
-    minHeight: 120,
+    minHeight: 100,
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#3E3B3B',

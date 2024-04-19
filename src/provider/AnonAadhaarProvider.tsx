@@ -89,8 +89,14 @@ export function AnonAadhaarProvider(
 
   // Provide context
   const val = React.useMemo(
-    () => ({ state, useTestAadhaar, appName, setProofState }),
-    [state, useTestAadhaar, appName, setProofState]
+    () => ({
+      state,
+      useTestAadhaar,
+      appName,
+      setProofState,
+      setUseTestAadhaar,
+    }),
+    [state, useTestAadhaar, appName, setProofState, setUseTestAadhaar]
   );
 
   return (

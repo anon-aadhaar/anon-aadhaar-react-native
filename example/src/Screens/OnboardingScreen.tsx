@@ -20,13 +20,6 @@ export type OnboardingScreenProps = {
   navigation: any;
 };
 
-// const images = [
-//   require('../../assets/image1.png'),
-//   require('../../assets/image2.png'),
-//   require('../../assets/image3.png'),
-//   require('../../assets/image4.png'),
-//   require('../../assets/image5.png'),
-// ];
 const lotties = [
   require('../../assets/lotties/1.Validate.json'),
   require('../../assets/lotties/2.Leveraging.json'),
@@ -61,10 +54,6 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
 
     return () => clearInterval(intervalId);
   }, []);
-
-  // const onLoadEvent = () => {
-  //   setIsLoading(false);
-  // };
 
   useEffect(() => {
     const interval = setInterval(() => {

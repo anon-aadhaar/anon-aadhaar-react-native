@@ -6,3 +6,4 @@ export * from './ProveModal/AnonAadhaarProve';
 export * from './types';
 export * from './hooks/useAnonAadhaar';
 export * from './util';
+export * from './provider/AnonAadhaarProvider';

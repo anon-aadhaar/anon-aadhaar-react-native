@@ -1,10 +1,12 @@
 import React from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
   useCodeScanner,
   Camera,
   useCameraDevice,
 } from 'react-native-vision-camera';
+import { icons } from '../icons';
+import { SvgXml } from 'react-native-svg';
 
 type AadhaarScannerProps = {
   cameraOn: boolean;
@@ -21,7 +23,14 @@ export function AadhaarScanner({
   setIsVerifyingSig,
   setCurrentScreen,
 }: AadhaarScannerProps) {
-  const device = useCameraDevice('back');
+  // const device = useCameraDevice('back');
+  const device = useCameraDevice('back', {
+    physicalDevices: [
+      'ultra-wide-angle-camera',
+      'wide-angle-camera',
+      'telephoto-camera',
+    ],
+  });
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
@@ -56,7 +65,12 @@ export function AadhaarScanner({
         />
       </View>
       <View style={styles.overlay}>
-        <Text style={styles.scannerText}>Read your secure Aadhaar QR code</Text>
+        <TouchableOpacity
+          onPress={() => setCameraOn(false)}
+          style={styles.closeButton}
+        >
+          <SvgXml xml={icons.closeCircle} width="48" height="48" />
+        </TouchableOpacity>
         <View style={styles.cutout}>
           <View style={[styles.edgeStyle, styles.topLeftEdge]} />
           <View style={[styles.edgeStyle, styles.topRightEdge]} />
@@ -139,5 +153,11 @@ const styles = StyleSheet.create({
     color: '#FFF', // White text to match your design
     fontWeight: 'bold',
     fontSize: 18,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 70,
+    right: 15,
+    zIndex: 10, // Ensure it's above other components
   },
 });

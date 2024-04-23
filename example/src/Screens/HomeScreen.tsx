@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Outfit-Bold',
   },
   scrollView: {
-    justifyContent: 'center',
     padding: 20,
     flex: 1,
   },

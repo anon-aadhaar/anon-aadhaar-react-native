@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Outfit-Regular',
     fontSize: 16,
     color: 'white',
-    lineHeight: 15,
   },
   roundButton: {
     width: '100%',

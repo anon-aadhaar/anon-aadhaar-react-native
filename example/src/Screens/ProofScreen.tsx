@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext, type FunctionComponent } from 'react';
+import React, { useContext, useState, type FunctionComponent } from 'react';
 import {
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -18,10 +19,84 @@ import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
+import { BlurView } from '@react-native-community/blur';
 
 type ProofScreenProps = {
   route: any;
   navigation: any;
+};
+
+const ConfirmationModal = ({
+  setModalVisible,
+  modalVisible,
+  setProofState,
+  navigation,
+}: {
+  setModalVisible: any;
+  modalVisible: boolean;
+  navigation: any;
+  setProofState: any;
+}) => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <BlurView
+        style={styles.absolute}
+        blurType="dark"
+        blurAmount={1}
+        reducedTransparencyFallbackColor="dark"
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Are you sure you want to delete this proof?
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 20,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+                style={[
+                  styles.confirmationModalButton,
+                  { borderEndStartRadius: 8 },
+                ]}
+              >
+                <Text style={{ color: 'white' }}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  cleanAnonAadhaarState();
+                  setProofState('deleted');
+                  navigation.navigate('Home');
+                  setModalVisible(!modalVisible);
+                }}
+                style={[
+                  styles.confirmationModalButton,
+                  { borderEndEndRadius: 8, borderLeftWidth: 1 },
+                ]}
+              >
+                <Text style={{ color: '#ED3636', fontWeight: 'bold' }}>
+                  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </BlurView>
+    </Modal>
+  );
 };
 
 export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
@@ -31,6 +106,7 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
   const { anonAadhaarProof } = route.params;
   const proof: AnonAadhaarProof = anonAadhaarProof.anonAadhaarProof;
   const { setProofState } = useContext(AnonAadhaarContext);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const copyToClipboard = () => {
     Clipboard.setString(JSON.stringify(proof));
@@ -65,6 +141,12 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                 <Text style={styles.infoText}>Copy Proof</Text>
                 <SvgXml xml={icons.fileCopyLine} width="24" height="24" />
               </TouchableOpacity>
+              <ConfirmationModal
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+                navigation={navigation}
+                setProofState={setProofState}
+              />
               <TouchableOpacity
                 style={[
                   styles.actionButton,
@@ -74,11 +156,7 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                     justifyContent: 'space-around',
                   },
                 ]}
-                onPress={async () => {
-                  await cleanAnonAadhaarState();
-                  setProofState('deleted');
-                  navigation.navigate('Home');
-                }}
+                onPress={() => setModalVisible(true)}
               >
                 <Text style={[styles.infoText, { color: '#ED3636' }]}>
                   Delete Proof
@@ -315,5 +393,46 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#3E3B3B',
+    borderRadius: 8,
+    paddingTop: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Outfit-Regular',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  absolute: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
+  confirmationModalButton: {
+    flex: 1,
+    backgroundColor: '#484343',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    paddingVertical: 15,
+    borderColor: 'gray',
   },
 });

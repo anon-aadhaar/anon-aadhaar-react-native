@@ -153,14 +153,13 @@ export const ProveScreen = ({
                 </View>
               </>
             )}
-            <View style={{ width: '100%' }}>
-              <TouchableOpacity
-                style={modalStyles.proveButton}
-                onPress={() => genProof()}
-              >
-                <Text style={modalStyles.buttonText}>Generate your proof</Text>
-              </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity
+              style={modalStyles.proveButton}
+              onPress={() => genProof()}
+            >
+              <Text style={modalStyles.buttonText}>Generate your proof</Text>
+            </TouchableOpacity>
           </View>
         </>
       )}

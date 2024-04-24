@@ -116,14 +116,13 @@ export const modalStyles = StyleSheet.create({
     marginTop: 20,
   },
   proveButton: {
-    width: '100%',
-    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 15,
     backgroundColor: '#06753B',
     borderRadius: 8,
     marginTop: 20,
-    paddingHorizontal: 81,
   },
   buttonText: {
     fontSize: 20,

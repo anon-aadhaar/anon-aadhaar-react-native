@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -37,14 +38,20 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
             source={require('../../assets/home.png')}
             style={styles.topImage}
           />
+
           <View style={{ padding: 15, marginTop: 10 }}>
-            <View style={styles.tag}>
-              <Text style={styles.callout}>
-                {anonAadhaarStatus.status === 'logged-in'
-                  ? 'Verified'
-                  : 'Not Verified'}
-              </Text>
-            </View>
+            <TouchableHighlight
+              onLongPress={() => navigation.navigate('Benchmark')}
+              underlayColor="white"
+            >
+              <View style={styles.tag}>
+                <Text style={styles.callout}>
+                  {anonAadhaarStatus.status === 'logged-in'
+                    ? 'Verified'
+                    : 'Not Verified'}
+                </Text>
+              </View>
+            </TouchableHighlight>
             <Text style={styles.title}>Proof of identity</Text>
             <Text style={styles.footnote}>
               A zero-knowledge proof generated for confirming the authenticity

@@ -49,6 +49,7 @@ const Rapidsnark = NativeModules.Rapidsnark
     );
 
 export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
+// export const DEFAULT_ZKEY_BUFFER_SIZE = 1024 * 1024 * 100;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 export async function groth16ProveWithZKeyFilePath(
@@ -133,19 +134,6 @@ export function groth16Verify(
     errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
   }
 ): Promise<boolean> {
-  console.log('Proof received: ', proof.groth16Proof);
-  console.log('Public Inputs received: ', [
-    proof.pubkeyHash,
-    proof.nullifier,
-    proof.timestamp,
-    proof.ageAbove18,
-    proof.gender,
-    proof.state,
-    proof.pincode,
-    proof.nullifierSeed,
-    proof.signalHash,
-  ]);
-
   const public_signals = JSON.stringify([
     proof.pubkeyHash,
     proof.nullifier,

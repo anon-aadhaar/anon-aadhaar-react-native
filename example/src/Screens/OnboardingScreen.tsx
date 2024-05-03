@@ -116,9 +116,9 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
               <SvgXml xml={icons.arrowRightLine} width="24" height="24" />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.buttonDisabled}>
+            <View style={styles.buttonDisabled}>
               <SvgXml xml={icons.arrowRightLine} width="24" height="24" />
-            </TouchableOpacity>
+            </View>
           )}
         </View>
       </View>

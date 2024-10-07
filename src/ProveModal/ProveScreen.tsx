@@ -3,13 +3,7 @@ import React, { useContext, useState } from 'react';
 import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
 import { getVerificationKey } from '../util';
 import RNFS from 'react-native-fs';
-import {
-  //   ActivityIndicator,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { modalStyles } from './modalStyles';
 import {
   fieldsLabel,
@@ -91,7 +85,9 @@ export const ProveScreen = ({
         </>
       ) : (
         <>
-          <Text style={modalStyles.headerQr}>Your document is verified.</Text>
+          <Text style={modalStyles.headerQr}>
+            Your document is not verified.
+          </Text>
 
           <View
             style={{

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
   useCodeScanner,
   Camera,
   useCameraDevice,
+  useCameraPermission,
 } from 'react-native-vision-camera';
 import { icons } from '../icons';
 import { SvgXml } from 'react-native-svg';
@@ -24,6 +25,18 @@ export function AadhaarScanner({
   setCurrentScreen,
 }: AadhaarScannerProps) {
   // const device = useCameraDevice('back');
+  const { hasPermission, requestPermission } = useCameraPermission();
+
+  useEffect(() => {
+    const getPermission = async () => {
+      if (!hasPermission) {
+        await requestPermission();
+      }
+    };
+
+    getPermission();
+  }, [hasPermission, requestPermission]);
+
   const device = useCameraDevice('back', {
     physicalDevices: [
       'ultra-wide-angle-camera',

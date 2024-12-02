@@ -4,33 +4,225 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
 
-class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext) {
+import android.util.Log
+import android.content.Context
+import java.io.ByteArrayOutputStream
+import java.io.File
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
-  override fun getName() = NAME
+class AwesomeLibraryModule(reactContext: ReactApplicationContext) : 
+    ReactContextBaseJavaModule(reactContext) {
+    
+    private val TAG = "AwesomeLibraryModule"
 
-  @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-
-  @ReactMethod
-  fun add(a: Double, b: Double, promise: Promise) {
-    try {
-      val result = nativeAdd(a, b)
-      promise.resolve(result)
-    } catch (e: Exception) {
-      promise.reject("ERROR", e.message)
+    override fun getName(): String {
+        return "AwesomeLibrary"
     }
-  }
 
-  companion object {
-    const val NAME = "AwesomeLibrary"
+    @ReactMethod
+    fun add(a: Double, b: Double, promise: Promise) {
+        promise.resolve(nativeAdd(a, b))
+    }
+
+    @ReactMethod
+    fun generateProof(
+        zkeyPath: String, 
+        circuitPath: String, 
+        inputs: ReadableMap, 
+        promise: Promise
+    ) {
+        Log.e(TAG, "zkeyPath: $zkeyPath")
+        Log.e(TAG, "circuitPath: $circuitPath")
+        Log.e(TAG, "inputs: ${inputs.toString()}")
+
+        try {
+            // Read the circuit file
+            val circuitFile = File(circuitPath)
+            if (!circuitFile.exists()) {
+                throw IllegalArgumentException("Circuit file does not exist at path: $circuitPath")
+            }
+
+            val circuitBytes = try {
+                circuitFile.readBytes()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("Error reading circuit file: ${e.message}")
+            }
+
+            // Format inputs
+            val formattedInputs = mutableMapOf<String, Any?>()
+            val iterator = inputs.keySetIterator()
+            while (iterator.hasNextKey()) {
+                val key = iterator.nextKey()
+                val array = inputs.getArray(key)?.toArrayList()?.map { it.toString() }
+                formattedInputs[key] = if (array?.size == 1) array.firstOrNull() else array
+            }
+
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            Log.e(TAG, gson.toJson(formattedInputs))
+            
+            val jsonInputs = gson.toJson(formattedInputs).toByteArray()
+            val zkpTools = ZKPTools(reactApplicationContext)
+
+            // Generate witness
+            val witnessLen = LongArray(1).apply { this[0] = 100 * 1024 * 1024 }
+            val witnessBuffer = ByteArray(100 * 1024 * 1024)
+            val errorMsg = ByteArray(256)
+
+            val witnessResult = zkpTools.witnesscalc_aadhaar_verifier(
+                circuitBytes,
+                circuitBytes.size.toLong(),
+                jsonInputs,
+                jsonInputs.size.toLong(),
+                witnessBuffer,
+                witnessLen,
+                errorMsg,
+                256
+            )
+
+            Log.e(TAG, "Witness generation result: $witnessResult")
+
+            when (witnessResult) {
+                3 -> throw Exception("Error 3")
+                2 -> throw Exception("Not enough memory for witness calculation")
+                1 -> throw Exception("Error during witness calculation: ${errorMsg.decodeToString()}")
+            }
+
+            // Generate proof
+            val proofBuffer = ByteArray(4 * 1024 * 1024)
+            val proofSize = LongArray(1).apply { this[0] = proofBuffer.size.toLong() }
+            val publicBuffer = ByteArray(4 * 1024 * 1024)
+            val publicSize = LongArray(1).apply { this[0] = publicBuffer.size.toLong() }
+
+            val zkeyBytes = File(zkeyPath).readBytes()
+            val proofResult = zkpTools.groth16_prover(
+                zkeyBytes,
+                zkeyBytes.size.toLong(),
+                witnessBuffer.copyOfRange(0, witnessLen[0].toInt()),
+                witnessLen[0],
+                proofBuffer,
+                proofSize,
+                publicBuffer,
+                publicSize,
+                errorMsg,
+                256
+            )
+
+            Log.e(TAG, "Proof generation result: $proofResult")
+
+            when (proofResult) {
+                2 -> throw Exception("Not enough memory for proof generation")
+                1 -> throw Exception("Error during proof generation: ${errorMsg.decodeToString()}")
+            }
+
+            // Format proof
+            val proofData = proofBuffer.copyOfRange(0, proofSize[0].toInt())
+            val pubData = publicBuffer.copyOfRange(0, publicSize[0].toInt())
+
+            val proofString = proofData.toString(Charsets.UTF_8)
+            val pubString = pubData.decodeToString()
+
+            val proofEndIndex = findLastIndexOfSubstring(proofString, "\"protocol\":\"groth16\"}")
+            val pubEndIndex = findLastIndexOfSubstring(pubString, "]")
+
+            val formattedProof = proofString.slice(0..proofEndIndex)
+            val formattedPubData = pubString.slice(0..pubEndIndex)
+
+            Log.e(TAG, "Formatted proof: $formattedProof")
+
+            val proof = Proof.fromJson(formattedProof)
+            val zkProof = ZkProof(
+                proof = proof,
+                pub_signals = getPubSignals(formattedPubData)
+            )
+
+            promise.resolve(gson.toJson(zkProof))
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            promise.reject("ERROR", e.message)
+        }
+    }
+
+    private fun findLastIndexOfSubstring(mainString: String, searchString: String): Int {
+        val index = mainString.lastIndexOf(searchString)
+        return if (index != -1) {
+            index + searchString.length - 1
+        } else {
+            -1
+        }
+    }
+
+    private fun getPubSignals(jsonString: String): List<String> {
+        return try {
+            val gson = Gson()
+            gson.fromJson(jsonString, Array<String>::class.java).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    private external fun nativeAdd(a: Double, b: Double): Double
+
+    companion object {
+        init {
+            System.loadLibrary("rapidsnark")
+            System.loadLibrary("anon-aadhaar-react-native")
+        }
+    }
+}
+
+data class Proof(
+    val pi_a: List<String>,
+    val pi_b: List<List<String>>,
+    val pi_c: List<String>,
+    val protocol: String,
+    var curve: String = "bn128"
+) {
+    companion object {
+        fun fromJson(jsonString: String): Proof {
+            Log.d("Proof", jsonString)
+            val json = Gson().fromJson(jsonString, Proof::class.java)
+            json.curve = "bn128"
+            return json
+        }
+    }
+}
+
+data class ZkProof(
+    val proof: Proof,
+    val pub_signals: List<String>
+)
+
+class ZKPTools(val context: Context) {
+    external fun witnesscalc_aadhaar_verifier(
+        circuitBuffer: ByteArray,
+        circuitSize: Long,
+        jsonBuffer: ByteArray,
+        jsonSize: Long,
+        wtnsBuffer: ByteArray,
+        wtnsSize: LongArray,
+        errorMsg: ByteArray,
+        errorMsgMaxSize: Long
+    ): Int
+
+    external fun groth16_prover(
+        zkeyBuffer: ByteArray, 
+        zkeySize: Long,
+        wtnsBuffer: ByteArray, 
+        wtnsSize: Long,
+        proofBuffer: ByteArray, 
+        proofSize: LongArray,
+        publicBuffer: ByteArray, 
+        publicSize: LongArray,
+        errorMsg: ByteArray, 
+        errorMsgMaxSize: Long
+    ): Int
+
     init {
-      System.loadLibrary("anon-aadhaar-react-native")
+        System.loadLibrary("rapidsnark")
+        System.loadLibrary("anon-aadhaar-react-native")
     }
-    @JvmStatic
-    external fun nativeAdd(a: Double, b: Double): Double
-  }
 }

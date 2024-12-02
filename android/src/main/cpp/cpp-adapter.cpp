@@ -11,7 +11,7 @@ Java_com_awesomelibrary_AwesomeLibraryModule_nativeAdd(JNIEnv *env, jclass type,
 
 // Witness Generation Function
 extern "C" JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_AwesomeLibraryModule_witnesscalc_1aadhaar_1verifier(
+Java_com_awesomelibrary_ZKPTools_witnesscalc_1aadhaar_1verifier(
     JNIEnv *env, jobject thiz,
     jbyteArray circuit_buffer, jlong circuit_size,
     jbyteArray json_buffer, jlong json_size,
@@ -50,7 +50,7 @@ Java_com_awesomelibrary_AwesomeLibraryModule_witnesscalc_1aadhaar_1verifier(
 
 // Proof Generation Function
 extern "C" JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_AwesomeLibraryModule_groth16_1prover(
+Java_com_awesomelibrary_ZKPTools_groth16_1prover(
     JNIEnv *env, jobject thiz,
     jbyteArray zkey_buffer, jlong zkey_size,
     jbyteArray wtns_buffer, jlong wtns_size,

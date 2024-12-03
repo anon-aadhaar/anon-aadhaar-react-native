@@ -1,4 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.awesomelibrary">
-          <uses-permission android:name="android.permission.CAMERA" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+    package="com.awesomelibrary">
+    
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <application
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
+        >
+    </application>
 </manifest>

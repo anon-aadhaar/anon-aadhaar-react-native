@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import android.util.Base64
 
 class AwesomeLibraryModule(reactContext: ReactApplicationContext) : 
     ReactContextBaseJavaModule(reactContext) {
@@ -25,6 +26,22 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun add(a: Double, b: Double, promise: Promise) {
         promise.resolve(nativeAdd(a, b))
+    }
+
+    private fun loadFileInChunks(path: String): ByteArray {
+        val file = File(path)
+        val chunkSize = 1024 * 1024 // 1MB chunks
+        val outputStream = ByteArrayOutputStream()
+        
+        file.inputStream().buffered().use { input ->
+            val buffer = ByteArray(chunkSize)
+            var bytesRead = input.read(buffer)
+            while (bytesRead != -1) {
+                outputStream.write(buffer, 0, bytesRead)
+                bytesRead = input.read(buffer)
+            }
+        }
+        return outputStream.toByteArray()
     }
 
     @ReactMethod
@@ -66,10 +83,12 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
             val jsonInputs = gson.toJson(formattedInputs).toByteArray()
             val zkpTools = ZKPTools(reactApplicationContext)
 
-            // Generate witness
-            val witnessLen = LongArray(1).apply { this[0] = 100 * 1024 * 1024 }
-            val witnessBuffer = ByteArray(100 * 1024 * 1024)
-            val errorMsg = ByteArray(256)
+
+            val BUFFER_SIZE = 33 * 1024 * 1024 
+            // val BUFFER_SIZE = 2 * 1024 * 1024 
+            val witnessLen = LongArray(1).apply { this[0] = BUFFER_SIZE.toLong() }
+            val witnessBuffer = ByteArray(BUFFER_SIZE)
+            val errorMsg = ByteArray(1024)
 
             val witnessResult = zkpTools.witnesscalc_aadhaar_verifier(
                 circuitBytes,
@@ -90,13 +109,20 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
                 1 -> throw Exception("Error during witness calculation: ${errorMsg.decodeToString()}")
             }
 
-            // Generate proof
+            val witnessData = witnessBuffer.copyOfRange(0, witnessLen[0].toInt())
+            val base64Witness = Base64.encodeToString(witnessData, Base64.NO_WRAP)
+            
+            // return promise.resolve("suiiiiiiiiiiiiiiii witness is working")
+
+
             val proofBuffer = ByteArray(4 * 1024 * 1024)
             val proofSize = LongArray(1).apply { this[0] = proofBuffer.size.toLong() }
             val publicBuffer = ByteArray(4 * 1024 * 1024)
             val publicSize = LongArray(1).apply { this[0] = publicBuffer.size.toLong() }
 
+            // its failing here
             val zkeyBytes = File(zkeyPath).readBytes()
+            
             val proofResult = zkpTools.groth16_prover(
                 zkeyBytes,
                 zkeyBytes.size.toLong(),
@@ -110,35 +136,36 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
                 256
             )
 
-            Log.e(TAG, "Proof generation result: $proofResult")
+            return promise.resolve("SUIIIIII from proofResult")
+            // Log.e(TAG, "Proof generation result: $proofResult")
 
-            when (proofResult) {
-                2 -> throw Exception("Not enough memory for proof generation")
-                1 -> throw Exception("Error during proof generation: ${errorMsg.decodeToString()}")
-            }
+            // when (proofResult) {
+            //     2 -> throw Exception("Not enough memory for proof generation")
+            //     1 -> throw Exception("Error during proof generation: ${errorMsg.decodeToString()}")
+            // }
 
-            // Format proof
-            val proofData = proofBuffer.copyOfRange(0, proofSize[0].toInt())
-            val pubData = publicBuffer.copyOfRange(0, publicSize[0].toInt())
+            // // Format proof
+            // val proofData = proofBuffer.copyOfRange(0, proofSize[0].toInt())
+            // val pubData = publicBuffer.copyOfRange(0, publicSize[0].toInt())
 
-            val proofString = proofData.toString(Charsets.UTF_8)
-            val pubString = pubData.decodeToString()
+            // val proofString = proofData.toString(Charsets.UTF_8)
+            // val pubString = pubData.decodeToString()
 
-            val proofEndIndex = findLastIndexOfSubstring(proofString, "\"protocol\":\"groth16\"}")
-            val pubEndIndex = findLastIndexOfSubstring(pubString, "]")
+            // val proofEndIndex = findLastIndexOfSubstring(proofString, "\"protocol\":\"groth16\"}")
+            // val pubEndIndex = findLastIndexOfSubstring(pubString, "]")
 
-            val formattedProof = proofString.slice(0..proofEndIndex)
-            val formattedPubData = pubString.slice(0..pubEndIndex)
+            // val formattedProof = proofString.slice(0..proofEndIndex)
+            // val formattedPubData = pubString.slice(0..pubEndIndex)
 
-            Log.e(TAG, "Formatted proof: $formattedProof")
+            // Log.e(TAG, "Formatted proof: $formattedProof")
 
-            val proof = Proof.fromJson(formattedProof)
-            val zkProof = ZkProof(
-                proof = proof,
-                pub_signals = getPubSignals(formattedPubData)
-            )
+            // val proof = Proof.fromJson(formattedProof)
+            // val zkProof = ZkProof(
+            //     proof = proof,
+            //     pub_signals = getPubSignals(formattedPubData)
+            // )
 
-            promise.resolve(gson.toJson(zkProof))
+            // promise.resolve(gson.toJson(zkProof))
             
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")

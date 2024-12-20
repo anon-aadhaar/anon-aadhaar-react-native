@@ -28,22 +28,6 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
         promise.resolve(nativeAdd(a, b))
     }
 
-    private fun loadFileInChunks(path: String): ByteArray {
-        val file = File(path)
-        val chunkSize = 1024 * 1024 // 1MB chunks
-        val outputStream = ByteArrayOutputStream()
-        
-        file.inputStream().buffered().use { input ->
-            val buffer = ByteArray(chunkSize)
-            var bytesRead = input.read(buffer)
-            while (bytesRead != -1) {
-                outputStream.write(buffer, 0, bytesRead)
-                bytesRead = input.read(buffer)
-            }
-        }
-        return outputStream.toByteArray()
-    }
-
     @ReactMethod
     fun generateProof(
         zkeyPath: String, 
@@ -112,31 +96,63 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
             val witnessData = witnessBuffer.copyOfRange(0, witnessLen[0].toInt())
             val base64Witness = Base64.encodeToString(witnessData, Base64.NO_WRAP)
             
-            // return promise.resolve("suiiiiiiiiiiiiiiii witness is working")
-
-
-            val proofBuffer = ByteArray(4 * 1024 * 1024)
-            val proofSize = LongArray(1).apply { this[0] = proofBuffer.size.toLong() }
-            val publicBuffer = ByteArray(4 * 1024 * 1024)
-            val publicSize = LongArray(1).apply { this[0] = publicBuffer.size.toLong() }
-
-            // its failing here
-            val zkeyBytes = File(zkeyPath).readBytes()
-            
-            val proofResult = zkpTools.groth16_prover(
-                zkeyBytes,
-                zkeyBytes.size.toLong(),
-                witnessBuffer.copyOfRange(0, witnessLen[0].toInt()),
-                witnessLen[0],
-                proofBuffer,
-                proofSize,
-                publicBuffer,
-                publicSize,
-                errorMsg,
-                256
+            val result = mapOf(
+                "witness" to base64Witness,
+                "length" to witnessLen[0]
             )
 
-            return promise.resolve("SUIIIIII from proofResult")
+            promise.resolve(gson.toJson(result))
+
+            // how to send as witness file !?
+            
+
+            // var offset = 0
+
+            // File(zkeyPath1).inputStream().buffered().use { input ->
+            //     val buffer = ByteArray(8 * 1024) // 8KB chunks
+            //     var bytesRead: Int
+            //     while (input.read(buffer).also { bytesRead = it } != -1) {
+            //         System.arraycopy(buffer, 0, combinedZkeyBytes, offset, bytesRead)
+            //         offset += bytesRead
+            //     }
+            // }
+
+            // // casing OOM For me here 
+            // val zkeyBytes1 = File(zkeyPath1).readBytes()
+            // val zkeyBytes2 = File(zkeyPath2).readBytes()
+            // Thread {
+            //     try {
+            //         val zkeyBytes1 = File(zkeyPath1).readBytes()
+            //         val zkeyBytes = zkeyBytes1 + zkeyBytes1                    
+            //         promise.resolve("Success")
+            //     } catch (e: Exception) {
+            //         Log.e(TAG, "Error: ${e.message}")
+            //         promise.reject("ERROR", e.message)
+            //     }
+            // }.start()
+
+            // its failing here
+            // val zkeyBytes1 = File(zkeyPath1).readBytes()
+
+            // Thread.sleep(5000)
+            // // sleep
+
+            // val zkeyBytes2 = File(zkeyPath2).readBytes()
+            
+            // val proofResult = zkpTools.groth16_prover(
+            //     zkeyBytes,
+            //     zkeyBytes.size.toLong(),
+            //     witnessBuffer.copyOfRange(0, witnessLen[0].toInt()),
+            //     witnessLen[0],
+            //     proofBuffer,
+            //     proofSize,
+            //     publicBuffer,
+            //     publicSize,
+            //     errorMsg,
+            //     256
+            // )
+
+            // return promise.resolve("SUIIIIII from proofResult gg")
             // Log.e(TAG, "Proof generation result: $proofResult")
 
             // when (proofResult) {

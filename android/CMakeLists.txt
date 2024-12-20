@@ -9,7 +9,7 @@ include_directories(
 # Add rapidsnark library
 add_library(rapidsnark SHARED IMPORTED)
 set_target_properties(rapidsnark PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/libs/librapidsnark.so)
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/libs/librapidsnark_local.so)
 
 # Add witness calculator library
 add_library(witnesscalc_aadhaar_verifier SHARED IMPORTED)

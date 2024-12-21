@@ -214,6 +214,43 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
         }
     }
 
+    @ReactMethod
+    fun groth16Verify(
+        proof: String,
+        publicSignals: String,
+        verificationKey: String,
+        promise: Promise
+    ) {
+        try {
+            Log.e(TAG, "Starting verification")
+            
+            val errorMsg = ByteArray(256)
+            val errorMsgMaxSize: Long = errorMsg.size.toLong()
+
+            val zkpTools = ZKPTools(reactApplicationContext)
+            
+            val verificationResult = zkpTools.groth16Verify(
+                proof,
+                publicSignals,
+                verificationKey,
+                errorMsg,
+                errorMsgMaxSize
+            )
+
+            when (verificationResult) {
+                0 -> promise.resolve(true)  // Verification successful
+                1 -> {
+                    promise.resolve(false)  // Verification failed  
+                }
+                else -> throw Exception("Unknown verification error")
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Verification error: ${e.message}")
+            promise.reject("VERIFICATION_ERROR", e.message)
+        }
+    }
+
     private fun findLastIndexOfSubstring(mainString: String, searchString: String): Int {
         val index = mainString.lastIndexOf(searchString)
         return if (index != -1) {
@@ -296,6 +333,14 @@ class ZKPTools(val context: Context) {
         publicBuffer: ByteArray, publicSize: LongArray,
         errorMsg: ByteArray, errorMsgMaxSize: Long
     ): Int
+
+    external fun groth16Verify(
+        proof: String,
+        inputs: String,
+        verificationKey: String,
+        errorMsg: ByteArray,
+        errorMsgMaxSize: Long
+): Int
 
     init {
         System.loadLibrary("rapidsnark")

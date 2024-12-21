@@ -138,3 +138,31 @@ Java_com_awesomelibrary_ZKPTools_groth16ProveWithZKeyFilePath(JNIEnv *env, jobje
 
     return status_code;
 }
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_awesomelibrary_ZKPTools_groth16Verify(
+    JNIEnv *env, jobject obj,
+    jstring proof, jstring inputs, jstring verificationKey,
+    jbyteArray errorMsg, jlong errorMsgMaxSize
+) {
+    
+    const char *nativeInputs = env->GetStringUTFChars(inputs, nullptr);
+    const char *nativeProof = env->GetStringUTFChars(proof, nullptr);
+    const char *nativeVerificationKey = env->GetStringUTFChars(verificationKey, nullptr);
+    char *nativeErrorMsg = (char *) env->GetByteArrayElements(errorMsg, nullptr);
+
+    int status_code = groth16_verify(
+        nativeProof,
+        nativeInputs,
+        nativeVerificationKey,
+        nativeErrorMsg, errorMsgMaxSize
+    );
+
+    env->ReleaseStringUTFChars(inputs, nativeInputs);
+    env->ReleaseStringUTFChars(proof, nativeProof);
+    env->ReleaseStringUTFChars(verificationKey, nativeVerificationKey);
+    env->ReleaseByteArrayElements(errorMsg, (jbyte *) nativeErrorMsg, 0);
+
+    return status_code;
+}

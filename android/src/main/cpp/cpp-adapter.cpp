@@ -1,14 +1,7 @@
 #include <jni.h>
-#include "anon-aadhaar-react-native.h"
 #include "prover.h"
 #include "verifier.h"
 #include "witnesscalc_aadhaar_verifier.h"
-
-extern "C"
-JNIEXPORT jdouble JNICALL
-Java_com_awesomelibrary_AwesomeLibraryModule_nativeAdd(JNIEnv *env, jclass type, jdouble a, jdouble b) {
-    return anonaadhaar_reactnative::add(a, b);
-}
 
 // Witness Generation Function
 extern "C"
@@ -93,6 +86,7 @@ Java_com_awesomelibrary_ZKPTools_groth16_1prover(
     return result;
 }
 
+// Proof Generation Function with Zkeypath file
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_awesomelibrary_ZKPTools_groth16ProveWithZKeyFilePath(JNIEnv *env, jobject obj,

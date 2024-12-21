@@ -18,7 +18,6 @@ set_target_properties(witnesscalc_aadhaar_verifier PROPERTIES
 
 # Main library
 add_library(anon-aadhaar-react-native SHARED
-    src/main/cpp/anon-aadhaar-react-native.cpp
     src/main/cpp/cpp-adapter.cpp)
 
 # Link all libraries

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.22.1)
 project(anon-aadhaar)
 
 # Include directories for all headers
@@ -9,7 +9,7 @@ include_directories(
 # Add rapidsnark library
 add_library(rapidsnark SHARED IMPORTED)
 set_target_properties(rapidsnark PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/libs/librapidsnark_local.so)
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/libs/librapidsnark.so)
 
 # Add witness calculator library
 add_library(witnesscalc_aadhaar_verifier SHARED IMPORTED)

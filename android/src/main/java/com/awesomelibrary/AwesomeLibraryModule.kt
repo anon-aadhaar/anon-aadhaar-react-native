@@ -133,6 +133,7 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
     
             // Format inputs
             val formattedInputs = mutableMapOf<String, Any?>()
+            
             val iterator = inputs.keySetIterator()
             while (iterator.hasNextKey()) {
                 val key = iterator.nextKey()
@@ -144,6 +145,7 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
             Log.e(TAG, gson.toJson(formattedInputs))
             
             val jsonInputs = gson.toJson(formattedInputs).toByteArray()
+
             val zkpTools = ZKPTools(reactApplicationContext)
     
             val rapidsnarkInputs = prepareCircuitInputs(
@@ -169,9 +171,43 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
                 2 -> throw Exception("Not enough memory for witness calculation")
                 1 -> throw Exception("Error during witness calculation: ${rapidsnarkInputs.errorMsg.toString(Charsets.UTF_8).trim()}")
             }
-    
-            promise.resolve("Success")
-    
+
+
+            var proofRes = zkpTools.groth16ProveWithZKeyFilePath(
+                zkeyPath,
+                rapidsnarkInputs.wtnsBuffer,
+                rapidsnarkInputs.wtnsSize[0],
+                rapidsnarkInputs.proofData,
+                rapidsnarkInputs.proofLen,
+                rapidsnarkInputs.pubData,
+                rapidsnarkInputs.pubLen,
+                rapidsnarkInputs.errorMsg,
+                rapidsnarkInputs.errorMsgMaxSize
+            )
+
+            when (proofRes) {
+                2 -> throw Exception("Not enough memory for proof generation")
+                1 -> throw Exception("Error during proof generation: ${rapidsnarkInputs.errorMsg.decodeToString()}")
+            }
+
+            val proofData =  rapidsnarkInputs.proofData.copyOfRange(0, rapidsnarkInputs.proofLen[0].toInt())
+            val pubData =   rapidsnarkInputs.pubData.copyOfRange(0, rapidsnarkInputs.pubLen[0].toInt())
+            val proofString = proofData.toString(Charsets.UTF_8)
+            val pubString = pubData.decodeToString()
+
+            val proofEndIndex = findLastIndexOfSubstring(proofString, "\"protocol\":\"groth16\"}")
+            val pubEndIndex = findLastIndexOfSubstring(pubString, "]")
+
+            val formattedProof = proofString.slice(0..proofEndIndex)
+            val formattedPubData = pubString.slice(0..pubEndIndex)
+
+            val proof = Proof.fromJson(formattedProof)
+            val zkProof = ZkProof(
+                proof = proof,
+                pub_signals = getPubSignals(formattedPubData)
+            )
+
+            promise.resolve(gson.toJson(zkProof))   
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
             promise.reject("ERROR", e.message)
@@ -251,6 +287,14 @@ class ZKPTools(val context: Context) {
         publicSize: LongArray,
         errorMsg: ByteArray, 
         errorMsgMaxSize: Long
+    ): Int
+
+    external fun groth16ProveWithZKeyFilePath(
+        zkeyPath: String,
+        wtnsBuffer: ByteArray, wtnsSize: Long,
+        proofBuffer: ByteArray, proofSize: LongArray,
+        publicBuffer: ByteArray, publicSize: LongArray,
+        errorMsg: ByteArray, errorMsgMaxSize: Long
     ): Int
 
     init {

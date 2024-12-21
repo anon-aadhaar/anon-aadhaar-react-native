@@ -5,14 +5,93 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
-
 import android.util.Log
 import android.content.Context
 import java.io.ByteArrayOutputStream
+import java.io.BufferedInputStream
+import java.io.FileInputStream
 import java.io.File
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import android.util.Base64
+
+data class CircuitInputs(
+    val circuitBuffer: ByteArray,
+    val circuitSize: Long,
+    val jsonBuffer: ByteArray,
+    val jsonSize: Long,
+    val wtnsBuffer: ByteArray,
+    val wtnsSize: LongArray,
+    val errorMsg: ByteArray,
+    val errorMsgMaxSize: Long,
+    val pubData: ByteArray,
+    val pubLen: LongArray,
+    val proofData: ByteArray,
+    val proofLen: LongArray
+)
+
+fun readFileInChunks(filePath: String, chunkSize: Int = 2048): ByteArray {
+    val file = File(filePath)
+    val outputStream = ByteArrayOutputStream()
+
+    BufferedInputStream(FileInputStream(file)).use { inputStream ->
+        val buffer = ByteArray(chunkSize)
+        var bytesRead: Int
+        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+            outputStream.write(buffer, 0, bytesRead)
+        }
+    }
+
+    return outputStream.toByteArray()
+}
+
+fun prepareCircuitInputs(
+    circuitPath: String,
+    jsonBuffer: ByteArray,
+): CircuitInputs {
+
+    // 1. Load circuit data into circuitBuffer
+    val circuitBuffer: ByteArray = readFileInChunks(circuitPath)
+    val circuitSize: Long = circuitBuffer.size.toLong()
+
+    // 2. Load JSON data into jsonBuffer
+    // val jsonBuffer: ByteArray = readFileInChunks(jsonPath)
+    val jsonSize: Long = jsonBuffer.size.toLong()
+
+    // 3. Prepare witness buffer (initially empty)
+    val wtnsBuffer: ByteArray = ByteArray(200 * 1024 * 1024) // Allocate buffer size
+    val wtnsSize = LongArray(1)
+    wtnsSize[0] = wtnsBuffer.size.toLong()
+
+    // 4. Prepare error message buffer (initially empty)
+    val errorMsg: ByteArray = ByteArray(256) // Set buffer size
+    val errorMsgMaxSize: Long = errorMsg.size.toLong()
+
+    // 5. Prepare public data and proof buffers
+    val pubData = ByteArray(4 * 1024 * 1024)
+    val pubLen = LongArray(1)
+    pubLen[0] = pubData.size.toLong()
+
+    val proofData = ByteArray(4 * 1024 * 1024)
+    val proofLen = LongArray(1)
+    proofLen[0] = proofData.size.toLong()
+
+    // Return all prepared inputs
+    return CircuitInputs(
+        circuitBuffer,
+        circuitSize,
+        jsonBuffer,
+        jsonSize,
+        wtnsBuffer,
+        wtnsSize,
+        errorMsg,
+        errorMsgMaxSize,
+        pubData,
+        pubLen,
+        proofData,
+        proofLen
+    )
+}
 
 class AwesomeLibraryModule(reactContext: ReactApplicationContext) : 
     ReactContextBaseJavaModule(reactContext) {
@@ -38,20 +117,20 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
         Log.e(TAG, "zkeyPath: $zkeyPath")
         Log.e(TAG, "circuitPath: $circuitPath")
         Log.e(TAG, "inputs: ${inputs.toString()}")
-
+    
         try {
             // Read the circuit file
             val circuitFile = File(circuitPath)
             if (!circuitFile.exists()) {
                 throw IllegalArgumentException("Circuit file does not exist at path: $circuitPath")
             }
-
+    
             val circuitBytes = try {
                 circuitFile.readBytes()
             } catch (e: Exception) {
                 throw IllegalArgumentException("Error reading circuit file: ${e.message}")
             }
-
+    
             // Format inputs
             val formattedInputs = mutableMapOf<String, Any?>()
             val iterator = inputs.keySetIterator()
@@ -60,129 +139,39 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
                 val array = inputs.getArray(key)?.toArrayList()?.map { it.toString() }
                 formattedInputs[key] = if (array?.size == 1) array.firstOrNull() else array
             }
-
+    
             val gson = GsonBuilder().setPrettyPrinting().create()
             Log.e(TAG, gson.toJson(formattedInputs))
             
             val jsonInputs = gson.toJson(formattedInputs).toByteArray()
             val zkpTools = ZKPTools(reactApplicationContext)
-
-
-            val BUFFER_SIZE = 33 * 1024 * 1024 
-            // val BUFFER_SIZE = 2 * 1024 * 1024 
-            val witnessLen = LongArray(1).apply { this[0] = BUFFER_SIZE.toLong() }
-            val witnessBuffer = ByteArray(BUFFER_SIZE)
-            val errorMsg = ByteArray(1024)
-
-            val witnessResult = zkpTools.witnesscalc_aadhaar_verifier(
-                circuitBytes,
-                circuitBytes.size.toLong(),
-                jsonInputs,
-                jsonInputs.size.toLong(),
-                witnessBuffer,
-                witnessLen,
-                errorMsg,
-                256
+    
+            val rapidsnarkInputs = prepareCircuitInputs(
+                circuitPath,
+                jsonInputs  
             )
-
-            Log.e(TAG, "Witness generation result: $witnessResult")
-
-            when (witnessResult) {
+    
+            val wtnsRes = zkpTools.witnesscalc_aadhaar_verifier(
+                rapidsnarkInputs.circuitBuffer,
+                rapidsnarkInputs.circuitSize,
+                rapidsnarkInputs.jsonBuffer,
+                rapidsnarkInputs.jsonSize,
+                rapidsnarkInputs.wtnsBuffer,
+                rapidsnarkInputs.wtnsSize,
+                rapidsnarkInputs.errorMsg,
+                rapidsnarkInputs.errorMsgMaxSize
+            )
+    
+            Log.e(TAG, "Witness generation result: $wtnsRes")
+    
+            when (wtnsRes) {
                 3 -> throw Exception("Error 3")
                 2 -> throw Exception("Not enough memory for witness calculation")
-                1 -> throw Exception("Error during witness calculation: ${errorMsg.decodeToString()}")
+                1 -> throw Exception("Error during witness calculation: ${rapidsnarkInputs.errorMsg.toString(Charsets.UTF_8).trim()}")
             }
-
-            val witnessData = witnessBuffer.copyOfRange(0, witnessLen[0].toInt())
-            val base64Witness = Base64.encodeToString(witnessData, Base64.NO_WRAP)
-            
-            val result = mapOf(
-                "witness" to base64Witness,
-                "length" to witnessLen[0]
-            )
-
-            promise.resolve(gson.toJson(result))
-
-            // how to send as witness file !?
-            
-
-            // var offset = 0
-
-            // File(zkeyPath1).inputStream().buffered().use { input ->
-            //     val buffer = ByteArray(8 * 1024) // 8KB chunks
-            //     var bytesRead: Int
-            //     while (input.read(buffer).also { bytesRead = it } != -1) {
-            //         System.arraycopy(buffer, 0, combinedZkeyBytes, offset, bytesRead)
-            //         offset += bytesRead
-            //     }
-            // }
-
-            // // casing OOM For me here 
-            // val zkeyBytes1 = File(zkeyPath1).readBytes()
-            // val zkeyBytes2 = File(zkeyPath2).readBytes()
-            // Thread {
-            //     try {
-            //         val zkeyBytes1 = File(zkeyPath1).readBytes()
-            //         val zkeyBytes = zkeyBytes1 + zkeyBytes1                    
-            //         promise.resolve("Success")
-            //     } catch (e: Exception) {
-            //         Log.e(TAG, "Error: ${e.message}")
-            //         promise.reject("ERROR", e.message)
-            //     }
-            // }.start()
-
-            // its failing here
-            // val zkeyBytes1 = File(zkeyPath1).readBytes()
-
-            // Thread.sleep(5000)
-            // // sleep
-
-            // val zkeyBytes2 = File(zkeyPath2).readBytes()
-            
-            // val proofResult = zkpTools.groth16_prover(
-            //     zkeyBytes,
-            //     zkeyBytes.size.toLong(),
-            //     witnessBuffer.copyOfRange(0, witnessLen[0].toInt()),
-            //     witnessLen[0],
-            //     proofBuffer,
-            //     proofSize,
-            //     publicBuffer,
-            //     publicSize,
-            //     errorMsg,
-            //     256
-            // )
-
-            // return promise.resolve("SUIIIIII from proofResult gg")
-            // Log.e(TAG, "Proof generation result: $proofResult")
-
-            // when (proofResult) {
-            //     2 -> throw Exception("Not enough memory for proof generation")
-            //     1 -> throw Exception("Error during proof generation: ${errorMsg.decodeToString()}")
-            // }
-
-            // // Format proof
-            // val proofData = proofBuffer.copyOfRange(0, proofSize[0].toInt())
-            // val pubData = publicBuffer.copyOfRange(0, publicSize[0].toInt())
-
-            // val proofString = proofData.toString(Charsets.UTF_8)
-            // val pubString = pubData.decodeToString()
-
-            // val proofEndIndex = findLastIndexOfSubstring(proofString, "\"protocol\":\"groth16\"}")
-            // val pubEndIndex = findLastIndexOfSubstring(pubString, "]")
-
-            // val formattedProof = proofString.slice(0..proofEndIndex)
-            // val formattedPubData = pubString.slice(0..pubEndIndex)
-
-            // Log.e(TAG, "Formatted proof: $formattedProof")
-
-            // val proof = Proof.fromJson(formattedProof)
-            // val zkProof = ZkProof(
-            //     proof = proof,
-            //     pub_signals = getPubSignals(formattedPubData)
-            // )
-
-            // promise.resolve(gson.toJson(zkProof))
-            
+    
+            promise.resolve("Success")
+    
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
             promise.reject("ERROR", e.message)

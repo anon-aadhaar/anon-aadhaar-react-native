@@ -47,7 +47,7 @@ export type AnonAadhaarProof = {
 export type AnonAadhaarArgs = {
   qrDataPadded: string[];
   qrDataPaddedLength: string[];
-  nonPaddedDataLength: string[];
+  // nonPaddedDataLength: string[];
   delimiterIndices: string[];
   signature: string[];
   pubKey: string[];

@@ -108,7 +108,7 @@ class RapidsnarkModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun generateProof(
+    fun groth16ProveWithZKeyFilePath(
         zkeyPath: String, 
         circuitPath: String, 
         inputs: ReadableMap, 

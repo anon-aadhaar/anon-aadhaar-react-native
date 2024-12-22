@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 import pako from 'pako';
+import fetchBlob from 'react-native-blob-util';
 import RNFS from 'react-native-fs';
 import storage from './storage';
 
@@ -181,4 +182,46 @@ export async function cleanAnonAadhaarState() {
   return await storage.remove({
     key: 'anonAadhaar',
   });
+}
+
+export async function downloadFile(url: string, targetPath: string) {
+  try {
+    console.log(`Starting download of ${url}`);
+
+    // Download with progress tracking
+    const task = fetchBlob
+      .config({
+        path: targetPath,
+        timeout: 60000 * 5, // 5 minute timeout
+      })
+      .fetch('GET', url);
+
+    task.progress((received: any, total: any) => {
+      if (total > 0) {
+        // Only log if total is valid
+        const percentage = Math.floor((received / total) * 100);
+        console.log(
+          `Downloaded: ${(received / (1024 * 1024)).toFixed(2)}MB / ${(total / (1024 * 1024)).toFixed(2)}MB (${percentage}%)`
+        );
+      }
+    });
+
+    const finalSize = await RNFS.stat(targetPath);
+    console.log(
+      `Download completed. Final size: ${(finalSize.size / (1024 * 1024)).toFixed(2)} MB`
+    );
+    console.log('File saved to:', targetPath);
+
+    // Verify file is not empty
+    if (finalSize.size === 0) {
+      throw new Error('Downloaded file is empty');
+    }
+  } catch (error) {
+    console.error('Error during file download:', error);
+    try {
+      await RNFS.unlink(targetPath);
+    } catch (cleanupError) {
+      console.error('Error cleaning up failed download:', cleanupError);
+    }
+  }
 }

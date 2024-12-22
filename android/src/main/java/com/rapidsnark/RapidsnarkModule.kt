@@ -59,7 +59,7 @@ fun prepareCircuitInputs(
     val jsonSize: Long = jsonBuffer.size.toLong()
 
     // 3. Prepare witness buffer (initially empty)
-    val wtnsBuffer: ByteArray = ByteArray(200 * 1024 * 1024) // Allocate buffer size
+    val wtnsBuffer: ByteArray = ByteArray(35 * 1024 * 1024) // Allocate buffer size
     val wtnsSize = LongArray(1)
     wtnsSize[0] = wtnsBuffer.size.toLong()
 
@@ -68,11 +68,11 @@ fun prepareCircuitInputs(
     val errorMsgMaxSize: Long = errorMsg.size.toLong()
 
     // 5. Prepare public data and proof buffers
-    val pubData = ByteArray(4 * 1024 * 1024)
+    val pubData = ByteArray(1 * 1024 * 1024)
     val pubLen = LongArray(1)
     pubLen[0] = pubData.size.toLong()
 
-    val proofData = ByteArray(4 * 1024 * 1024)
+    val proofData = ByteArray(1 * 1024 * 1024)
     val proofLen = LongArray(1)
     proofLen[0] = proofData.size.toLong()
 

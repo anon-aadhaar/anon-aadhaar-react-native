@@ -6,6 +6,7 @@
     <application
         android:largeHeap="true"
         android:hardwareAccelerated="false"
+        android:vmSafeMode="false"
         >
     </application>
 </manifest>

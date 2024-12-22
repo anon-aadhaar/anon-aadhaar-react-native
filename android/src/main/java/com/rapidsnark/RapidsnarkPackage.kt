@@ -1,4 +1,4 @@
-package com.awesomelibrary
+package com.rapidsnark
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
@@ -6,9 +6,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ViewManager
 
 
-class AwesomeLibraryPackage : ReactPackage {
+class RapidsnarkPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-    return listOf(AwesomeLibraryModule(reactContext))
+    return listOf(RapidsnarkModule(reactContext))
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {

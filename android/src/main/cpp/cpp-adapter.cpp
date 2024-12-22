@@ -6,7 +6,7 @@
 // Witness Generation Function
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_ZKPTools_witnesscalc_1aadhaar_1verifier(JNIEnv *env, jobject thiz,
+Java_com_rapidsnark_ZKPTools_witnesscalc_1aadhaar_1verifier(JNIEnv *env, jobject thiz,
                                                               jbyteArray circuit_buffer,
                                                               jlong circuit_size,
                                                               jbyteArray json_buffer,
@@ -46,7 +46,7 @@ Java_com_awesomelibrary_ZKPTools_witnesscalc_1aadhaar_1verifier(JNIEnv *env, job
 
 // Proof Generation Function
 extern "C" JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_ZKPTools_groth16_1prover(
+Java_com_rapidsnark_ZKPTools_groth16_1prover(
     JNIEnv *env, jobject thiz,
     jbyteArray zkey_buffer, jlong zkey_size,
     jbyteArray wtns_buffer, jlong wtns_size,
@@ -89,7 +89,7 @@ Java_com_awesomelibrary_ZKPTools_groth16_1prover(
 // Proof Generation Function with Zkeypath file
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_ZKPTools_groth16ProveWithZKeyFilePath(JNIEnv *env, jobject obj,
+Java_com_rapidsnark_ZKPTools_groth16ProveWithZKeyFilePath(JNIEnv *env, jobject obj,
                                                                 jstring zkeyPath,
                                                                 jbyteArray wtnsBuffer, jlong wtnsSize,
                                                                 jbyteArray proofBuffer, jlongArray proofSize,
@@ -141,7 +141,7 @@ Java_com_awesomelibrary_ZKPTools_groth16ProveWithZKeyFilePath(JNIEnv *env, jobje
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_awesomelibrary_ZKPTools_groth16Verify(
+Java_com_rapidsnark_ZKPTools_groth16Verify(
     JNIEnv *env, jobject obj,
     jstring proof, jstring inputs, jstring verificationKey,
     jbyteArray errorMsg, jlong errorMsgMaxSize

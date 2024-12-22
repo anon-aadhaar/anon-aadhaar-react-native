@@ -1,4 +1,4 @@
-package com.awesomelibrary
+package com.rapidsnark
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -93,13 +93,13 @@ fun prepareCircuitInputs(
     )
 }
 
-class AwesomeLibraryModule(reactContext: ReactApplicationContext) : 
+class RapidsnarkModule(reactContext: ReactApplicationContext) : 
     ReactContextBaseJavaModule(reactContext) {
     
-    private val TAG = "AwesomeLibraryModule"
+    private val TAG = "RapidsnarkModule"
 
     override fun getName(): String {
-        return "AwesomeLibrary"
+        return "Rapidsnark"
     }
 
     @ReactMethod
@@ -219,14 +219,13 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
         proof: String,
         publicSignals: String,
         verificationKey: String,
+        errorSize: Int,
         promise: Promise
     ) {
         try {
             Log.e(TAG, "Starting verification")
             
-            val errorMsg = ByteArray(256)
-            val errorMsgMaxSize: Long = errorMsg.size.toLong()
-
+            val errorMsg = ByteArray(errorSize)
             val zkpTools = ZKPTools(reactApplicationContext)
             
             val verificationResult = zkpTools.groth16Verify(
@@ -234,7 +233,7 @@ class AwesomeLibraryModule(reactContext: ReactApplicationContext) :
                 publicSignals,
                 verificationKey,
                 errorMsg,
-                errorMsgMaxSize
+                errorSize.toLong()
             )
 
             when (verificationResult) {

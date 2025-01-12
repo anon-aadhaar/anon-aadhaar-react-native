@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs';
 import { fileUrls } from './constants';
 import storage from './storage';
 import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
-import { downloadFile } from './util';
+import { downloadFile, getFileSize, verifyFileSize } from './util';
 
 const LINKING_ERROR =
   `The package 'react-native-rapidsnark' doesn't seem to be linked. Make sure: \n\n` +
@@ -14,12 +14,24 @@ const LINKING_ERROR =
 export async function setupProver() {
   console.log('Starting setup!');
   for (const [key, url] of Object.entries(fileUrls)) {
-    const filePath = `${RNFS.DocumentDirectoryPath}/${key}`;
+    let filePath = `${RNFS.DocumentDirectoryPath}/${key}`;
 
-    if (!(await RNFS.exists(filePath))) {
-      await downloadFile(url, filePath);
-    } else {
-      console.log(`${key} already exists at ${filePath}`);
+    try {
+      const fileExists = await RNFS.exists(filePath);
+      if (fileExists) {
+        // there might corrupted files so, we need check the files size once!
+        const expectedFileSize = await getFileSize(url);
+        const sizeVerify = await verifyFileSize(filePath, expectedFileSize);
+        if (!sizeVerify) {
+          // corrupted the file
+          await RNFS.unlink(filePath);
+          await downloadFile(url, filePath);
+        }
+      } else {
+        await downloadFile(url, filePath);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 }

@@ -188,23 +188,24 @@ export async function downloadFile(url: string, targetPath: string) {
   try {
     console.log(`Starting download of ${url}`);
 
-    // Download with progress tracking
     const task = fetchBlob
       .config({
         path: targetPath,
-        timeout: 60000 * 5, // 5 minute timeout
+        fileCache: true,
+        timeout: 60000 * 5,
       })
       .fetch('GET', url);
 
     task.progress((received: any, total: any) => {
       if (total > 0) {
-        // Only log if total is valid
         const percentage = Math.floor((received / total) * 100);
         console.log(
           `Downloaded: ${(received / (1024 * 1024)).toFixed(2)}MB / ${(total / (1024 * 1024)).toFixed(2)}MB (${percentage}%)`
         );
       }
     });
+
+    await task;
 
     const finalSize = await RNFS.stat(targetPath);
     console.log(
@@ -217,11 +218,45 @@ export async function downloadFile(url: string, targetPath: string) {
       throw new Error('Downloaded file is empty');
     }
   } catch (error) {
-    console.error('Error during file download:', error);
-    try {
-      await RNFS.unlink(targetPath);
-    } catch (cleanupError) {
-      console.error('Error cleaning up failed download:', cleanupError);
+    console.log(error);
+    // console.error('Error during file download:', error);
+  }
+}
+
+export async function verifyFileSize(
+  filePath: string,
+  expectedSize: number
+): Promise<boolean> {
+  try {
+    const stats = await RNFS.stat(filePath);
+    return stats.size === expectedSize;
+  } catch (error) {
+    console.error('Error verifying file size:', error);
+    return false;
+  }
+}
+
+export async function getFileSize(url: string): Promise<number> {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      headers: {
+        'Accept-Encoding': 'identity', // Disable compression for accurate size
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const contentLength = response.headers.get('content-length');
+    if (!contentLength) {
+      throw new Error('Content-Length header not found');
+    }
+    const sizeInBytes = parseInt(contentLength, 10); // Parse the size to number (bytes)
+    return sizeInBytes;
+  } catch (error) {
+    console.error('Error getting file size:', error);
+    throw error;
   }
 }

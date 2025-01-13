@@ -70,6 +70,7 @@ __metadata:
     react-native-storage: ^1.0.1
     react-native-svg: ^15.1.0
     react-native-vision-camera: ^3.9.2
+    react-native-zip-archive: ^7.0.1
     release-it: ^15.0.0
     rn-qr-generator: ^1.4.0
     turbo: ^1.10.7
@@ -3820,6 +3821,7 @@ __metadata:
     react-native-svg: ^15.1.0
     react-native-toast-message: ^2.2.0
     react-native-vision-camera: ^3.9.2
+    react-native-zip-archive: ^7.0.1
     rn-qr-generator: ^1.4.0
     yarn: ^1.22.22
   languageName: unknown
@@ -11648,6 +11650,16 @@ __metadata:
     react-native-worklets-core:
       optional: true
   checksum: b69beca5bcc486c6e4f9b11199ba46cc8552be2bb46a8b1f74851c9563f88eedf851d9c61299e2d3e507029398281a7fcbc4e2183af3ee39d75a6194bcfaf757
+  languageName: node
+  linkType: hard
+
+"react-native-zip-archive@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "react-native-zip-archive@npm:7.0.1"
+  peerDependencies:
+    react: ">=16.8.6"
+    react-native: ">=0.60.0"
+  checksum: 2f7747d2ed903102e0d097921d1a019311f0c23c9ceb15304c39d699fba380e60b70cb1474b1fb516d114514af2a3c8a88ee5690f83d0a92d87500d095ba2b39
   languageName: node
   linkType: hard
 

@@ -1,9 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
-import { fileUrls } from './constants';
+import { ZIP_URL } from './constants';
 import storage from './storage';
 import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
-import { downloadFile, getFileSize, verifyFileSize } from './util';
+import { downloadFile } from './util';
 
 const LINKING_ERROR =
   `The package 'react-native-rapidsnark' doesn't seem to be linked. Make sure: \n\n` +
@@ -12,27 +12,29 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 export async function setupProver() {
-  console.log('Starting setup!');
-  for (const [key, url] of Object.entries(fileUrls)) {
-    let filePath = `${RNFS.DocumentDirectoryPath}/${key}`;
+  try {
+    const zipUrl = ZIP_URL['compressed-aadhaar-verifier.zip'];
+    const zipFilePath = `${RNFS.DocumentDirectoryPath}/compressed-aadhaar-verifier.zip`;
+    const aadhaarVerifier = `${RNFS.DocumentDirectoryPath}/aadhaar-verifier`;
 
-    try {
-      const fileExists = await RNFS.exists(filePath);
-      if (fileExists) {
-        // there might corrupted files so, we need check the files size once!
-        const expectedFileSize = await getFileSize(url);
-        const sizeVerify = await verifyFileSize(filePath, expectedFileSize);
-        if (!sizeVerify) {
-          // corrupted the file
-          await RNFS.unlink(filePath);
-          await downloadFile(url, filePath);
-        }
-      } else {
-        await downloadFile(url, filePath);
-      }
-    } catch (error) {
-      console.log(error);
+    const folderExists = await RNFS.exists(aadhaarVerifier);
+    if (folderExists) {
+      console.log('Setup already complete');
+      return;
     }
+
+    // possible corruption case
+    const zipExists = await RNFS.exists(zipFilePath);
+    if (zipExists) {
+      console.log('Found incomplete setup, removing zip file');
+      await RNFS.unlink(zipFilePath);
+    }
+
+    console.log('Downloading verifier...');
+    await downloadFile(zipUrl, zipFilePath);
+    console.log('Setup complete');
+  } catch (error) {
+    console.log('Setup failed:', error);
   }
 }
 

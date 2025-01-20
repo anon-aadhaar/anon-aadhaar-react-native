@@ -1,0 +1,19 @@
+{
+  "name": "@anon-aadhaar/react-native",
+  "version": "0.0.0",
+  "description": "React Native Package for Anon aadhaar protocol",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "RNReactNativeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
+  "author": " <> ()",
+  "license": "UNLICENSED",
+  "homepage": "#readme",
+  "create-react-native-library": {
+    "type": "turbo-module",
+    "languages": "cpp",
+    "version": "0.45.5"
+  }
+}

@@ -2,10 +2,12 @@
 import pako from 'pako';
 import RNFS from 'react-native-fs';
 import storage from './storage';
+import { unzip } from 'react-native-zip-archive';
+import fetchBlob from 'react-native-blob-util';
+import { VKEY_PATH } from './constants';
 
 export function getVerificationKey(): Promise<string> {
-  const path = RNFS.DocumentDirectoryPath + '/vkey.json';
-  return RNFS.readFile(path, 'utf8');
+  return RNFS.readFile(VKEY_PATH, 'utf8');
 }
 
 export function str2ab(str: string) {
@@ -181,4 +183,47 @@ export async function cleanAnonAadhaarState() {
   return await storage.remove({
     key: 'anonAadhaar',
   });
+}
+
+export async function downloadFile(url: string, targetPath: string) {
+  try {
+    const extractPath = RNFS.DocumentDirectoryPath;
+    console.log(`Starting download of ${url}`);
+
+    const task = fetchBlob
+      .config({
+        path: targetPath,
+        fileCache: true,
+        timeout: 60000 * 10,
+      })
+      .fetch('GET', url);
+
+    task.progress((received: any, total: any) => {
+      if (total > 0) {
+        const percentage = Math.floor((received / total) * 100);
+        console.log(
+          `Downloaded: ${(received / (1024 * 1024)).toFixed(2)}MB / ${(total / (1024 * 1024)).toFixed(2)}MB (${percentage}%)`
+        );
+      }
+    });
+
+    await task;
+
+    const finalSize = await RNFS.stat(targetPath);
+    console.log(
+      `Download completed. Final size: ${(finalSize.size / (1024 * 1024)).toFixed(2)} MB`
+    );
+    console.log('File saved to:', targetPath);
+
+    if (finalSize.size === 0) {
+      throw new Error('Downloaded file is empty');
+    }
+
+    // unzip the file
+    await unzip(targetPath, extractPath);
+    // removing the zip file
+    await RNFS.unlink(targetPath);
+  } catch (error) {
+    console.log(error);
+  }
 }

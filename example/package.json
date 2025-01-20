@@ -29,6 +29,7 @@
     "react-native-svg": "^15.1.0",
     "react-native-toast-message": "^2.2.0",
     "react-native-vision-camera": "^3.9.2",
+    "react-native-zip-archive": "^7.0.1",
     "rn-qr-generator": "^1.4.0",
     "yarn": "^1.22.22"
   },

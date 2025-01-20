@@ -1,9 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
-import fetchBlob from 'react-native-blob-util';
-import { fileUrls } from './constants';
-import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
+import { ZIP_URL } from './constants';
 import storage from './storage';
+import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
+import { downloadFile } from './util';
 
 const LINKING_ERROR =
   `The package 'react-native-rapidsnark' doesn't seem to be linked. Make sure: \n\n` +
@@ -11,29 +11,30 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-async function downloadFile(url: string, targetPath: string) {
-  try {
-    // Download the file to a temporary path
-    await fetchBlob.config({ path: targetPath }).fetch('GET', url);
-    console.log('The file is saved to ', targetPath);
-  } catch (error) {
-    console.error('Error during file download or decompression:', error);
-  }
-}
-
 export async function setupProver() {
-  console.log('Starting setup!');
-  for (const [key, url] of Object.entries(fileUrls)) {
-    console.log('Round for key: ', key);
+  try {
+    const zipUrl = ZIP_URL['compressed-aadhaar-verifier.zip'];
+    const zipFilePath = `${RNFS.DocumentDirectoryPath}/compressed-aadhaar-verifier.zip`;
+    const aadhaarVerifier = `${RNFS.DocumentDirectoryPath}/aadhaar-verifier`;
 
-    const filePath = `${RNFS.DocumentDirectoryPath}/${key}`;
-    const fileExists = await RNFS.exists(filePath);
-
-    if (!fileExists) {
-      await downloadFile(url, filePath);
+    const folderExists = await RNFS.exists(aadhaarVerifier);
+    if (folderExists) {
+      console.log('Setup already complete');
+      return;
     }
 
-    console.log(`${key} loaded at ${filePath}`);
+    // possible corruption case
+    const zipExists = await RNFS.exists(zipFilePath);
+    if (zipExists) {
+      console.log('Found incomplete setup, removing zip file');
+      await RNFS.unlink(zipFilePath);
+    }
+
+    console.log('Downloading verifier...');
+    await downloadFile(zipUrl, zipFilePath);
+    console.log('Setup complete');
+  } catch (error) {
+    console.log('Setup failed:', error);
   }
 }
 
@@ -49,7 +50,6 @@ const Rapidsnark = NativeModules.Rapidsnark
     );
 
 export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
-// export const DEFAULT_ZKEY_BUFFER_SIZE = 1024 * 1024 * 100;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 export async function groth16ProveWithZKeyFilePath(
@@ -69,25 +69,26 @@ export async function groth16ProveWithZKeyFilePath(
     publicBufferSize,
     errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
   }: {
-    proofBufferSize: number;
-    publicBufferSize: number | undefined;
-    errorBufferSize: number;
-  } = {
-    proofBufferSize: DEFAULT_PROOF_BUFFER_SIZE,
-    publicBufferSize: undefined,
-    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-  }
+    proofBufferSize?: number;
+    publicBufferSize?: number;
+    errorBufferSize?: number;
+  } = {}
 ): Promise<AnonAadhaarProof> {
-  let public_buffer_size: number;
-  if (!publicBufferSize) {
-    public_buffer_size = await groth16PublicSizeForZkeyFile(zkeyFilePath);
-  } else {
-    public_buffer_size = proofBufferSize;
-  }
-
   try {
-    const { proof, pub_signals } =
-      await Rapidsnark.groth16ProveWithZKeyFilePath(
+    let proof, pub_signals;
+
+    if (Platform.OS === 'android') {
+      const response = await Rapidsnark.groth16ProveWithZKeyFilePath(
+        zkeyFilePath,
+        datFilePath,
+        inputs
+      );
+      ({ proof, pub_signals } = JSON.parse(response));
+    } else {
+      const public_buffer_size =
+        publicBufferSize ?? (await groth16PublicSizeForZkeyFile(zkeyFilePath));
+
+      const result = await Rapidsnark.groth16ProveWithZKeyFilePath(
         zkeyFilePath,
         datFilePath,
         inputs,
@@ -95,8 +96,12 @@ export async function groth16ProveWithZKeyFilePath(
         public_buffer_size,
         errorBufferSize
       );
+      ({ proof, pub_signals } = result);
+    }
 
-    const public_signals_array = JSON.parse(pub_signals);
+    const public_signals_array = Array.isArray(pub_signals)
+      ? pub_signals
+      : JSON.parse(pub_signals);
 
     const fullProof = {
       groth16Proof: proof,
@@ -113,16 +118,14 @@ export async function groth16ProveWithZKeyFilePath(
     };
 
     await saveProof(fullProof);
-
     return fullProof;
-  } catch (e) {
-    console.error(e);
-    throw Error(
+  } catch (error) {
+    console.error('[groth16ProveWithZKeyFilePath]:', error);
+    throw new Error(
       '[groth16ProveWithZKeyFilePath]: Error while generating the proof'
     );
   }
 }
-
 export function groth16Verify(
   proof: AnonAadhaarProof,
   verificationKey: string,
@@ -148,7 +151,7 @@ export function groth16Verify(
 
   try {
     return Rapidsnark.groth16Verify(
-      proof.groth16Proof,
+      JSON.stringify(proof.groth16Proof),
       public_signals,
       verificationKey,
       errorBufferSize

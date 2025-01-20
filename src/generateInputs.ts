@@ -69,7 +69,7 @@ export async function circuitInputsFromQR({
   return {
     qrDataPadded: Uint8ArrayToCharArray(paddedMsg),
     qrDataPaddedLength: [messageLen.toString()],
-    nonPaddedDataLength: [signedData.length.toString()],
+    // nonPaddedDataLength: [signedData.length.toString()],
     delimiterIndices: delimiterIndices.map((x) => x.toString()),
     signature: splitToWords(signature, BigInt(121), BigInt(17)),
     pubKey: splitToWords(pubKey, BigInt(121), BigInt(17)),

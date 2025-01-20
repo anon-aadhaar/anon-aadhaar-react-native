@@ -1,3 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.awesomelibrary">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+    package="com.rapidsnark">
+    
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <application
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
+        android:vmSafeMode="false"
+        >
+    </application>
 </manifest>

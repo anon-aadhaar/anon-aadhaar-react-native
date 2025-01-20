@@ -1,40 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from 'react';
-import RNFS from 'react-native-fs';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  // Platform,
-} from 'react-native';
-import {
-  type AnonAadhaarArgs,
-  groth16ProveWithZKeyFilePath,
   AadhaarScanner,
-  verifySignature,
+  type AnonAadhaarArgs,
+  getVerificationKey,
+  groth16ProveWithZKeyFilePath,
   groth16Verify,
   setupProver,
+  verifySignature,
 } from '@anon-aadhaar/react-native';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { circuitInputsFromQR } from '../../../src/generateInputs';
 import type { AnonAadhaarProof } from '../../../src/types';
+import { ZKEY_PATH, DAT_PATH } from '../../../src/constants';
 
 const Toast = ({ message }: { message: string }) => (
   <View style={styles.toastContainer}>
     <Text style={styles.toastText}>{message}</Text>
   </View>
 );
-
-// const zkeyChunksFolderPath = RNFS.DocumentDirectoryPath + '/chunked';
-const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
-const datFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
-
-function getVerificationKey(): Promise<string> {
-  const path = RNFS.DocumentDirectoryPath + '/vkey.json';
-  return RNFS.readFile(path, 'utf8');
-}
 
 export default function BenchmarkView({}) {
   const [ready, setReady] = useState<boolean>(false);
@@ -102,9 +93,10 @@ export default function BenchmarkView({}) {
       setIsProving(true);
       const startProof = Date.now();
       if (!anonAadhaarArgs) throw Error('You must generate arguments first');
+
       const aaProof = await groth16ProveWithZKeyFilePath({
-        zkeyFilePath,
-        datFilePath,
+        zkeyFilePath: ZKEY_PATH,
+        datFilePath: DAT_PATH,
         inputs: anonAadhaarArgs,
       });
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));

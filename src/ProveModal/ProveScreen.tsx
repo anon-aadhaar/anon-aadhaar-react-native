@@ -1,22 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext, useState } from 'react';
-import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
-import { getVerificationKey } from '../util';
-import RNFS from 'react-native-fs';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { modalStyles } from './modalStyles';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { SvgXml } from 'react-native-svg';
+import { DAT_PATH, ZKEY_PATH } from '../constants';
+import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
+import { AnonAadhaarContext } from '../hooks/useAnonAadhaar';
+import { icons } from '../icons';
 import {
   fieldsLabel,
-  type FieldsToRevealArray,
   type AnonAadhaarArgs,
+  type FieldsToRevealArray,
 } from '../types';
-import { SvgXml } from 'react-native-svg';
-import { icons } from '../icons';
-import { AnonAadhaarContext } from '../hooks/useAnonAadhaar';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-
-const zkeyFilePath = RNFS.DocumentDirectoryPath + '/circuit_final.zkey';
-const datFilePath = RNFS.DocumentDirectoryPath + '/aadhaar-verifier.dat';
+import { getVerificationKey } from '../util';
+import { modalStyles } from './modalStyles';
 
 export const ProveScreen = ({
   anonAadhaarArgs,
@@ -38,8 +35,8 @@ export const ProveScreen = ({
     setIsProving(true);
     try {
       const anonAadhaarProof = await groth16ProveWithZKeyFilePath({
-        zkeyFilePath,
-        datFilePath,
+        zkeyFilePath: ZKEY_PATH,
+        datFilePath: DAT_PATH,
         inputs: anonAadhaarArgs,
         signal,
       });

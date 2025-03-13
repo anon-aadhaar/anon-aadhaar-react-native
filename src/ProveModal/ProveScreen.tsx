@@ -12,7 +12,6 @@ import {
   type AnonAadhaarArgs,
   type FieldsToRevealArray,
 } from '../types';
-import { getVerificationKey } from '../util';
 import { modalStyles } from './modalStyles';
 
 export const ProveScreen = ({
@@ -40,11 +39,7 @@ export const ProveScreen = ({
         inputs: anonAadhaarArgs,
         signal,
       });
-      // TODO Get path of the vk
-      const isVerified = await groth16Verify(
-        anonAadhaarProof,
-        await getVerificationKey()
-      );
+      const isVerified = await groth16Verify(ZKEY_PATH, anonAadhaarProof);
       setProofState('created');
       if (setProofs) setProofs(anonAadhaarProof);
       setProofVerified(isVerified);

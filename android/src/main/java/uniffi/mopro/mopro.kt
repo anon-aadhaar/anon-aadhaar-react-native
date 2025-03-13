@@ -764,6 +764,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
+    fun uniffi_mopro_bindings_checksum_func_from_ethereum_inputs(): Short
+
+    fun uniffi_mopro_bindings_checksum_func_from_ethereum_proof(): Short
+
     fun uniffi_mopro_bindings_checksum_func_generate_circom_proof(): Short
 
     fun uniffi_mopro_bindings_checksum_func_to_ethereum_inputs(): Short
@@ -814,6 +818,16 @@ internal interface UniffiLib : Library {
     }
 
     // FFI functions
+    fun uniffi_mopro_bindings_fn_func_from_ethereum_inputs(
+        `inputs`: RustBuffer.ByValue,
+        uniffi_out_err: UniffiRustCallStatus,
+    ): RustBuffer.ByValue
+
+    fun uniffi_mopro_bindings_fn_func_from_ethereum_proof(
+        `proof`: RustBuffer.ByValue,
+        uniffi_out_err: UniffiRustCallStatus,
+    ): RustBuffer.ByValue
+
     fun uniffi_mopro_bindings_fn_func_generate_circom_proof(
         `zkeyPath`: RustBuffer.ByValue,
         `circuitInputs`: RustBuffer.ByValue,
@@ -1068,6 +1082,12 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
+    if (lib.uniffi_mopro_bindings_checksum_func_from_ethereum_inputs() != 44693.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_mopro_bindings_checksum_func_from_ethereum_proof() != 10.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_mopro_bindings_checksum_func_generate_circom_proof() != 57032.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1495,6 +1515,26 @@ public object FfiConverterSequenceString : FfiConverterRustBuffer<List<kotlin.St
         }
     }
 }
+
+fun `fromEthereumInputs`(`inputs`: List<kotlin.String>): kotlin.ByteArray =
+    FfiConverterByteArray.lift(
+        uniffiRustCall { _status ->
+            UniffiLib.INSTANCE.uniffi_mopro_bindings_fn_func_from_ethereum_inputs(
+                FfiConverterSequenceString.lower(`inputs`),
+                _status,
+            )
+        },
+    )
+
+fun `fromEthereumProof`(`proof`: ProofCalldata): kotlin.ByteArray =
+    FfiConverterByteArray.lift(
+        uniffiRustCall { _status ->
+            UniffiLib.INSTANCE.uniffi_mopro_bindings_fn_func_from_ethereum_proof(
+                FfiConverterTypeProofCalldata.lower(`proof`),
+                _status,
+            )
+        },
+    )
 
 @Throws(MoproException::class)
 fun `generateCircomProof`(

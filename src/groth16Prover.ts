@@ -125,16 +125,9 @@ export async function groth16ProveWithZKeyFilePath(
     );
   }
 }
-export function groth16Verify(
-  proof: AnonAadhaarProof,
-  verificationKey: string,
-  {
-    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-  }: {
-    errorBufferSize: number;
-  } = {
-    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-  }
+export async function groth16Verify(
+  zkeyFilePath: string,
+  proof: AnonAadhaarProof
 ): Promise<boolean> {
   const public_signals = JSON.stringify([
     proof.pubkeyHash,
@@ -149,11 +142,10 @@ export function groth16Verify(
   ]);
 
   try {
-    return Rapidsnark.groth16Verify(
+    return Rapidsnark.verifyProof(
+      zkeyFilePath,
       JSON.stringify(proof.groth16Proof),
-      public_signals,
-      verificationKey,
-      errorBufferSize
+      public_signals
     );
   } catch (e) {
     console.log(e);

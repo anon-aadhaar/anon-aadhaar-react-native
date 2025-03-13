@@ -2,7 +2,6 @@
 import {
   AadhaarScanner,
   type AnonAadhaarArgs,
-  getVerificationKey,
   groth16ProveWithZKeyFilePath,
   groth16Verify,
   setupProver,
@@ -116,7 +115,7 @@ export default function BenchmarkView({}) {
   const verifProof = async (_proof: AnonAadhaarProof) => {
     try {
       const startVerif = Date.now();
-      const res = await groth16Verify(_proof, await getVerificationKey());
+      const res = await groth16Verify(ZKEY_PATH, _proof);
       console.log('Verification result: ', res);
       setProofVerified(res);
       setExecutionTime((prev) => ({

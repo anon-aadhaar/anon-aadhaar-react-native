@@ -78,10 +78,9 @@ export async function groth16ProveWithZKeyFilePath(
     let proof, pub_signals;
 
     if (Platform.OS === 'android') {
-      const response = await Rapidsnark.groth16ProveWithZKeyFilePath(
+      const response = await Rapidsnark.generateProof(
         zkeyFilePath,
-        datFilePath,
-        inputs
+        JSON.stringify(inputs)
       );
       ({ proof, pub_signals } = JSON.parse(response));
     } else {

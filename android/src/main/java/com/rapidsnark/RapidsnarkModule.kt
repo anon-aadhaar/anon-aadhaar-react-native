@@ -14,6 +14,11 @@ import java.io.File
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import android.util.Base64
+import uniffi.mopro.generateCircomProof
+import uniffi.mopro.toEthereumInputs
+import uniffi.mopro.toEthereumProof
+import uniffi.mopro.ProofCalldata
+import uniffi.mopro.ProofLib
 
 data class CircuitInputs(
     val circuitBuffer: ByteArray,
@@ -93,6 +98,37 @@ fun prepareCircuitInputs(
     )
 }
 
+data class ModuleG1 (
+    val x: String,
+    val y: String
+)
+
+data class ModuleG2 (
+    val x: List<String>,
+    val y: List<String>
+)
+
+
+data class ModuleProof(
+    val pi_a: List<String>,
+    val pi_b: List<List<String>>,
+    val pi_c: List<String>,
+    val protocol: String = "groth16",
+    var curve: String = "bn128"
+)
+
+fun convertType(proof: ProofCalldata): ModuleProof {
+    val pi_a = listOf(proof.a.x, proof.a.y, "1")
+    val pi_b = listOf(listOf(proof.b.x[0], proof.b.x[1]), listOf(proof.b.y[0], proof.b.y[1]), listOf("1", "0"))
+    val pi_c = listOf(proof.c.x, proof.c.y, "1")
+    return ModuleProof(pi_a, pi_b, pi_c)
+}
+
+data class CircomProof(
+    val proof: ModuleProof,
+    val pub_signals: List<String>
+)
+
 class RapidsnarkModule(reactContext: ReactApplicationContext) : 
     ReactContextBaseJavaModule(reactContext) {
     
@@ -105,6 +141,29 @@ class RapidsnarkModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun add(a: Double, b: Double, promise: Promise) {
         promise.resolve(nativeAdd(a, b))
+    }
+
+    @ReactMethod
+    fun generateProof(
+        zkeyPath: String,
+        inputs: String,
+        promise: Promise
+    ) {
+        try {
+            val res = uniffi.mopro.generateCircomProof(zkeyPath, inputs, ProofLib.RAPIDSNARK)
+            val proof = toEthereumProof(res.proof)
+            val inputs = toEthereumInputs(res.inputs)
+            var moduleProof = convertType(proof)
+            val zkProof = CircomProof(
+                proof = moduleProof,
+                pub_signals = inputs
+            )
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            promise.resolve(gson.toJson(zkProof))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            promise.reject("ERROR", e.message)
+        }
     }
 
     @ReactMethod

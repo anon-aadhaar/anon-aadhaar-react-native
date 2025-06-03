@@ -231,8 +231,8 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                       {proof.ageAbove18 === '0'
                         ? 'Not revealed'
                         : proof.ageAbove18
-                          ? 'True'
-                          : 'False'}
+                        ? 'True'
+                        : 'False'}
                     </Text>
                   </View>
                 </View>

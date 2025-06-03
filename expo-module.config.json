@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "AnonAadhaarPackageModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.anonaadhaar.AnonAadhaarPackageModule"
+    ]
+  }
+}

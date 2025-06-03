@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { UploadQR } from './UploadQR';
 import { ProveScreen } from './ProveScreen';
-import { BlurView } from '@react-native-community/blur';
+// import { BlurView } from '@react-native-community/blur';
 import type { FieldsToRevealArray, AnonAadhaarArgs } from '../types';
 import { icons } from '../icons';
 import { SvgXml } from 'react-native-svg';

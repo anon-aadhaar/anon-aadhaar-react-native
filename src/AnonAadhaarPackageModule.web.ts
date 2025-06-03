@@ -1,6 +1,6 @@
 import { registerWebModule, NativeModule } from 'expo';
 
-import { AnonAadhaarPackageModuleEvents, CircomProofResult } from './AnonAadhaarPackage.types';
+import { AnonAadhaarPackageModuleEvents, Result } from './AnonAadhaarPackage.types';
 
 class AnonAadhaarPackageModule extends NativeModule<AnonAadhaarPackageModuleEvents> {
   PI = Math.PI;
@@ -13,7 +13,7 @@ class AnonAadhaarPackageModule extends NativeModule<AnonAadhaarPackageModuleEven
   generateCircomProof(zkeyPath: string, circuitInputs: string) {
     throw new Error('Not implemented on web');
   }
-  verifyProof(zkeyPath: string, proofResult: CircomProofResult) {
+  verifyProof(zkeyPath: string, proofResult: Result) {
     throw new Error('Not implemented on web');
   }
 }

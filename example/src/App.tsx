@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { OnboardingScreen } from './Screens/OnboardingScreen';
-import { HomeScreen } from './Screens/HomeScreen';
-import BenchmarkView from './Screens/BenchmarkScreen';
 import { setupProver, AnonAadhaarProvider } from '@anon-aadhaar/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState, useEffect } from 'react';
+
 import { AboutScreen } from './Screens/AboutScreen';
+import BenchmarkView from './Screens/BenchmarkScreen';
+import { HomeScreen } from './Screens/HomeScreen';
+import { OnboardingScreen } from './Screens/OnboardingScreen';
 import { ProofScreen } from './Screens/ProofScreen';
 
 const Stack = createNativeStackNavigator();

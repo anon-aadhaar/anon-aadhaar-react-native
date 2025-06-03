@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { AnonAadhaarPackageViewProps } from './AnonAadhaarPackage.types';
 
-export default function AnonAadhaarPackageView(props: AnonAadhaarPackageViewProps) {
+export default function AnonAadhaarPackageView(
+  props: AnonAadhaarPackageViewProps
+) {
   return (
     <div>
       <iframe

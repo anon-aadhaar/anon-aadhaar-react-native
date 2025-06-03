@@ -1,3 +1,8 @@
+import forge from 'node-forge';
+
+import { certificateTest, certificateProd } from './certificates';
+import { hash } from './hash';
+import type { AnonAadhaarArgs, GenerateArgsOptions } from './types';
 import {
   Uint8ArrayToCharArray,
   convertBigIntToByteArray,
@@ -6,10 +11,6 @@ import {
   splitToWords,
   uint8ArrayToHex,
 } from './util';
-import forge from 'node-forge';
-import { certificateTest, certificateProd } from './certificates';
-import { hash } from './hash';
-import type { AnonAadhaarArgs, GenerateArgsOptions } from './types';
 
 export async function circuitInputsFromQR({
   qrData,

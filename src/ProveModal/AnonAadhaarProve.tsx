@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { modalStyles } from './modalStyles';
 import { Text, TouchableOpacity } from 'react-native';
+
+import { modalStyles } from './modalStyles';
 import type { FieldsToRevealArray } from '../types';
 import { ProveModal } from './ProveModal';
 

@@ -1,3 +1,4 @@
+import LottieView from 'lottie-react-native';
 import React, { useState, type FunctionComponent, useEffect } from 'react';
 import {
   SafeAreaView,
@@ -8,12 +9,12 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+
+import * as messages from '../../assets/messages.json';
 import { CircularProgress } from '../Components/CircleProgress';
 import { ProgressBar } from '../Components/ProgressBar';
-import * as messages from '../../assets/messages.json';
 import { icons } from '../Components/illustrations';
-import LottieView from 'lottie-react-native';
-import { SvgXml } from 'react-native-svg';
 
 export type OnboardingScreenProps = {
   setupReady?: boolean;
@@ -128,11 +129,53 @@ export const OnboardingScreen: FunctionComponent<OnboardingScreenProps> = ({
 
 const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000000',
+  brandLogo: {
+    height: 50,
+    resizeMode: 'contain',
+    width: 50,
+  },
+  button: {
+    backgroundColor: '#06753b',
+    borderRadius: 50,
+    paddingHorizontal: 70,
+    paddingVertical: 15,
+  },
+  buttonDisabled: {
+    backgroundColor: '#51785a',
+    borderRadius: 50,
+    paddingHorizontal: 70,
+    paddingVertical: 15,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 24,
   },
   content: {
+    flex: 1,
+  },
+  footer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    width: '100%',
+  },
+  heading: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'left',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  safeArea: {
+    backgroundColor: '#000000',
     flex: 1,
   },
   scrollView: {
@@ -140,62 +183,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  topImage: {
-    width: screenWidth - 40, // Assuming 20 padding on each side
-    height: (screenWidth - 40) * (416 / 390),
-    resizeMode: 'contain',
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-  },
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
-  },
-  subHeading: {
-    fontSize: 16,
-    color: '#b8b8b8',
-    textAlign: 'left',
-    marginTop: 10,
-    fontFamily: 'Outfit-Regular',
-  },
-  brandLogo: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
-  },
-  button: {
-    paddingHorizontal: 70,
-    paddingVertical: 15,
-    backgroundColor: '#06753b',
-    borderRadius: 50,
-  },
   shortcut: {
     paddingHorizontal: 70,
     paddingVertical: 15,
   },
-  buttonDisabled: {
-    paddingHorizontal: 70,
-    paddingVertical: 15,
-    backgroundColor: '#51785a',
-    borderRadius: 50,
+  subHeading: {
+    color: '#b8b8b8',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'left',
   },
-  buttonText: {
-    fontSize: 24,
-    color: '#FFFFFF',
-  },
-  logoContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
+  topImage: {
+    width: screenWidth - 40, // Assuming 20 padding on each side
+    height: (screenWidth - 40) * (416 / 390),
+    resizeMode: 'contain',
   },
 });

@@ -1,10 +1,11 @@
+import React, { useEffect, useState, type ReactNode } from 'react';
+
 import {
   AnonAadhaarContext,
   type AnonAadhaarState,
 } from '../hooks/useAnonAadhaar';
-import React, { useEffect, useState, type ReactNode } from 'react';
-import type { AnonAadhaarProof } from '../types';
 import storage from '../storage';
+import type { AnonAadhaarProof } from '../types';
 
 type ArtifactsLinks = {
   zkey_url: string;

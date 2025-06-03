@@ -14,4 +14,6 @@ declare class AnonAadhaarPackageModule extends NativeModule<AnonAadhaarPackageMo
 }
 
 // This call loads the native module object from the JSI.
-export default requireNativeModule<AnonAadhaarPackageModule>('AnonAadhaarPackage');
+export default requireNativeModule<AnonAadhaarPackageModule>(
+  'AnonAadhaarPackage'
+);

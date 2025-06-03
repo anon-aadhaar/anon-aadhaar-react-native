@@ -23,14 +23,14 @@ export type G1 = {
   x: string;
   y: string;
   z: string;
-}
+};
 
 // Define the G2 type
 export type G2 = {
   x: string[];
   y: string[];
   z: string[];
-}
+};
 
 // Define the ProofCalldata type
 export type ProofCalldata = {
@@ -38,10 +38,10 @@ export type ProofCalldata = {
   b: G2;
   c: G1;
   inputs: string[];
-}
+};
 
 // Define the Result type
 export type Result = {
   proof: ProofCalldata;
   inputs: string[];
-}
+};

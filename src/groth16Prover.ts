@@ -1,9 +1,10 @@
 import RNFS from 'react-native-fs';
+
+import AnonAadhaarPackageModule from './AnonAadhaarPackageModule';
 import { ZIP_URL } from './constants';
 import storage from './storage';
 import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
 import { downloadFile } from './util';
-import AnonAadhaarPackageModule from './AnonAadhaarPackageModule';
 
 export async function setupProver() {
   try {
@@ -35,20 +36,20 @@ export async function setupProver() {
 export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
-export async function groth16ProveWithZKeyFilePath(
-  {
-    zkeyFilePath,
-    inputs,
-    signal,
-  }: {
-    zkeyFilePath: string;
-    inputs: AnonAadhaarArgs;
-    signal?: string;
-  },
-): Promise<AnonAadhaarProof> {
+export async function groth16ProveWithZKeyFilePath({
+  zkeyFilePath,
+  inputs,
+  signal,
+}: {
+  zkeyFilePath: string;
+  inputs: AnonAadhaarArgs;
+  signal?: string;
+}): Promise<AnonAadhaarProof> {
   try {
-
-    const result = await AnonAadhaarPackageModule.generateCircomProof(zkeyFilePath, JSON.stringify(inputs));
+    const result = await AnonAadhaarPackageModule.generateCircomProof(
+      zkeyFilePath,
+      JSON.stringify(inputs)
+    );
 
     const { proof, pub_signals } = {
       proof: result.proof,
@@ -84,7 +85,7 @@ export async function groth16ProveWithZKeyFilePath(
 }
 export async function groth16Verify(
   zkeyFilePath: string,
-  proof: AnonAadhaarProof,
+  proof: AnonAadhaarProof
 ): Promise<boolean> {
   const public_signals = [
     proof.pubkeyHash,
@@ -103,7 +104,10 @@ export async function groth16Verify(
   };
 
   try {
-    const valid = await AnonAadhaarPackageModule.verifyProof(zkeyFilePath, proofResult);
+    const valid = await AnonAadhaarPackageModule.verifyProof(
+      zkeyFilePath,
+      proofResult
+    );
 
     return valid;
   } catch (e) {
@@ -119,8 +123,8 @@ export function groth16PublicSizeForZkeyFile(
   }: {
     errorBufferSize: number;
   } = {
-      errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-    }
+    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
+  }
 ): Promise<number> {
   // return Rapidsnark.groth16PublicSizeForZkeyFile(zkeyPath, errorBufferSize);
   return Promise.resolve(0);
@@ -133,8 +137,8 @@ export function groth16PublicSizeForChunkedZkeyFile(
   }: {
     errorBufferSize: number;
   } = {
-      errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-    }
+    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
+  }
 ): Promise<number> {
   // return Rapidsnark.groth16PublicSizeForChunkedZkeyFile(
   //   zkeyChunksPaths,

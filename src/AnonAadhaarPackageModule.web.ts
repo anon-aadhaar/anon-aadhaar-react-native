@@ -1,6 +1,9 @@
 import { registerWebModule, NativeModule } from 'expo';
 
-import { AnonAadhaarPackageModuleEvents, Result } from './AnonAadhaarPackage.types';
+import {
+  AnonAadhaarPackageModuleEvents,
+  Result,
+} from './AnonAadhaarPackage.types';
 
 class AnonAadhaarPackageModule extends NativeModule<AnonAadhaarPackageModuleEvents> {
   PI = Math.PI;

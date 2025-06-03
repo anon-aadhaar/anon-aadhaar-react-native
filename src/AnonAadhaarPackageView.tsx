@@ -6,6 +6,8 @@ import { AnonAadhaarPackageViewProps } from './AnonAadhaarPackage.types';
 const NativeView: React.ComponentType<AnonAadhaarPackageViewProps> =
   requireNativeView('AnonAadhaarPackage');
 
-export default function AnonAadhaarPackageView(props: AnonAadhaarPackageViewProps) {
+export default function AnonAadhaarPackageView(
+  props: AnonAadhaarPackageViewProps
+) {
   return <NativeView {...props} />;
 }

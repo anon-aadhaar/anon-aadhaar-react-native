@@ -1,4 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
+import {
+  AnonAadhaarContext,
+  bigIntsToString,
+  cleanAnonAadhaarState,
+  type AnonAadhaarProof,
+} from '@anon-aadhaar/react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { BlurView } from '@react-native-community/blur';
 import React, { useContext, useState, type FunctionComponent } from 'react';
 import {
   Modal,
@@ -8,18 +16,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Footer } from '../Components/Footer';
-import {
-  AnonAadhaarContext,
-  bigIntsToString,
-  cleanAnonAadhaarState,
-  type AnonAadhaarProof,
-} from '@anon-aadhaar/react-native';
-import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
-import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
-import { BlurView } from '@react-native-community/blur';
+
+import { Footer } from '../Components/Footer';
+import { icons } from '../Components/illustrations';
 
 type ProofScreenProps = {
   route: any;
@@ -40,7 +41,7 @@ const ConfirmationModal = ({
   return (
     <Modal
       animationType="slide"
-      transparent={true}
+      transparent
       visible={modalVisible}
       onRequestClose={() => {
         setModalVisible(!modalVisible);
@@ -53,48 +54,48 @@ const ConfirmationModal = ({
         blurAmount={1}
         reducedTransparencyFallbackColor="dark"
       > */}
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Are you sure you want to delete this proof?
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 20,
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>
+            Are you sure you want to delete this proof?
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 20,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(!modalVisible);
               }}
+              style={[
+                styles.confirmationModalButton,
+                { borderEndStartRadius: 8 },
+              ]}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-                style={[
-                  styles.confirmationModalButton,
-                  { borderEndStartRadius: 8 },
-                ]}
-              >
-                <Text style={{ color: 'white' }}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  cleanAnonAadhaarState();
-                  setProofState('deleted');
-                  navigation.navigate('Home');
-                  setModalVisible(!modalVisible);
-                }}
-                style={[
-                  styles.confirmationModalButton,
-                  { borderEndEndRadius: 8, borderLeftWidth: 1 },
-                ]}
-              >
-                <Text style={{ color: '#ED3636', fontWeight: 'bold' }}>
-                  Delete
-                </Text>
-              </TouchableOpacity>
-            </View>
+              <Text style={{ color: 'white' }}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                cleanAnonAadhaarState();
+                setProofState('deleted');
+                navigation.navigate('Home');
+                setModalVisible(!modalVisible);
+              }}
+              style={[
+                styles.confirmationModalButton,
+                { borderEndEndRadius: 8, borderLeftWidth: 1 },
+              ]}
+            >
+              <Text style={{ color: '#ED3636', fontWeight: 'bold' }}>
+                Delete
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
+      </View>
       {/* </BlurView> */}
     </Modal>
   );
@@ -232,8 +233,8 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
                       {proof.ageAbove18 === '0'
                         ? 'Not revealed'
                         : proof.ageAbove18
-                        ? 'True'
-                        : 'False'}
+                          ? 'True'
+                          : 'False'}
                     </Text>
                   </View>
                 </View>
@@ -297,91 +298,22 @@ export const ProofScreen: FunctionComponent<ProofScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  callout: {
-    fontFamily: 'Outfit-Regular',
-    fontSize: 14,
-    color: 'white',
-    flexWrap: 'wrap',
-    width: 'auto',
-  },
-  fieldToRevealContainer: {
+  absolute: {
+    height: '100%',
+    position: 'absolute',
     width: '100%',
-  },
-  fieldToRevealText: {
-    fontFamily: 'Outfit-Bold',
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingVertical: 6,
-  },
-  fieldToReveal: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    borderRadius: 4,
-    backgroundColor: '#3E3B3B',
-    marginBottom: 5,
-    marginTop: 5,
-    padding: 10,
-    paddingHorizontal: 18,
-    height: 'auto',
-  },
-  subhead: {
-    fontFamily: 'Outfit-Regular',
-    fontSize: 15,
-    color: '#B3ADAE',
-  },
-  infoIcon: {
-    width: 95,
-    height: 95,
-    backgroundColor: '#E93CAE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  infoText: {
-    fontFamily: 'Outfit-Regular',
-    fontSize: 15,
-    color: '#FFFFFF',
-    textAlign: 'left',
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
-  },
-  scrollView: {
-    justifyContent: 'center',
-    padding: 20,
-    flex: 1,
-  },
-  footnote: {
-    fontFamily: 'Outfit-Light',
-    fontSize: 14,
-    color: 'white',
-    lineHeight: 16,
   },
   actionButton: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: '#3E3B3B',
     borderRadius: 8,
+    elevation: 8,
+    flex: 1,
+    flexDirection: 'row',
+    marginVertical: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -389,18 +321,92 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8,
-    alignSelf: 'center',
-    marginVertical: 4,
-    flexDirection: 'row',
+  },
+  callout: {
+    color: 'white',
+    flexWrap: 'wrap',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 14,
+    width: 'auto',
+  },
+  centeredView: {
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 22,
+  },
+  confirmationModalButton: {
+    alignItems: 'center',
+    backgroundColor: '#484343',
+    borderColor: 'gray',
+    borderTopWidth: 1,
+    flex: 1,
+    paddingVertical: 15,
+  },
+  fieldToReveal: {
+    alignItems: 'center',
+    backgroundColor: '#3E3B3B',
+    borderRadius: 4,
+    flexDirection: 'row',
+    height: 'auto',
+    marginBottom: 5,
+    marginTop: 5,
+    padding: 10,
+    paddingHorizontal: 18,
+    width: '100%',
+  },
+  fieldToRevealContainer: {
+    width: '100%',
+  },
+  fieldToRevealText: {
+    color: 'white',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingVertical: 6,
+  },
+  footnote: {
+    color: 'white',
+    fontFamily: 'Outfit-Light',
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  heading: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'left',
+  },
+  infoIcon: {
+    alignItems: 'center',
+    backgroundColor: '#E93CAE',
+    borderRadius: 8,
+    height: 95,
+    justifyContent: 'center',
+    width: 95,
+  },
+  infoText: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 15,
+    textAlign: 'left',
+  },
+  modalText: {
+    color: 'white',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 16,
+    marginBottom: 15,
+    textAlign: 'center',
   },
   modalView: {
-    margin: 20,
+    alignItems: 'center',
     backgroundColor: '#3E3B3B',
     borderRadius: 8,
+    elevation: 5,
+    margin: 20,
     paddingTop: 35,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -408,32 +414,27 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'Outfit-Regular',
+  safeArea: {
+    backgroundColor: '#000000',
+    flex: 1,
   },
-  centeredView: {
+  scrollView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+    padding: 20,
   },
-  absolute: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+  subhead: {
+    color: '#B3ADAE',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 15,
   },
-  confirmationModalButton: {
-    flex: 1,
-    backgroundColor: '#484343',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    paddingVertical: 15,
-    borderColor: 'gray',
+  title: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'left',
   },
 });

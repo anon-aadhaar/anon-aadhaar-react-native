@@ -1,4 +1,5 @@
 import React, { Pressable, Text } from 'react-native';
+
 import { modalStyles } from './modalStyles';
 
 export const WelcomeScreen = ({

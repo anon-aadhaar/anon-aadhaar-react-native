@@ -1,10 +1,11 @@
 /* eslint-disable no-bitwise */
 import pako from 'pako';
-import RNFS from 'react-native-fs';
-import storage from './storage';
-import { unzip } from 'react-native-zip-archive';
 import fetchBlob from 'react-native-blob-util';
+import RNFS from 'react-native-fs';
+import { unzip } from 'react-native-zip-archive';
+
 import { VKEY_PATH } from './constants';
+import storage from './storage';
 
 export function getVerificationKey(): Promise<string> {
   return RNFS.readFile(VKEY_PATH, 'utf8');
@@ -45,8 +46,8 @@ export function uint8ArrayToHex(byteArray: Uint8Array) {
 }
 
 function int64toBytes(num: number): Uint8Array {
-  let arr = new ArrayBuffer(8); // an Int32 takes 4 bytes
-  let view = new DataView(arr);
+  const arr = new ArrayBuffer(8); // an Int32 takes 4 bytes
+  const view = new DataView(arr);
   view.setInt32(4, num, false); // byteOffset = 0; litteEndian = false
   return new Uint8Array(arr);
 }
@@ -54,7 +55,7 @@ function int64toBytes(num: number): Uint8Array {
 // Utils from zk-email
 export function mergeUInt8Arrays(a1: Uint8Array, a2: Uint8Array): Uint8Array {
   // sum of individual array lengths
-  var mergedArray = new Uint8Array(a1.length + a2.length);
+  const mergedArray = new Uint8Array(a1.length + a2.length);
   mergedArray.set(a1);
   mergedArray.set(a2, a1.length);
   return mergedArray;
@@ -63,8 +64,8 @@ export function mergeUInt8Arrays(a1: Uint8Array, a2: Uint8Array): Uint8Array {
 // Utils from zk-email
 // Works only on 32 bit sha text lengths
 export function int8toBytes(num: number): Uint8Array {
-  let arr = new ArrayBuffer(1); // an Int8 takes 4 bytes
-  let view = new DataView(arr);
+  const arr = new ArrayBuffer(1); // an Int8 takes 4 bytes
+  const view = new DataView(arr);
   view.setUint8(0, num); // byteOffset = 0; litteEndian = false
   return new Uint8Array(arr);
 }
@@ -81,8 +82,8 @@ export function sha256Pad(
   prehash_prepad_m: Uint8Array,
   maxShaBytes: number
 ): [Uint8Array, number] {
-  let length_bits = prehash_prepad_m.length * 8; // bytes to bits
-  let length_in_bytes = int64toBytes(length_bits);
+  const length_bits = prehash_prepad_m.length * 8; // bytes to bits
+  const length_in_bytes = int64toBytes(length_bits);
   prehash_prepad_m = mergeUInt8Arrays(prehash_prepad_m, int8toBytes(2 ** 7)); // Add the 1 on the end, length 505
   // while ((prehash_prepad_m.length * 8 + length_in_bytes.length * 8) % 512 !== 0) {
   while (
@@ -96,7 +97,7 @@ export function sha256Pad(
     (prehash_prepad_m.length * 8) % 512 === 0,
     'Padding did not complete properly!'
   );
-  let messageLen = prehash_prepad_m.length;
+  const messageLen = prehash_prepad_m.length;
   while (prehash_prepad_m.length < maxShaBytes) {
     prehash_prepad_m = mergeUInt8Arrays(prehash_prepad_m, int64toBytes(0));
   }

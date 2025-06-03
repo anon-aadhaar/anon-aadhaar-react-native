@@ -1,4 +1,4 @@
-import { ProofCalldata } from "./AnonAadhaarPackage.types";
+import { ProofCalldata } from './AnonAadhaarPackage.types';
 
 export type FieldsToReveal = {
   revealAgeAbove18: boolean;

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const createConfigAsync = require('@expo/webpack-config');
 const path = require('path');
 

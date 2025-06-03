@@ -45,19 +45,3 @@ export type Result = {
   proof: ProofCalldata;
   inputs: string[];
 }
-
-// --- Added based on native CircomProofResult ---
-export interface CircomProof {
-  a: G1;
-  b: G2;
-  c: G1;
-  protocol: string;
-  curve: string;
-}
-
-export interface CircomProofResult {
-  proof: CircomProof;
-  inputs: string[];
-}
-// --- End added types ---
-

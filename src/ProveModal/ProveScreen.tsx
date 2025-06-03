@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { SvgXml } from 'react-native-svg';
-import { DAT_PATH, ZKEY_PATH } from '../constants';
+import { ZKEY_PATH } from '../constants';
 import { groth16ProveWithZKeyFilePath, groth16Verify } from '../groth16Prover';
 import { AnonAadhaarContext } from '../hooks/useAnonAadhaar';
 import { icons } from '../icons';
@@ -12,7 +12,6 @@ import {
   type AnonAadhaarArgs,
   type FieldsToRevealArray,
 } from '../types';
-import { getVerificationKey } from '../util';
 import { modalStyles } from './modalStyles';
 
 export const ProveScreen = ({
@@ -36,14 +35,12 @@ export const ProveScreen = ({
     try {
       const anonAadhaarProof = await groth16ProveWithZKeyFilePath({
         zkeyFilePath: ZKEY_PATH,
-        datFilePath: DAT_PATH,
         inputs: anonAadhaarArgs,
         signal,
       });
-      // TODO Get path of the vk
       const isVerified = await groth16Verify(
-        anonAadhaarProof,
-        await getVerificationKey()
+        ZKEY_PATH,
+        anonAadhaarProof
       );
       setProofState('created');
       if (setProofs) setProofs(anonAadhaarProof);

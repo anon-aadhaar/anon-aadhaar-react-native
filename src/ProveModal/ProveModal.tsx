@@ -129,12 +129,13 @@ export const ProveModal = ({
           setModalVisible(!modalVisible);
         }}
       >
-        <BlurView
+        {/* TODO: Add blur view */}
+        {/* <BlurView
           style={modalStyles.absolute}
           blurType="dark"
           blurAmount={10}
           reducedTransparencyFallbackColor="dark"
-        >
+        > */}
           <TouchableWithoutFeedback onPress={onCloseModal}>
             <View style={modalStyles.centeredView}>
               <View style={modalStyles.modalView}>
@@ -171,7 +172,7 @@ export const ProveModal = ({
               </View>
             </View>
           </TouchableWithoutFeedback>
-        </BlurView>
+        {/* </BlurView> */}
       </Modal>
     </View>
   );

@@ -1,91 +1,42 @@
 import ExpoModulesCore
 import moproFFI
 
-// Modify generateProof to return the full CircomProofResult structure directly
-// Expo Modules should handle the serialization of the moproFFI.CircomProofResult struct
-func generateProof(zkeyPath: String, circuitInputs: String) throws -> CircomProofResult {
-  // Changed return type to CircomProofResult
-  // No more conversion needed
-  let res = try generateCircomProof(
-    zkeyPath: zkeyPath, circuitInputs: circuitInputs, proofLib: ProofLib.arkworks
-  )
-  // Return the result directly from the FFI call
-  return res
+func convertType(proof: CircomProof) -> ExpoProof {
+  var a = ExpoG1()
+  a.x = proof.a.x
+  a.y = proof.a.y
+
+  var b = ExpoG2()
+  b.x = proof.b.x
+  b.y = proof.b.y
+
+  var c = ExpoG1()
+  c.x = proof.c.x
+  c.y = proof.c.y
+
+  var expoProof = ExpoProof()
+  expoProof.a = a
+  expoProof.b = b
+  expoProof.c = c
+  return expoProof
 }
 
-// --- Add Manual Conversion --- 
-func convertG1ToDict(_ g1: G1) -> [String: String] {
-    return ["x": g1.x, "y": g1.y, "z": g1.z]
-}
-
-func convertG2ToDict(_ g2: G2) -> [String: [String]] {
-    return ["x": g2.x, "y": g2.y, "z": g2.z]
-}
-
-func convertCircomProofToDict(_ proof: CircomProof) -> [String: Any] {
-    return [
-        "a": convertG1ToDict(proof.a),
-        "b": convertG2ToDict(proof.b),
-        "c": convertG1ToDict(proof.c),
-        "protocol": proof.protocol,
-        "curve": proof.curve
-    ]
-}
-
-func convertCircomProofResultToDict(_ result: CircomProofResult) -> [String: Any] {
-    return [
-        "proof": convertCircomProofToDict(result.proof),
-        "inputs": result.inputs
-    ]
-}
-// --- End Manual Conversion ---
-
-// Helper function to parse G1 from Dictionary
-func parseG1(dict: [String: Any]) throws -> G1 {
-  guard let x = dict["x"] as? String,
-        let y = dict["y"] as? String,
-        let z = dict["z"] as? String else {
-    throw MoproError.CircomError("Failed to parse G1 from dictionary")
+func convertProofResult(proofResult: Result) -> CircomProofResult {
+  guard let proof = proofResult.proof,
+        let a = proof.a,
+        let b = proof.b,
+        let c = proof.c,
+        let inputs = proofResult.inputs else {
+    fatalError("Invalid proof result")
   }
-  return G1(x: x, y: y, z: z)
-}
-
-// Helper function to parse G2 from Dictionary
-func parseG2(dict: [String: Any]) throws -> G2 {
-  guard let x = dict["x"] as? [String],
-        let y = dict["y"] as? [String],
-        let z = dict["z"] as? [String] else {
-    throw MoproError.CircomError("Failed to parse G2 from dictionary")
-  }
-  return G2(x: x, y: y, z: z)
-}
-
-// Helper function to parse CircomProof from Dictionary
-func parseCircomProof(dict: [String: Any]) throws -> CircomProof {
-  guard let aDict = dict["a"] as? [String: Any],
-        let bDict = dict["b"] as? [String: Any],
-        let cDict = dict["c"] as? [String: Any],
-        let protocolStr = dict["protocol"] as? String,
-        let curveStr = dict["curve"] as? String else {
-    throw MoproError.CircomError("Failed to parse CircomProof fields from dictionary")
-  }
-
-  let a = try parseG1(dict: aDict)
-  let b = try parseG2(dict: bDict)
-  let c = try parseG1(dict: cDict)
-
-  return CircomProof(a: a, b: b, c: c, protocol: protocolStr, curve: curveStr)
-}
-
-// Helper function to parse CircomProofResult from Dictionary
-func parseCircomProofResult(dict: [String: Any]) throws -> CircomProofResult {
-  guard let proofDict = dict["proof"] as? [String: Any],
-        let inputs = dict["inputs"] as? [String] else {
-    throw MoproError.CircomError("Failed to parse CircomProofResult fields from dictionary")
-  }
-
-  let proof = try parseCircomProof(dict: proofDict)
-  return CircomProofResult(proof: proof, inputs: inputs)
+  
+  let g1a = G1(x: a.x ?? "0", y: a.y ?? "0", z: "1")
+  let g2b = G2(x: b.x ?? ["1","0"], y: b.y ?? ["1","0"], z: ["1","0"])
+  let g1c = G1(x: c.x ?? "0", y: c.y ?? "0", z: "1")
+  
+  let circomProof = CircomProof(a: g1a, b: g2b, c: g1c, protocol: "groth16", curve: "bn128")
+  let circomProofResult = CircomProofResult(proof: circomProof, inputs: inputs)
+  return circomProofResult
 }
 
 public class AnonAadhaarPackageModule: Module {
@@ -113,13 +64,16 @@ public class AnonAadhaarPackageModule: Module {
 
     // Convert to AsyncFunction
     AsyncFunction("generateCircomProof") {
-      (zkeyPath: String, circuitInputs: String) -> [String: Any] in // Return Dictionary
+      (zkeyPath: String, circuitInputs: String) -> Result in // Return Dictionary
       // The logic remains the same, but Expo handles the async execution
       // and promise resolution/rejection based on throws.
       do {
-          let proofResult = try generateProof(zkeyPath: zkeyPath, circuitInputs: circuitInputs)
-          // Convert the result to a serializable Dictionary before returning
-          return convertCircomProofResultToDict(proofResult)
+          let res = try generateCircomProof(
+            zkeyPath: zkeyPath, circuitInputs: circuitInputs, proofLib: ProofLib.rapidsnark)
+          let result = Result()
+          result.inputs = res.inputs
+          result.proof = convertType(proof: res.proof)
+          return result
       } catch let error as MoproError {
           print("MoproError generating proof: \(error)")
           throw Exception(name: "MoproGenerationError", description: "MoproError generating proof: \(error)")
@@ -130,17 +84,14 @@ public class AnonAadhaarPackageModule: Module {
     }
 
     AsyncFunction("verifyProof") {
-      (zkeyPath: String, proofResultDict: [String: Any]) -> Bool in
+      (zkeyPath: String, proofResult: Result) -> Bool in
       do {
-        // Parse the dictionary into the CircomProofResult struct
-        let parsedProofResult = try parseCircomProofResult(dict: proofResultDict)
-
         // Call the verifyCircomProof function from mopro.swift
         // Using ProofLib.arkworks to match generation
         let isValid = try verifyCircomProof(
             zkeyPath: zkeyPath,
-            proofResult: parsedProofResult,
-            proofLib: ProofLib.arkworks
+            proofResult: convertProofResult(proofResult: proofResult),
+            proofLib: ProofLib.rapidsnark
         )
         return isValid
       } catch let error as MoproError {

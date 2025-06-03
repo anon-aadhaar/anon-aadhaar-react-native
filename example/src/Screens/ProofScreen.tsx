@@ -46,12 +46,13 @@ const ConfirmationModal = ({
         setModalVisible(!modalVisible);
       }}
     >
-      <BlurView
+      {/* TODO: Add blur view */}
+      {/* <BlurView
         style={styles.absolute}
         blurType="dark"
         blurAmount={1}
         reducedTransparencyFallbackColor="dark"
-      >
+      > */}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
@@ -94,7 +95,7 @@ const ConfirmationModal = ({
             </View>
           </View>
         </View>
-      </BlurView>
+      {/* </BlurView> */}
     </Modal>
   );
 };

@@ -95,7 +95,6 @@ export default function BenchmarkView({}) {
 
       const aaProof = await groth16ProveWithZKeyFilePath({
         zkeyFilePath: ZKEY_PATH,
-        datFilePath: DAT_PATH,
         inputs: anonAadhaarArgs,
       });
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));

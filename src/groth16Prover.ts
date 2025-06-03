@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import { ZIP_URL } from './constants';
 import storage from './storage';
@@ -33,90 +32,35 @@ export async function setupProver() {
   }
 }
 
-// const Rapidsnark = NativeModules.Rapidsnark
-//   ? NativeModules.Rapidsnark
-//   : new Proxy(
-//     {},
-//     {
-//       get() {
-//         throw new Error(LINKING_ERROR);
-//       },
-//     }
-//   );
-
 export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
 export async function groth16ProveWithZKeyFilePath(
   {
     zkeyFilePath,
-    datFilePath,
     inputs,
     signal,
   }: {
     zkeyFilePath: string;
-    datFilePath: string;
     inputs: AnonAadhaarArgs;
     signal?: string;
   },
-  {
-    proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
-    publicBufferSize,
-    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-  }: {
-    proofBufferSize?: number;
-    publicBufferSize?: number;
-    errorBufferSize?: number;
-  } = {}
 ): Promise<AnonAadhaarProof> {
   try {
-    let proof, pub_signals;
 
-    if (Platform.OS === 'android') {
-      const result = await AnonAadhaarPackageModule.generateCircomProof(
-        zkeyFilePath,
-        JSON.stringify(inputs)
-      );
-      ({ proof, pub_signals } = {
-        proof: result.proof,
-        pub_signals: result.inputs,
-      });
-    } else {
-      // const public_buffer_size =
-      //   publicBufferSize ?? (await groth16PublicSizeForZkeyFile(zkeyFilePath));
+    const result = await AnonAadhaarPackageModule.generateCircomProof(zkeyFilePath, JSON.stringify(inputs));
 
-      const result = await AnonAadhaarPackageModule.generateCircomProof(zkeyFilePath, JSON.stringify(inputs));
-      console.log(result);
-      // const result = await Rapidsnark.groth16ProveWithZKeyFilePath(
-      //   zkeyFilePath,
-      //   datFilePath,
-      //   inputs,
-      //   proofBufferSize,
-      //   public_buffer_size,
-      //   errorBufferSize
-      // );
-
-      ({ proof, pub_signals } = {
-        proof: result.proof,
-        pub_signals: result.inputs,
-      });
-    }
-    console.log(proof)
-    console.log(pub_signals)
+    const { proof, pub_signals } = {
+      proof: result.proof,
+      pub_signals: result.inputs,
+    };
 
     const public_signals_array = Array.isArray(pub_signals)
       ? pub_signals
       : JSON.parse(pub_signals);
 
-    const groth16Proof = {
-      pi_a: [proof.a.x, proof.a.y],
-      pi_b: [proof.b.x, proof.b.y],
-      pi_c: [proof.c.x, proof.c.y],
-      protocol: "groth16",
-      curve: "bn128",
-    };
     const fullProof = {
-      groth16Proof: groth16Proof,
+      groth16Proof: proof,
       pubkeyHash: public_signals_array[0],
       timestamp: public_signals_array[2],
       nullifierSeed: inputs.nullifierSeed[0]!,
@@ -138,37 +82,30 @@ export async function groth16ProveWithZKeyFilePath(
     );
   }
 }
-export function groth16Verify(
+export async function groth16Verify(
+  zkeyFilePath: string,
   proof: AnonAadhaarProof,
-  verificationKey: string,
-  {
-    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-  }: {
-    errorBufferSize: number;
-  } = {
-      errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-    }
 ): Promise<boolean> {
-  // const public_signals = JSON.stringify([
-  //   proof.pubkeyHash,
-  //   proof.nullifier,
-  //   proof.timestamp,
-  //   proof.ageAbove18,
-  //   proof.gender,
-  //   proof.state,
-  //   proof.pincode,
-  //   proof.nullifierSeed,
-  //   proof.signalHash,
-  // ]);
+  const public_signals = [
+    proof.pubkeyHash,
+    proof.nullifier,
+    proof.timestamp,
+    proof.ageAbove18,
+    proof.gender,
+    proof.state,
+    proof.pincode,
+    proof.nullifierSeed,
+    proof.signalHash,
+  ];
+  const proofResult = {
+    proof: proof.groth16Proof,
+    inputs: public_signals,
+  };
 
   try {
-    // return Rapidsnark.groth16Verify(
-    //   JSON.stringify(proof.groth16Proof),
-    //   public_signals,
-    //   verificationKey,
-    //   errorBufferSize
-    // );
-    return Promise.resolve(true);
+    const valid = await AnonAadhaarPackageModule.verifyProof(zkeyFilePath, proofResult);
+
+    return valid;
   } catch (e) {
     console.log(e);
     throw Error('[groth16Verify]: Error while verifying the proof');

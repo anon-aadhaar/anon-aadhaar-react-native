@@ -105,6 +105,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cocoapods-
 
+      - name: Download bindings
+        run: |
+          ./download_bindings.sh
+
       - name: Install cocoapods
         run: |
           cd example/ios

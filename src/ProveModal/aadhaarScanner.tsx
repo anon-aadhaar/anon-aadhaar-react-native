@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import {
   useCodeScanner,
   Camera,
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+
 import { icons } from '../icons';
-import { SvgXml } from 'react-native-svg';
 
 type AadhaarScannerProps = {
   cameraOn: boolean;
@@ -97,76 +98,76 @@ export function AadhaarScanner({
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    margin: 0,
-  },
-  modalView: {
-    flex: 1,
-    backgroundColor: 'black',
-    margin: 0,
-  },
-  cameraContainer: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  camera: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  cutout: {
-    height: 350,
-    width: 350,
-    borderColor: '#000',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  topLeftEdge: {
-    borderTopColor: 'orange',
-    borderLeftColor: 'orange',
-    top: 0,
-    left: 0,
-    width: 50,
-    height: 50,
-  },
-  topRightEdge: {
-    borderTopColor: 'white',
-    borderRightColor: 'white',
-    top: 0,
-    right: 0,
-    width: 50,
-    height: 50,
-  },
   bottomLeftEdge: {
     borderBottomColor: 'white',
     borderLeftColor: 'white',
     bottom: 0,
+    height: 50,
     left: 0,
     width: 50,
-    height: 50,
   },
   bottomRightEdge: {
     borderBottomColor: 'green',
     borderRightColor: 'green',
     bottom: 0,
+    height: 50,
     right: 0,
     width: 50,
-    height: 50,
   },
-  edgeStyle: {
-    position: 'absolute',
-    borderColor: 'transparent',
-    borderWidth: 10,
+  camera: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+  },
+  cameraContainer: {
+    backgroundColor: 'black',
+    flex: 1,
   },
   closeButton: {
     position: 'absolute',
-    top: 70,
     right: 15,
+    top: 70,
     zIndex: 10,
+  },
+  cutout: {
+    borderColor: '#000',
+    height: 350,
+    width: 350,
+  },
+  edgeStyle: {
+    borderColor: 'transparent',
+    borderWidth: 10,
+    position: 'absolute',
+  },
+  modal: {
+    flex: 1,
+    margin: 0,
+  },
+  modalView: {
+    backgroundColor: 'black',
+    flex: 1,
+    margin: 0,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+  },
+  topLeftEdge: {
+    borderLeftColor: 'orange',
+    borderTopColor: 'orange',
+    height: 50,
+    left: 0,
+    top: 0,
+    width: 50,
+  },
+  topRightEdge: {
+    borderRightColor: 'white',
+    borderTopColor: 'white',
+    height: 50,
+    right: 0,
+    top: 0,
+    width: 50,
   },
 });

@@ -1,4 +1,30 @@
 {
-  "name": "Anon Aadhaar",
-  "displayName": "Anon Aadhaar"
+  "expo": {
+    "name": "Anon Aadhaar",
+    "slug": "anonaadhaar",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "expo.modules.anonaadhaar.example"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "expo.modules.anonaadhaar.example"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
 }

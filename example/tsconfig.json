@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@anon-aadhaar/react-native": ["../src/index"],
+      "@anon-aadhaar/react-native/*": ["../src/*"]
+    }
+  }
+}

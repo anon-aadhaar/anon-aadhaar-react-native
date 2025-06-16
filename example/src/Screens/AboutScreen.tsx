@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { AnonAadhaarContext } from '@anon-aadhaar/react-native';
 import React, { useContext, type FunctionComponent } from 'react';
 import {
   SafeAreaView,
@@ -9,11 +10,11 @@ import {
   Linking,
   Switch,
 } from 'react-native';
-import { icons } from '../Components/illustrations';
 import { SvgXml } from 'react-native-svg';
-import { Footer } from '../Components/Footer';
+
 import Divider from '../Components/Divider';
-import { AnonAadhaarContext } from '@anon-aadhaar/react-native';
+import { Footer } from '../Components/Footer';
+import { icons } from '../Components/illustrations';
 
 type AboutProps = {
   navigation: any;
@@ -123,66 +124,37 @@ export const AboutScreen: FunctionComponent<AboutProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  infoIcon: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#E93CAE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginLeft: 15,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 10,
-    fontFamily: 'Outfit-Bold',
-  },
-  scrollView: {
-    justifyContent: 'center',
-    padding: 20,
-    flex: 1,
-  },
-  footnote: {
-    fontFamily: 'Outfit-Light',
-    fontSize: 14,
-    color: 'white',
-    lineHeight: 16,
-  },
   callout: {
+    color: 'white',
     fontFamily: 'Outfit-Regular',
     fontSize: 16,
-    color: 'white',
     lineHeight: 15,
   },
+  footnote: {
+    color: 'white',
+    fontFamily: 'Outfit-Light',
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  heading: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'left',
+  },
   infoContainer: {
-    width: '100%',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#3E3B3B',
+    borderRadius: 8,
+    elevation: 8,
+    flexDirection: 'row',
+    marginVertical: 4,
     minHeight: 100,
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#3E3B3B',
-    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -190,10 +162,39 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8,
-    alignSelf: 'center',
-    marginVertical: 4,
-    flexDirection: 'row',
+    width: '100%',
+  },
+  infoIcon: {
     alignItems: 'center',
+    backgroundColor: '#E93CAE',
+    borderRadius: 8,
+    height: 80,
+    justifyContent: 'center',
+    width: 80,
+  },
+  infoText: {
+    color: '#FFFFFF',
+    flex: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 15,
+    textAlign: 'left',
+  },
+  safeArea: {
+    backgroundColor: '#000000',
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+    textAlign: 'left',
   },
 });

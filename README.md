@@ -1,4 +1,4 @@
-# react-native-awesome-library
+# @anon-aadhaar/react-native
 
 test
 

@@ -21,12 +21,12 @@ export const ProgressBar = ({
 };
 
 const styles = StyleSheet.create({
-  progressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 20, // Adjust height as needed
-    marginVertical: 10, // Spacing above and below the progress bar
+  activeDot: {
+    backgroundColor: '#06753b', // Active dot color
+    width: 20, // Larger width for active bar
+    height: 8, // Same height for bar
+    borderRadius: 4, // This will keep the edges rounded
+    // For a more "bar" like appearance, you can set borderRadius to 0
   },
   dot: {
     backgroundColor: 'gray', // Inactive dot color
@@ -36,11 +36,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 4, // Spacing between dots
     // transition: 'all 0.2s ease-in-out', // Smooth transition for web, ignored in native
   },
-  activeDot: {
-    backgroundColor: '#06753b', // Active dot color
-    width: 20, // Larger width for active bar
-    height: 8, // Same height for bar
-    borderRadius: 4, // This will keep the edges rounded
-    // For a more "bar" like appearance, you can set borderRadius to 0
+  progressBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 20, // Adjust height as needed
+    marginVertical: 10, // Spacing above and below the progress bar
   },
 });

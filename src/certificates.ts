@@ -1,7 +1,7 @@
 // This is the official test data public key certificate issued by the UIDAI
 // data on https://www.uidai.gov.in/en/916-developer-section/data-and-downloads-section/11349-uidai-certificate-details.html
 
-export const certificateTest: string = `-----BEGIN CERTIFICATE-----
+export const certificateTest = `-----BEGIN CERTIFICATE-----
 MIID6jCCAtKgAwIBAgIBATANBgkqhkiG9w0BAQsFADBpMRQwEgYDVQQDEwtleGFt
 cGxlLm9yZzELMAkGA1UEBhMCVVMxETAPBgNVBAgTCFZpcmdpbmlhMRMwEQYDVQQH
 EwpCbGFja3NidXJnMQ0wCwYDVQQKEwRUZXN0MQ0wCwYDVQQLEwRUZXN0MB4XDTI0
@@ -25,7 +25,7 @@ HDK9/pGSuobx6Fi7ufzqymirT/GOuxslquB4mleCu4ArCg2qAVC2wDjQymgvq8FS
 bVukYnC6XdwqYhvIuTPnEys4gGdeirY+UPGQeqxMrNm+ZpKPTS0NwzxHwlhutw==
 -----END CERTIFICATE-----`;
 
-export const certificateProd: string = `-----BEGIN CERTIFICATE-----
+export const certificateProd = `-----BEGIN CERTIFICATE-----
 MIIHwjCCBqqgAwIBAgIEU5laMzANBgkqhkiG9w0BAQsFADCB/DELMAkGA1UEBhMC
 SU4xQTA/BgNVBAoTOEd1amFyYXQgTmFybWFkYSBWYWxsZXkgRmVydGlsaXplcnMg
 YW5kIENoZW1pY2FscyBMaW1pdGVkMR0wGwYDVQQLExRDZXJ0aWZ5aW5nIEF1dGhv

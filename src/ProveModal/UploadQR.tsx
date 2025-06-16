@@ -1,11 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import { Text, TouchableOpacity, View } from 'react-native';
-import { modalStyles } from './modalStyles';
-import { AadhaarScanner } from './aadhaarScanner';
-import { uploadAadhaarPNG } from '../uploadPNG';
 import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+
+import { AadhaarScanner } from './aadhaarScanner';
+import { modalStyles } from './modalStyles';
 import { icons } from '../icons';
+import { uploadAadhaarPNG } from '../uploadPNG';
 
 export const UploadQR = ({
   setCurrentScreen,

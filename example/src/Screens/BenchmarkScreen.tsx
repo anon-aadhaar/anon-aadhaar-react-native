@@ -2,7 +2,6 @@
 import {
   AadhaarScanner,
   type AnonAadhaarArgs,
-  getVerificationKey,
   groth16ProveWithZKeyFilePath,
   groth16Verify,
   setupProver,
@@ -17,9 +16,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
+import { ZKEY_PATH, DAT_PATH } from '../../../src/constants';
 import { circuitInputsFromQR } from '../../../src/generateInputs';
 import type { AnonAadhaarProof } from '../../../src/types';
-import { ZKEY_PATH, DAT_PATH } from '../../../src/constants';
 
 const Toast = ({ message }: { message: string }) => (
   <View style={styles.toastContainer}>
@@ -96,7 +96,6 @@ export default function BenchmarkView({}) {
 
       const aaProof = await groth16ProveWithZKeyFilePath({
         zkeyFilePath: ZKEY_PATH,
-        datFilePath: DAT_PATH,
         inputs: anonAadhaarArgs,
       });
       setExecutionTime((prev) => ({ ...prev, proof: Date.now() - startProof }));
@@ -116,7 +115,7 @@ export default function BenchmarkView({}) {
   const verifProof = async (_proof: AnonAadhaarProof) => {
     try {
       const startVerif = Date.now();
-      const res = await groth16Verify(_proof, await getVerificationKey());
+      const res = await groth16Verify(ZKEY_PATH, _proof);
       console.log('Verification result: ', res);
       setProofVerified(res);
       setExecutionTime((prev) => ({
@@ -220,67 +219,67 @@ export default function BenchmarkView({}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  button: {
     alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    color: 'white',
-  },
-  buttonEnabled: {
     backgroundColor: '#64a8e3',
+    borderRadius: 5,
+    padding: 15,
+    width: '90%',
   },
   buttonDisabled: {
     backgroundColor: '#cccccc',
   },
-  button: {
+  buttonEnabled: {
     backgroundColor: '#64a8e3',
-    padding: 15,
-    width: '90%',
-    alignItems: 'center',
-    borderRadius: 5,
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
   },
-  statusRow: {
-    flexDirection: 'row',
+  container: {
     alignItems: 'center',
-    marginVertical: 5,
-    color: 'white',
-  },
-  statusIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginRight: 10,
-    color: 'white',
-  },
-  statusText: {
-    fontSize: 16,
-    color: 'white',
+    backgroundColor: '#ffffff',
+    flex: 1,
+    justifyContent: 'space-around',
   },
   loaderContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  statusIndicator: {
+    borderRadius: 10,
+    color: 'white',
+    height: 20,
+    marginRight: 10,
+    width: 20,
+  },
+  statusRow: {
     alignItems: 'center',
+    color: 'white',
+    flexDirection: 'row',
+    marginVertical: 5,
+  },
+  statusText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  title: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 20,
   },
   toastContainer: {
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    right: 20,
-    backgroundColor: 'red',
-    padding: 15,
-    borderRadius: 5,
     alignItems: 'center',
+    backgroundColor: 'red',
+    borderRadius: 5,
+    bottom: 50,
     justifyContent: 'center',
+    left: 20,
+    padding: 15,
+    position: 'absolute',
+    right: 20,
     zIndex: 1000, // Make sure it's above other elements
   },
   toastText: {

@@ -39,7 +39,7 @@ export const uploadAadhaarPNG = (
 
 const decodeQRCodeFromImage = async (base64: string): Promise<string> => {
   return RNQRGenerator.detect({
-    base64: base64,
+    base64,
   })
     .then((detectedQRCodes) => {
       const { values } = detectedQRCodes;

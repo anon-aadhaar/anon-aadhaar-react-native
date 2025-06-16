@@ -1,11 +1,12 @@
+import { KEYUTIL, KJUR } from 'jsrsasign';
+import forge from 'node-forge';
+
+import { certificateProd, certificateTest } from './certificates';
 import {
   convertBigIntToByteArray,
   decompressByteArray,
   uint8ArrayToHex,
 } from './util';
-import forge from 'node-forge';
-import { KEYUTIL, KJUR } from 'jsrsasign';
-import { certificateProd, certificateTest } from './certificates';
 
 /**
  * `verifySignature` verifies the digital signature of the provided data.

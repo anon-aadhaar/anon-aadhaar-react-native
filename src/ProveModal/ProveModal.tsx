@@ -1,8 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { verifySignature } from '../verifySignature';
-import { circuitInputsFromQR } from '../generateInputs';
 import React, { useCallback, useEffect, useState } from 'react';
-import { modalStyles } from './modalStyles';
 import {
   Alert,
   Modal,
@@ -11,12 +8,16 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { UploadQR } from './UploadQR';
-import { ProveScreen } from './ProveScreen';
-import { BlurView } from '@react-native-community/blur';
-import type { FieldsToRevealArray, AnonAadhaarArgs } from '../types';
-import { icons } from '../icons';
 import { SvgXml } from 'react-native-svg';
+
+import { circuitInputsFromQR } from '../generateInputs';
+import { verifySignature } from '../verifySignature';
+import { ProveScreen } from './ProveScreen';
+import { UploadQR } from './UploadQR';
+import { modalStyles } from './modalStyles';
+// import { BlurView } from '@react-native-community/blur';
+import { icons } from '../icons';
+import type { FieldsToRevealArray, AnonAadhaarArgs } from '../types';
 
 type ModalScreens = 'loading' | 'prove' | 'uploadQR' | 'error';
 
@@ -27,7 +28,7 @@ export const LoaderScreen = () => {
         We are verifying the signature of your document...
       </Text>
       <View style={{ height: '100%', justifyContent: 'center' }}>
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size="large" />
       </View>
     </>
   );
@@ -92,9 +93,9 @@ export const ProveModal = ({
           if (isVerified) {
             circuitInputsFromQR({
               qrData: qrCodeValue,
-              nullifierSeed: nullifierSeed,
-              signal: signal,
-              fieldsToRevealArray: fieldsToRevealArray,
+              nullifierSeed,
+              signal,
+              fieldsToRevealArray,
               isTestAadhaar: useTestAadhaar,
             }).then((args) => {
               setAnonAadhaarArgs(args);
@@ -122,56 +123,57 @@ export const ProveModal = ({
     <View style={modalStyles.centeredView}>
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}
       >
-        <BlurView
+        {/* TODO: Add blur view */}
+        {/* <BlurView
           style={modalStyles.absolute}
           blurType="dark"
           blurAmount={10}
           reducedTransparencyFallbackColor="dark"
-        >
-          <TouchableWithoutFeedback onPress={onCloseModal}>
-            <View style={modalStyles.centeredView}>
-              <View style={modalStyles.modalView}>
-                {(() => {
-                  switch (currentScreen) {
-                    case 'uploadQR':
-                      return (
-                        <UploadQR
-                          setCurrentScreen={setCurrentScreen}
-                          setQrCodeValue={setQrCodeValue}
-                          setIsVerifyingSig={setIsVerifyingSig}
+        > */}
+        <TouchableWithoutFeedback onPress={onCloseModal}>
+          <View style={modalStyles.centeredView}>
+            <View style={modalStyles.modalView}>
+              {(() => {
+                switch (currentScreen) {
+                  case 'uploadQR':
+                    return (
+                      <UploadQR
+                        setCurrentScreen={setCurrentScreen}
+                        setQrCodeValue={setQrCodeValue}
+                        setIsVerifyingSig={setIsVerifyingSig}
+                      />
+                    );
+                  case 'loading':
+                    return <LoaderScreen />;
+                  case 'error':
+                    return <ErrorScreen />;
+                  case 'prove':
+                    return (
+                      anonAadhaarArgs && (
+                        <ProveScreen
+                          setProofVerified={setProofVerified}
+                          anonAadhaarArgs={anonAadhaarArgs}
+                          setProofs={setProofs}
+                          signal={signal}
+                          fieldsToRevealArray={fieldsToRevealArray}
                         />
-                      );
-                    case 'loading':
-                      return <LoaderScreen />;
-                    case 'error':
-                      return <ErrorScreen />;
-                    case 'prove':
-                      return (
-                        anonAadhaarArgs && (
-                          <ProveScreen
-                            setProofVerified={setProofVerified}
-                            anonAadhaarArgs={anonAadhaarArgs}
-                            setProofs={setProofs}
-                            signal={signal}
-                            fieldsToRevealArray={fieldsToRevealArray}
-                          />
-                        )
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </View>
+                      )
+                    );
+                  default:
+                    return null;
+                }
+              })()}
             </View>
-          </TouchableWithoutFeedback>
-        </BlurView>
+          </View>
+        </TouchableWithoutFeedback>
+        {/* </BlurView> */}
       </Modal>
     </View>
   );

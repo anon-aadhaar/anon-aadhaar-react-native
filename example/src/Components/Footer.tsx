@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useRoute } from '@react-navigation/native';
 import React, { type FunctionComponent } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { icons } from './illustrations';
 import { SvgXml } from 'react-native-svg';
-import { useRoute } from '@react-navigation/native';
+
+import { icons } from './illustrations';
 
 type FooterProps = {
   navigation: any;
@@ -59,24 +60,24 @@ export const Footer: FunctionComponent<FooterProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  footerContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 60,
-  },
-  iconWrapper: {
-    alignItems: 'center',
-  },
   footerButton: {
     alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
+    justifyContent: 'center',
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    height: 60,
+    justifyContent: 'space-around',
+    width: '100%',
   },
   footerText: {
+    color: '#71696A',
     fontFamily: 'Outfit-Regular',
     fontSize: 14,
     marginTop: 4,
-    color: '#71696A',
+  },
+  iconWrapper: {
+    alignItems: 'center',
   },
 });

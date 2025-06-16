@@ -1,15 +1,10 @@
-import { NativeModules, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
+
+import AnonAadhaarPackageModule from './AnonAadhaarPackageModule';
 import { ZIP_URL } from './constants';
 import storage from './storage';
 import type { AnonAadhaarArgs, AnonAadhaarProof } from './types';
 import { downloadFile } from './util';
-
-const LINKING_ERROR =
-  `The package 'react-native-rapidsnark' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
 
 export async function setupProver() {
   try {
@@ -38,66 +33,28 @@ export async function setupProver() {
   }
 }
 
-const Rapidsnark = NativeModules.Rapidsnark
-  ? NativeModules.Rapidsnark
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
 export const DEFAULT_PROOF_BUFFER_SIZE = 1024;
 export const DEFAULT_ERROR_BUFFER_SIZE = 256;
 
-export async function groth16ProveWithZKeyFilePath(
-  {
-    zkeyFilePath,
-    datFilePath,
-    inputs,
-    signal,
-  }: {
-    zkeyFilePath: string;
-    datFilePath: string;
-    inputs: AnonAadhaarArgs;
-    signal?: string;
-  },
-  {
-    proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
-    publicBufferSize,
-    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-  }: {
-    proofBufferSize?: number;
-    publicBufferSize?: number;
-    errorBufferSize?: number;
-  } = {}
-): Promise<AnonAadhaarProof> {
+export async function groth16ProveWithZKeyFilePath({
+  zkeyFilePath,
+  inputs,
+  signal,
+}: {
+  zkeyFilePath: string;
+  inputs: AnonAadhaarArgs;
+  signal?: string;
+}): Promise<AnonAadhaarProof> {
   try {
-    let proof, pub_signals;
+    const result = await AnonAadhaarPackageModule.generateCircomProof(
+      zkeyFilePath,
+      JSON.stringify(inputs)
+    );
 
-    if (Platform.OS === 'android') {
-      const response = await Rapidsnark.groth16ProveWithZKeyFilePath(
-        zkeyFilePath,
-        datFilePath,
-        inputs
-      );
-      ({ proof, pub_signals } = JSON.parse(response));
-    } else {
-      const public_buffer_size =
-        publicBufferSize ?? (await groth16PublicSizeForZkeyFile(zkeyFilePath));
-
-      const result = await Rapidsnark.groth16ProveWithZKeyFilePath(
-        zkeyFilePath,
-        datFilePath,
-        inputs,
-        proofBufferSize,
-        public_buffer_size,
-        errorBufferSize
-      );
-      ({ proof, pub_signals } = result);
-    }
+    const { proof, pub_signals } = {
+      proof: result.proof,
+      pub_signals: result.inputs,
+    };
 
     const public_signals_array = Array.isArray(pub_signals)
       ? pub_signals
@@ -126,18 +83,11 @@ export async function groth16ProveWithZKeyFilePath(
     );
   }
 }
-export function groth16Verify(
-  proof: AnonAadhaarProof,
-  verificationKey: string,
-  {
-    errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
-  }: {
-    errorBufferSize: number;
-  } = {
-    errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
-  }
+export async function groth16Verify(
+  zkeyFilePath: string,
+  proof: AnonAadhaarProof
 ): Promise<boolean> {
-  const public_signals = JSON.stringify([
+  const public_signals = [
     proof.pubkeyHash,
     proof.nullifier,
     proof.timestamp,
@@ -147,15 +97,19 @@ export function groth16Verify(
     proof.pincode,
     proof.nullifierSeed,
     proof.signalHash,
-  ]);
+  ];
+  const proofResult = {
+    proof: proof.groth16Proof,
+    inputs: public_signals,
+  };
 
   try {
-    return Rapidsnark.groth16Verify(
-      JSON.stringify(proof.groth16Proof),
-      public_signals,
-      verificationKey,
-      errorBufferSize
+    const valid = await AnonAadhaarPackageModule.verifyProof(
+      zkeyFilePath,
+      proofResult
     );
+
+    return valid;
   } catch (e) {
     console.log(e);
     throw Error('[groth16Verify]: Error while verifying the proof');
@@ -172,7 +126,8 @@ export function groth16PublicSizeForZkeyFile(
     errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
   }
 ): Promise<number> {
-  return Rapidsnark.groth16PublicSizeForZkeyFile(zkeyPath, errorBufferSize);
+  // return Rapidsnark.groth16PublicSizeForZkeyFile(zkeyPath, errorBufferSize);
+  return Promise.resolve(0);
 }
 
 export function groth16PublicSizeForChunkedZkeyFile(
@@ -185,10 +140,11 @@ export function groth16PublicSizeForChunkedZkeyFile(
     errorBufferSize: DEFAULT_ERROR_BUFFER_SIZE,
   }
 ): Promise<number> {
-  return Rapidsnark.groth16PublicSizeForChunkedZkeyFile(
-    zkeyChunksPaths,
-    errorBufferSize
-  );
+  // return Rapidsnark.groth16PublicSizeForChunkedZkeyFile(
+  //   zkeyChunksPaths,
+  //   errorBufferSize
+  // );
+  return Promise.resolve(0);
 }
 
 async function saveProof(anonAadhaarProof: AnonAadhaarProof) {

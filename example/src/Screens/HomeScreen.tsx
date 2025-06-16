@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
 import React, { useEffect, type FunctionComponent } from 'react';
 import {
   Image,
@@ -9,10 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { AnonAadhaarProve, useAnonAadhaar } from '@anon-aadhaar/react-native';
+import { SvgXml } from 'react-native-svg';
+
 import { Footer } from '../Components/Footer';
 import { icons } from '../Components/illustrations';
-import { SvgXml } from 'react-native-svg';
 
 export type HomeScreenProps = {
   navigation: any;
@@ -102,89 +103,61 @@ export const HomeScreen: FunctionComponent<HomeScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
-  },
   aaLogo: {
+    left: '50%',
     position: 'absolute',
     top: '50%',
-    left: '50%',
     transform: [{ translateX: -14 }, { translateY: -14 }],
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'left',
-    marginTop: 20,
-    fontFamily: 'Outfit-Bold',
+  aaLogoContainer: {
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 8,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
   },
-  scrollView: {
-    padding: 20,
-    flex: 1,
+  buttonText: {
+    color: '#06753b',
+    fontFamily: 'Outfit-Light',
+    textAlign: 'center',
+  },
+  callout: {
+    color: 'white',
+    fontFamily: 'Outfit-Regular',
+    fontSize: 16,
+  },
+  footnote: {
+    color: 'white',
+    fontFamily: 'Outfit-Light',
+    fontSize: 14,
+    lineHeight: 15,
   },
   greenSection: {
     backgroundColor: '#06753B',
+    borderRadius: 10,
     height: 480,
     marginVertical: 20,
-    borderRadius: 10,
   },
-  aaLogoContainer: {
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    width: 40,
-    height: 40,
-  },
-  tag: {
-    backgroundColor: 'black',
-    borderRadius: 8,
-    padding: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '40%',
-  },
-  footnote: {
-    fontFamily: 'Outfit-Light',
-    fontSize: 14,
-    color: 'white',
-    lineHeight: 15,
-  },
-  callout: {
-    fontFamily: 'Outfit-Regular',
-    fontSize: 16,
-    color: 'white',
-  },
-  roundButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    borderRadius: 50,
+  heading: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 30,
+    fontWeight: 'bold',
     marginTop: 20,
-  },
-  buttonText: {
-    fontFamily: 'Outfit-Light',
-    color: '#06753b',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   proofSection: {
-    width: '100%',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#3E3B3B',
+    borderRadius: 8,
+    elevation: 8,
+    flexDirection: 'row',
+    marginVertical: 4,
     minHeight: 60,
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#3E3B3B',
-    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -192,22 +165,50 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8,
-    alignSelf: 'center',
-    marginVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: '100%',
   },
   proofSectionText: {
-    fontFamily: 'Outfit-Bold',
     color: 'white',
-    textAlign: 'left',
+    fontFamily: 'Outfit-Bold',
     fontSize: 20,
+    textAlign: 'left',
+  },
+  roundButton: {
+    backgroundColor: 'transparent',
+    borderRadius: 50,
+    marginTop: 20,
+    width: '100%',
+  },
+  safeArea: {
+    backgroundColor: '#000000',
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    padding: 20,
+  },
+  tag: {
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 8,
+    justifyContent: 'center',
+    padding: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    width: '40%',
+  },
+  title: {
+    color: '#FFFFFF',
+    fontFamily: 'Outfit-Bold',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'left',
   },
   topImage: {
-    width: '100%',
+    alignSelf: 'center',
     height: '50%',
     resizeMode: 'contain',
-    alignSelf: 'center',
+    width: '100%',
   },
 });
